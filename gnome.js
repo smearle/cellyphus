@@ -3,21 +3,26 @@ var Game = {
     map: {},
     engine: null,
     player: null,
-    pedro: null,
+    mouse: null,
+    hawk: null,
     ananas: null,
 
     init: function() {
-        this.display = new ROT.Display({spacing:1.1});
+        this.display = new ROT.Display({width:80, height:27, spacing:1.1});
         document.body.appendChild(this.display.getContainer());
 
         this._generateMap();
 
         var scheduler = new ROT.Scheduler.Simple();
         scheduler.add(this.player, true);
-        scheduler.add(this.pedro, true);
+        scheduler.add(this.mouse, true);
+        scheduler.add(this.grasshopper, true);
+        scheduler.add(this.snake, true);
+        scheduler.add(this.hawk, true);
 
         this.engine = new ROT.Engine(scheduler);
         this.engine.start();
+        this.scheduler = scheduler;
     },
 
     _generateMap: function() {
@@ -37,7 +42,10 @@ var Game = {
         this._drawWholeMap();
 
         this.player = this._createBeing(Player, freeCells);
-        this.pedro = this._createBeing(Pedro, freeCells);
+        this.mouse = this._createBeing(Mouse, freeCells);
+        this.hawk = this._createBeing(Hawk, freeCells);
+        this.grasshopper = this._createBeing(Grasshopper, freeCells);
+        this.snake = this._createBeing(Snake, freeCells);
     },
 
     _createBeing: function(what, freeCells) {
@@ -67,6 +75,17 @@ var Game = {
         }
     }
 };
+
+
+var passableCallback = function(x, y) {
+    return (x+","+y in Game.map);
+}
+
+var displayText = function(str) {
+    var empty = "                                                    "
+    Game.display.drawText(5, 25, empty);
+    Game.display.drawText(5, 25, str);
+}
 
 var Player = function(x, y) {
     this._x = x;
@@ -125,31 +144,33 @@ Player.prototype._draw = function() {
 Player.prototype._checkBox = function() {
     var key = this._x + "," + this._y;
     if (Game.map[key] != "*") {
-        alert("There is no box here!");
+        displayText("There is no box here!");
     } else if (key == Game.ananas) {
-        alert("Hooray! You found an ananas and won this game.");
+        displayText("Hooray! You found an ananas and won this game.");
         Game.engine.lock();
         window.removeEventListener("keydown", this);
     } else {
-        alert("This box is empty :-(");
+        displayText("This box is empty :-(");
     }
 }
 
-var Pedro = function(x, y) {
+var Mouse = function(x, y) {
     this._x = x;
     this._y = y;
     this._draw();
 }
 
-Pedro.prototype.getSpeed = function() { return 100; }
+Mouse.prototype.getSpeed = function() { return 100; }
 
-Pedro.prototype.act = function() {
-    var x = Game.player.getX();
-    var y = Game.player.getY();
-
-    var passableCallback = function(x, y) {
-        return (x+","+y in Game.map);
+Mouse.prototype.act = function() {
+    if (!Game.grasshopper) {
+        this._draw();
+        return
     }
+
+    var x = Game.grasshopper._x;
+    var y = Game.grasshopper._y;
+
     var astar = new ROT.Path.AStar(x, y, passableCallback, {topology:4});
 
     var path = [];
@@ -159,10 +180,17 @@ Pedro.prototype.act = function() {
     astar.compute(this._x, this._y, pathCallback);
 
     path.shift();
-    if (path.length == 1) {
-        Game.engine.lock();
-        alert("Game over - you were captured by Pedro!");
-    } else {
+    if (path.length == 1 || path.length == 0) {
+    //  Game.engine.lock();
+        displayText("Grasshopper captured by Mouse!");
+        Game.display.draw(Game.grasshopper._x, Game.grasshopper._y, Game.map[Game.grasshopper._x+","+ Game.grasshopper._y]);
+        Game.scheduler.remove(Game.grasshopper);
+        Game.grasshopper = null;
+    }
+    else if (path.length == 0)
+    {
+    }
+    else {
         x = path[0][0];
         y = path[0][1];
         Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
@@ -172,9 +200,158 @@ Pedro.prototype.act = function() {
     }
 }
 
-Pedro.prototype._draw = function() {
-    Game.display.draw(this._x, this._y, "P", "red");
+Mouse.prototype._draw = function() {
+    Game.display.draw(this._x, this._y, "m", "grey");
 }
+
+var Snake = function(x, y) {
+    this._x = x;
+    this._y = y;
+    this._draw();
+}
+
+Snake.prototype.getSpeed = function() { return 100; }
+
+Snake.prototype.act = function() {
+    if (!Game.mouse) {
+        this._draw();
+        return
+    }
+    var x = Game.mouse._x;
+    var y = Game.mouse._y;
+
+    var astar = new ROT.Path.AStar(x, y, passableCallback, {topology:4});
+
+    var path = [];
+    var pathCallback = function(x, y) {
+        path.push([x, y]);
+    }
+    astar.compute(this._x, this._y, pathCallback);
+
+    path.shift();
+    if (path.length == 1 || path.length == 0) {
+//      Game.engine.lock();
+        displayText("Mouse captured by snake!");
+        Game.display.draw(Game.mouse._x, Game.mouse._y, Game.map[Game.mouse._x+","+ Game.mouse._y]);
+        Game.scheduler.remove(Game.mouse)
+        Game.mouse = null;
+    }
+    else {
+        x = path[0][0];
+        y = path[0][1];
+        Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
+        this._x = x;
+        this._y = y;
+        this._draw();
+    }
+}
+
+Snake.prototype._draw = function() {
+    Game.display.draw(this._x, this._y, "S", "blue");
+}
+
+
+var Grasshopper = function(x, y) {
+    this._x = x;
+    this._y = y;
+    this._draw();
+    this._move_ticker = 0
+}
+
+Grasshopper.prototype.getSpeed = function() { return 100; }
+
+Grasshopper.prototype.act = function() {
+    var x = Game.player.getX();
+    var y = Game.player.getY();
+
+    if (!(this._move_ticker == 0)) {
+        this._move_ticker += 1;
+        return
+    }
+    this._move_ticker = 0;
+
+    var astar = new ROT.Path.AStar(x, y, passableCallback, {topology:4});
+
+    var path = [];
+    var pathCallback = function(x, y) {
+        path.push([x, y]);
+    }
+    astar.compute(this._x, this._y, pathCallback);
+
+    path.shift();
+    if (path.length == 1 || path.length == 0) {
+        Game.engine.lock();
+        displayText("You, grass, were eaten by a Grasshopper! Game over!");
+    } 
+    else {
+        x = path[0][0];
+        y = path[0][1];
+        Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
+        this._x = x;
+        this._y = y;
+        this._draw();
+    }
+}
+
+Grasshopper.prototype._draw = function() {
+    Game.display.draw(this._x, this._y, "G", "green");
+}
+
+
+var Hawk = function(x, y) {
+    this._x = x;
+    this._y = y;
+    this._draw();
+}
+
+Hawk.prototype.getSpeed = function() { return 50; }
+
+Hawk.prototype.act = function() {
+    if (!Game.snake) {
+        Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
+        this._draw()
+        return
+    }
+    var x = Game.snake._x;
+    var y = Game.snake._y;
+
+  //SHOW(Game.display.getContainer());
+
+
+    var astar = new ROT.Path.AStar(x, y, passableCallback, {topology:4});
+
+    var path = [];
+    var pathCallback = function(x, y) {
+        path.push([x, y]);
+    }
+    astar.compute(this._x, this._y, pathCallback);
+
+    path.shift();
+    if (path.length == 1 || path.length == 0) {
+//      Game.engine.lock();
+    //  alert("Snake captured by Hawk!");
+    //  var str = "Goodbye %c{red}cr%b{blue}u%b{}el %c{}world"
+        displayText("Snake captured by Hawk!");
+        Game.display.draw(Game.snake._x, Game.snake._y, Game.map[Game.snake._x+","+ Game.snake._y]);
+        Game.scheduler.remove(Game.snake);
+        Game.snake = null;
+    } 
+    else {
+        x = path[0][0];
+        y = path[0][1];
+        Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
+        this._x = x;
+        this._y = y;
+        this._draw();
+    }
+}
+
+Hawk.prototype._draw = function() {
+    Game.display.draw(this._x, this._y, "H", "brown");
+}
+
+
+
 
 
 Game.init();
