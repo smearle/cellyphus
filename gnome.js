@@ -18,7 +18,7 @@ var display_options = {
         "HH": [64, 0],
         "SS": [64, 0],
         "mm": [64, 0],
-        "w": [128, 0],
+        "ww": [128, 0],
     },
     width: map_width,
     height: map_height,
@@ -57,6 +57,43 @@ var Game = {
         this.engine.start();
     },
 
+    simulateGrass: function() {
+      live = [];
+      dead = [];
+      for (var iy = map_width - 1; iy >= 0; iy--) {
+        for (var ix = map_height - 1; ix >= 0; ix--) {
+            var key = ix+","+iy;
+            if (this.map[key] == "gg" || this.map[key] == "..") {
+
+                if (census(ix, iy)) {
+    //          live.push(key);
+                    live.push([ix, iy]);
+    //            live.push({
+    //              x: ix,
+    //              y: iy,
+    //            });
+                }
+                else {
+                  dead.push([ix, iy]);
+                }
+            }
+          }
+        }
+        for (var i = 0; i < live.length; i++) {
+              [x, y] = live[i];
+              var key = x+","+y;
+              this.map[key] = "gg";
+              this.display.draw(x, y, this.map[key]);
+        }
+        for (var i = 0; i < dead.length; i++) {
+            [x, y] = dead[i];
+            var key = x+","+y;
+            this.map[key] = "..";
+            this.display.draw(x, y, this.map[key]);
+        }
+      },
+    //  toggle(cell.x, cell.y, 'next');
+
     _generateCellMap: function() {
         var freeCells = [];
         var map = new ROT.Map.Cellular(map_width, map_height, {
@@ -76,7 +113,7 @@ var Game = {
                     }
                 else {
                     var key = x+","+y;
-                    this.map[key] = 'w';
+                    this.map[key] = "ww";
                 }
 
                 }
@@ -132,7 +169,7 @@ var Game = {
     },
 
     _generateGrass: function(freeCells) {
-        for (var i=0;i<10;i++) {
+        for (var i=0;i<200;i++) {
             var index = Math.floor(ROT.RNG.getUniform() * freeCells.length);
             var key = freeCells.splice(index, 1)[0];
             this.map[key] = "gg";
@@ -154,7 +191,7 @@ var passableCallback = function(x, y) {
 //    return (x+","+y in Game.map);
       key = x+","+y;
       tile_type = Game.map[key];
-      return (tile_type != "w");
+      return (tile_type != "ww");
 }
 
 
@@ -192,6 +229,7 @@ Player.prototype.handleEvent = function(e) {
         this._checkBox();
         return;
     }
+    Game.simulateGrass();
 
     var keyMap = {};
     keyMap[38] = 0;
@@ -215,6 +253,7 @@ Player.prototype.handleEvent = function(e) {
     if (!(newKey in Game.map)) { return; }
 
     Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
+    // Move the player
     this._x = newX;
     this._y = newY;
     this._draw();
@@ -226,6 +265,13 @@ Player.prototype.handleEvent = function(e) {
     }
     this.hunger = Math.max(this.hunger-1, 0);
     this.thirst = Math.max(this.thirst-1, 0);
+    curr_tile = Game.map[this._x+","+this._y];
+    if (curr_tile == "ww") {
+        this.thirst = Math.min(100, this.thirst + 25);
+        }
+    else if (curr_tile == "gg") {
+        this.hunger = Math.min(100, this.hunger + 25);
+    }
     Game.engine.unlock();
 }
 
@@ -453,18 +499,82 @@ Hawk.prototype._draw = function() {
 }
 
 
-//SHOW(display.getContainer());
+/*
+ * Logic
+ */
 
-//tileSet.onload = function() {
-//    Game.display.draw(1, 1, "@");
-//    Game.display.draw(0, 0, "#");
-//    Game.display.draw(0, 1, "#");
-//    Game.display.draw(1, 0, "#");
-//    Game.display.draw(0, 2, "#");
-//    Game.display.draw(2, 2, "a");
-//    Game.display.draw(2, 0, "!");
-//    Game.display.draw(2, 1, "!");
-//}
+function coinFlip() {
+  return (Math.floor(Math.random() * 2) == 0);
+}
+
+function isLive(x, y) {
+  var key = x+","+y;
+  var cell = Game.map[key];
+  return (cell == "gg") ? true : false;
+}
+
+function getNeighbors(x, y) {
+  n = (y != map_height - 1); // has northern neighbors
+  e = (x != 0); // has eastern neighbors
+  s = (y != 0); // has southern neighbors
+  w = (x != map_width - 1); // has western neighbors
+  count = 0;
+  if (n && isLive(x, y + 1)) count++;
+  if (n && e && isLive(x - 1, y + 1)) count++;
+  if (e && isLive(x - 1, y)) count++;
+  if (s && e && isLive(x - 1, y - 1)) count++;
+  if (s && isLive(x, y - 1)) count++;
+  if (s && w && isLive(x + 1, y - 1)) count++;
+  if (w && isLive(x + 1, y)) count++;
+  if (n && w && isLive(x + 1, y + 1)) count++;
+  return count;
+}
+
+/*
+ * Any live cell with fewer than two live neighbors dies, as if by under population.
+ */
+function isUnderPopulated(c) {
+  return (c < 2);
+}
+
+/*
+ * Any live cell with two or three live neighbors lives on to the next generation.
+ */
+function isHealthy(c) {
+  return (c == 2 || c == 3);
+}
+
+/*
+ * Any live cell with more than three live neighbors dies, as if by overpopulation.
+ */
+function isOverPopulated(c) {
+  return (c > 3);
+}
+
+/*
+ * Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.
+ */
+function isBorn(c) {
+  return (c == 3);
+}
+
+function census(x, y) {
+  c = getNeighbors(x, y);
+  underPopulated = healthy = overPopulated = born = false;
+  if (isLive(x, y)) {
+    underPopulated = isUnderPopulated(c);
+    healthy = isHealthy(c);
+    overPopulated = isOverPopulated(c);
+  } else {
+    born = isBorn(c);
+  }
+  if (underPopulated || overPopulated) {
+    return false;
+  }
+  if (healthy || born) {
+    return true;
+  }
+}
 
 
 window.onload = function() {
