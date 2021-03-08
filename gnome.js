@@ -14,7 +14,7 @@ var display_options = {
         "..": [32, 0],
         "gg": [64, 0],
         "**": [96, 0],
-        "GG": [64, 0],
+        "GG": [128, 0],
         "HH": [64, 0],
         "SS": [64, 0],
         "mm": [64, 0],
@@ -46,10 +46,10 @@ var Game = {
 
         var scheduler = new ROT.Scheduler.Simple();
         scheduler.add(this.player, true);
-        scheduler.add(this.mouse, true);
+        //scheduler.add(this.mouse, true);
         scheduler.add(this.grasshopper, true);
-        scheduler.add(this.snake, true);
-        scheduler.add(this.hawk, true);
+        //scheduler.add(this.snake, true);
+        //scheduler.add(this.hawk, true);
 
         this.engine = new ROT.Engine(scheduler);
         this.scheduler = scheduler;
@@ -144,10 +144,10 @@ var Game = {
         this._drawWholeMap();
 
         this.player = this._createBeing(Player, freeCells);
-        this.mouse = this._createBeing(Mouse, freeCells);
-        this.hawk = this._createBeing(Hawk, freeCells);
+        //this.mouse = this._createBeing(Mouse, freeCells);
+        //this.hawk = this._createBeing(Hawk, freeCells);
         this.grasshopper = this._createBeing(Grasshopper, freeCells);
-        this.snake = this._createBeing(Snake, freeCells);
+        //this.snake = this._createBeing(Snake, freeCells);
     },
 
     _createBeing: function(what, freeCells) {
@@ -220,37 +220,56 @@ Player.prototype.getThirst = function() { return this.thirst; }
 
 Player.prototype.act = function() {
     Game.engine.lock();
+    //window.addEventListener("click", this);
+    window.addEventListener("click", this);
     window.addEventListener("keydown", this);
 }
 
 Player.prototype.handleEvent = function(e) {
     var code = e.keyCode;
-    if (code == 13 || code == 32) {
-        this._checkBox();
-        return;
+
+    //runs if mouse click
+    if (typeof code === 'undefined')
+    {
+        var[x,y] = Game.display.eventToPosition(e);
+        document.getElementById("clickedCoords").innerHTML = [x,y];
+        var newX = this._x;
+        var newY = this._y;
+        Game.grasshopper._x_t = x;
+        Game.grasshopper._y_t = y;
+        console.log("this coords: " + this._x + ", " + this._y);
     }
-    Game.simulateGrass();
+    else //runs if button press
+    {
+        if (code == 13 || code == 32) {
+            this._checkBox();
+            return;
+        }
+        Game.simulateGrass();
 
-    var keyMap = {};
-    keyMap[38] = 0;
-    keyMap[33] = 1;
-    keyMap[39] = 2;
-    keyMap[34] = 3;
-    keyMap[40] = 4;
-    keyMap[35] = 5;
-    keyMap[37] = 6;
-    keyMap[36] = 7;
+        var keyMap = {};
+        keyMap[38] = 0;
+        keyMap[33] = 1;
+        keyMap[39] = 2;
+        keyMap[34] = 3;
+        keyMap[40] = 4;
+        keyMap[35] = 5;
+        keyMap[37] = 6;
+        keyMap[36] = 7;
 
-    /* one of numpad directions? */
-    if (!(code in keyMap)) { return; }
+        /* one of numpad directions? */
+        if (!(code in keyMap)) { return; }
 
-    /* is there a free space? */
-    var dir = ROT.DIRS[8][keyMap[code]];
-    var newX = this._x + dir[0];
-    var newY = this._y + dir[1];
-    var newKey = newX + "," + newY;
-    e.preventDefault();
-    if (!(newKey in Game.map)) { return; }
+        /* is there a free space? */
+        var dir = ROT.DIRS[8][keyMap[code]];
+        var newX = this._x + dir[0];
+        var newY = this._y + dir[1];
+        var newKey = newX + "," + newY;
+        e.preventDefault();
+        if (!(newKey in Game.map)) { return; }
+    }
+
+    
 
     Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
     // Move the player
@@ -302,6 +321,55 @@ var displayHUD = function() {
     Game.log_display.drawText(0, 2, hunger_str);
 }
 
+var Grasshopper = function(x, y) {
+    this._x = x;
+    this._y = y;
+    this._x_t = Game.player.getX();
+    this._y_t = Game.player.getY();
+    this._draw();
+    this._move_ticker = 0
+}
+
+Grasshopper.prototype.getSpeed = function() { return 100; }
+
+Grasshopper.prototype.act = function() {
+    var x = this._x_t;
+    var y = this._y_t;
+
+    if (!(this._move_ticker == 0)) {
+        this._move_ticker += 1;
+        return
+    }
+    this._move_ticker = 0;
+
+    var astar = new ROT.Path.AStar(x, y, passableCallback, {topology:4});
+
+    var path = [];
+    var pathCallback = function(x, y) {
+        path.push([x, y]);
+    }
+    astar.compute(this._x, this._y, pathCallback);
+
+    path.shift();
+    if (path.length == 1 || path.length == 0) {
+//      Game.engine.lock();
+        displayText("You, grass, were eaten by a Grasshopper! Game over!");
+    } 
+    else {
+        x = path[0][0];
+        y = path[0][1];
+        Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
+        this._x = x;
+        this._y = y;
+    }
+    this._draw();
+}
+
+Grasshopper.prototype._draw = function() {
+    Game.display.draw(this._x, this._y, "GG", "green");
+}
+
+/*
 var Mouse = function(x, y) {
     this._x = x;
     this._y = y;
@@ -399,51 +467,7 @@ Snake.prototype._draw = function() {
 }
 
 
-var Grasshopper = function(x, y) {
-    this._x = x;
-    this._y = y;
-    this._draw();
-    this._move_ticker = 0
-}
 
-Grasshopper.prototype.getSpeed = function() { return 100; }
-
-Grasshopper.prototype.act = function() {
-    var x = Game.player.getX();
-    var y = Game.player.getY();
-
-    if (!(this._move_ticker == 0)) {
-        this._move_ticker += 1;
-        return
-    }
-    this._move_ticker = 0;
-
-    var astar = new ROT.Path.AStar(x, y, passableCallback, {topology:4});
-
-    var path = [];
-    var pathCallback = function(x, y) {
-        path.push([x, y]);
-    }
-    astar.compute(this._x, this._y, pathCallback);
-
-    path.shift();
-    if (path.length == 1 || path.length == 0) {
-//      Game.engine.lock();
-        displayText("You, grass, were eaten by a Grasshopper! Game over!");
-    } 
-    else {
-        x = path[0][0];
-        y = path[0][1];
-        Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
-        this._x = x;
-        this._y = y;
-        this._draw();
-    }
-}
-
-Grasshopper.prototype._draw = function() {
-    Game.display.draw(this._x, this._y, "GG", "green");
-}
 
 
 var Hawk = function(x, y) {
@@ -497,7 +521,7 @@ Hawk.prototype.act = function() {
 Hawk.prototype._draw = function() {
     Game.display.draw(this._x, this._y, "HH", "brown");
 }
-
+*/
 
 /*
  * Logic
@@ -579,9 +603,9 @@ function census(x, y) {
 
 window.onload = function() {
     Game.init();
-    window.addEventListener("click", function(e) {
+    /*window.addEventListener("click", function(e) {
       document.getElementById("clickedCoords").innerHTML = Game.display.eventToPosition(e);
-    });
+    });*/
 }
 
 
