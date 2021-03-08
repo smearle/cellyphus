@@ -258,6 +258,7 @@ Player.prototype.handleEvent = function(e) {
     this._y = newY;
     this._draw();
     window.removeEventListener("keydown", this);
+    Game.log_display.clear();
     displayHUD();
     Game.tick ++;
     if (this.hunger == 0 && this.thirst == 0) {
@@ -297,7 +298,7 @@ var displayHUD = function() {
     health_str = "Health: " + Game.player.getHealth().toString().padStart(3, " ");
     hunger_str = "Hunger: " + Game.player.getHunger().toString().padStart(3, " ");
     thirst_str = "Thirst: " + Game.player.getThirst().toString().padStart(3, " ");
-    Game.log_display.drawText(0, 0, health_str);
+    Game.log_display.draw(0, 0, health_str);
     Game.log_display.drawText(0, 1, thirst_str);
     Game.log_display.drawText(0, 2, hunger_str);
 }
@@ -580,7 +581,9 @@ function census(x, y) {
 window.onload = function() {
     Game.init();
     window.addEventListener("click", function(e) {
-      document.getElementById("clickedCoords").innerHTML = Game.display.eventToPosition(e);
+      clicked_coords = Game.display.eventToPosition(e);
+      document.getElementById("clickedCoords").innerHTML = clicked_coords;
+      displayText("Tile ("+clicked_coords+")");
     });
 }
 

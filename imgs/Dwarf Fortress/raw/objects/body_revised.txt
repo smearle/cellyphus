@@ -1,0 +1,16 @@
+body_revised
+
+Revision: this file provides the body definition for mussel and oyster pearls. This fixes bug 4108: no pearls exist in Dwarf Fortress, despite being used for crafts. It also provides the bodygloss for floppy kobold ears.
+
+[OBJECT:BODY]
+
+[BODY:PEARL]
+	[BP:PEARL:pearl:STP][CONTYPE:UPPERBODY][SMALL][INTERNAL][CATEGORY:PEARL]
+		[DEFAULT_RELSIZE:20]
+		[VERMIN_BUTCHER_ITEM]
+
+[BODY:2FLOPPYEARS]
+	[BP:R_EAR:floppy right ear:STP][CONTYPE:HEAD][HEAR][SMALL][RIGHT][CATEGORY:EAR]
+		[DEFAULT_RELSIZE:60]
+	[BP:L_EAR:floppy left ear:STP][CONTYPE:HEAD][HEAR][SMALL][LEFT][CATEGORY:EAR]
+		[DEFAULT_RELSIZE:60]

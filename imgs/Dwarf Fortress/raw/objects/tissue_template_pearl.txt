@@ -1,0 +1,13 @@
+tissue_template_pearl
+
+Revision: this file provides the tissue template for mussel and oyster pearls. This fixes bug 4108: no pearls exist in Dwarf Fortress, despite being used for crafts.
+
+[OBJECT:TISSUE_TEMPLATE]
+
+[TISSUE_TEMPLATE:PEARL_TEMPLATE]
+	[TISSUE_NAME:pearl:NP]
+	[STRUCTURAL]
+	[TISSUE_MATERIAL:LOCAL_CREATURE_MAT:PEARL]
+	[RELATIVE_THICKNESS:1]
+	[CONNECTS]
+	[TISSUE_SHAPE:LAYER]

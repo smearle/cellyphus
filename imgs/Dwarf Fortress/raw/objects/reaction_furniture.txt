@@ -1,0 +1,430 @@
+reaction_furniture
+
+YES_DECORATIONS[OBJECT:REACTION]
+
+###############################################################################
+#####     FURNITURE SHOP    #######################################################
+###############################################################################
+
+	
+
+
+[REACTION:N_BANQUET_TABLE] 
+ [NAME:Craft (N) banquet table piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large table, the northern end.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:TABLE:NONE:INORGANIC:N_BANQUET_TABLE] 
+ [SKILL:MASONRY] 
++++
+
+[REACTION:E_BANQUET_TABLE] 
+ [NAME:Craft (E) banquet table piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large table, the eastern end.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:TABLE:NONE:INORGANIC:E_BANQUET_TABLE] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:S_BANQUET_TABLE] 
+ [NAME:Craft (S) banquet table piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large table, the southern end.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:TABLE:NONE:INORGANIC:S_BANQUET_TABLE] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:W_BANQUET_TABLE] 
+ [NAME:Craft (W) banquet table piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large table, the western end.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:TABLE:NONE:INORGANIC:W_BANQUET_TABLE] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:NS_BANQUET_TABLE] 
+ [NAME:Craft (NS) banquet table piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large table, the northern-south middle part.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:TABLE:NONE:INORGANIC:NS_BANQUET_TABLE] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:EW_BANQUET_TABLE] 
+ [NAME:Craft (EW) banquet table piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large table, the east-west middle part.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:TABLE:NONE:INORGANIC:EW_BANQUET_TABLE] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:NE_BANQUET_TABLE] 
+ [NAME:Craft (NE) banquet table piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large table, the north-eastern corner.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:TABLE:NONE:INORGANIC:NE_BANQUET_TABLE] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:SE_BANQUET_TABLE] 
+ [NAME:Craft (SE) banquet table piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large table, the south-eastern corner.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:TABLE:NONE:INORGANIC:SE_BANQUET_TABLE] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:SW_BANQUET_TABLE] 
+ [NAME:Craft (SW) banquet table piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large table, the south-western corner.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:TABLE:NONE:INORGANIC:SW_BANQUET_TABLE] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:NW_BANQUET_TABLE] 
+ [NAME:Craft (NW) banquet table piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large table, the north-western corner.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:TABLE:NONE:INORGANIC:NW_BANQUET_TABLE] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:NES_BANQUET_TABLE] 
+ [NAME:Craft (NES) banquet table piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large table, the t-section going north, east and south.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:TABLE:NONE:INORGANIC:NES_BANQUET_TABLE] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:ESW_BANQUET_TABLE] 
+ [NAME:Craft (ESW) banquet table piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large table, the t-section going east, south and west.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:TABLE:NONE:INORGANIC:ESW_BANQUET_TABLE] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:SWN_BANQUET_TABLE] 
+ [NAME:Craft (SWN) banquet table piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large table, the t-section going north, south and west.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:TABLE:NONE:INORGANIC:SWN_BANQUET_TABLE] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:WNE_BANQUET_TABLE] 
+ [NAME:Craft (WNE) banquet table piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large table, the t-section going north, east and west.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:TABLE:NONE:INORGANIC:WNE_BANQUET_TABLE] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:NESW_BANQUET_TABLE] 
+ [NAME:Craft (NESW) banquet table piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large table, the four-way section.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:TABLE:NONE:INORGANIC:NESW_BANQUET_TABLE] 
+ [SKILL:MASONRY] 
++++
+
+
+
+
+[REACTION:N_BENCH] 
+ [NAME:Craft (N) bench piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large bench, the northern end.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:CHAIR:NONE:INORGANIC:N_BENCH] 
+ [SKILL:MASONRY] 
++++
+
+[REACTION:E_BENCH] 
+ [NAME:Craft (E) bench piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large bench, the eastern end.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:CHAIR:NONE:INORGANIC:E_BENCH] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:S_BENCH] 
+ [NAME:Craft (S) bench piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large bench, the southern end.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:CHAIR:NONE:INORGANIC:S_BENCH] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:W_BENCH] 
+ [NAME:Craft (W) bench piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large bench, the western end.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:CHAIR:NONE:INORGANIC:W_BENCH] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:NS_BENCH] 
+ [NAME:Craft (NS) bench piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large bench, the northern-south middle part.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:CHAIR:NONE:INORGANIC:NS_BENCH] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:EW_BENCH] 
+ [NAME:Craft (EW) bench piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large bench, the east-west middle part.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:CHAIR:NONE:INORGANIC:EW_BENCH] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:NE_BENCH] 
+ [NAME:Craft (NE) bench piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large bench, the north-eastern corner.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:CHAIR:NONE:INORGANIC:NE_BENCH] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:SE_BENCH] 
+ [NAME:Craft (SE) bench piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large bench, the south-eastern corner.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:CHAIR:NONE:INORGANIC:SE_BENCH] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:SW_BENCH] 
+ [NAME:Craft (SW) bench piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large bench, the south-western corner.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:CHAIR:NONE:INORGANIC:SW_BENCH] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:NW_BENCH] 
+ [NAME:Craft (NW) bench piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large bench, the north-western corner.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:CHAIR:NONE:INORGANIC:NW_BENCH] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:NES_BENCH] 
+ [NAME:Craft (NES) bench piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large bench, the t-section going north, east and south.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:CHAIR:NONE:INORGANIC:NES_BENCH] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:ESW_BENCH] 
+ [NAME:Craft (ESW) bench piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large bench, the t-section going east, south and west.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:CHAIR:NONE:INORGANIC:ESW_BENCH] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:SWN_BENCH] 
+ [NAME:Craft (SWN) bench piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large bench, the t-section going north, south and west.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:CHAIR:NONE:INORGANIC:SWN_BENCH] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:WNE_BENCH] 
+ [NAME:Craft (WNE) bench piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large bench, the t-section going north, east and west.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:CHAIR:NONE:INORGANIC:WNE_BENCH] 
+ [SKILL:MASONRY] 
++++
+
+
+[REACTION:NESW_BENCH] 
+ [NAME:Craft (NESW) bench piece] 
+ [DESCRIPTION:Takes one boulder and makes a piece of a large bench, the four-way section.] 
+ [DESCRIPTION:] 
+ [DESCRIPTION:Uses masonry skill.] 
+~~~
+ [BUILDING:FURNITURE_SHOP:CUSTOM_NONE] 
+ [REAGENT:A:1:BOULDER:NONE:INORGANIC:NONE] 
+ [WORTHLESS_STONE_ONLY] 
+ [PRODUCT:100:1:CHAIR:NONE:INORGANIC:NESW_BENCH] 
+ [SKILL:MASONRY] 
++++
+
