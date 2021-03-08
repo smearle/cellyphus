@@ -579,7 +579,10 @@ function census(x, y) {
 
 window.onload = function() {
     Game.init();
-    }
+    window.addEventListener("click", function(e) {
+      document.getElementById("clickedCoords").innerHTML = Game.display.eventToPosition(e);
+    });
+}
 
 
 
