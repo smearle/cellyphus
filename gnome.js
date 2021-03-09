@@ -245,9 +245,12 @@ Player.prototype.handleEvent = function(e) {
         document.getElementById("clickedCoords").innerHTML = [x,y];
         var newX = this._x;
         var newY = this._y;
-        Game.grasshopper._x_t = x;
-        Game.grasshopper._y_t = y;
-        console.log("this coords: " + this._x + ", " + this._y);
+        if(x >= 0 && y >=0)
+        {
+            Game.grasshopper._x_t = x;
+            Game.grasshopper._y_t = y;
+            console.log("this coords: " + this._x + ", " + this._y);
+        }        
     }
     else //runs if button press
     {
@@ -364,7 +367,7 @@ Grasshopper.prototype.act = function() {
     astar.compute(this._x, this._y, pathCallback);
 
     path.shift();
-    if (path.length == 1 || path.length == 0) {
+    if (/*path.length == 1 ||*/ path.length == 0) {
 //      Game.engine.lock();
         displayText("You, grass, were eaten by a Grasshopper! Game over!");
     } 
