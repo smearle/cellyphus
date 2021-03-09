@@ -34,6 +34,10 @@ var Game = {
     hawk: null,
     ananas: null,
 
+    gameTicks: 0,
+    ticksPerDay: 3,
+    days: 0,
+
     init: function() {
         this.display = new ROT.Display(display_options);
         this.log_display = new ROT.Display({width:map_width, height:5})
@@ -48,7 +52,7 @@ var Game = {
         scheduler.add(this.player, true);
         //scheduler.add(this.mouse, true);
         scheduler.add(this.grasshopper, true);
-        //scheduler.add(this.snake, true);
+        scheduler.add(this.enemy, true);
         //scheduler.add(this.hawk, true);
 
         this.engine = new ROT.Engine(scheduler);
@@ -147,7 +151,9 @@ var Game = {
         //this.mouse = this._createBeing(Mouse, freeCells);
         //this.hawk = this._createBeing(Hawk, freeCells);
         this.grasshopper = this._createBeing(Grasshopper, freeCells);
-        //this.snake = this._createBeing(Snake, freeCells);
+        this.enemy = this._createBeing(Enemy, freeCells);
+
+        this.freeCells = freeCells;
     },
 
     _createBeing: function(what, freeCells) {
@@ -219,6 +225,10 @@ Player.prototype.getHunger = function() { return this.hunger; }
 Player.prototype.getThirst = function() { return this.thirst; }
 
 Player.prototype.act = function() {
+    Game.gameTicks += 1;
+    if(Game.gameTicks % Game.ticksPerDay == 0) {Game.days += 1;}
+
+
     Game.engine.lock();
     //window.addEventListener("click", this);
     window.addEventListener("click", this);
@@ -314,12 +324,14 @@ Player.prototype._checkBox = function() {
 
 
 var displayHUD = function() {
+    day_str = "Day: " + Game.days.toString().padStart(6, " ");
     health_str = "Health: " + Game.player.getHealth().toString().padStart(3, " ");
     hunger_str = "Hunger: " + Game.player.getHunger().toString().padStart(3, " ");
     thirst_str = "Thirst: " + Game.player.getThirst().toString().padStart(3, " ");
-    Game.log_display.draw(0, 0, health_str);
-    Game.log_display.drawText(0, 1, thirst_str);
-    Game.log_display.drawText(0, 2, hunger_str);
+    Game.log_display.drawText(0, 0, day_str);
+    Game.log_display.drawText(0, 1, health_str);
+    Game.log_display.drawText(0, 2, thirst_str);
+    Game.log_display.drawText(0, 3, hunger_str);
 }
 
 var Grasshopper = function(x, y) {
@@ -369,6 +381,53 @@ Grasshopper.prototype.act = function() {
 Grasshopper.prototype._draw = function() {
     Game.display.draw(this._x, this._y, "GG", "green");
 }
+
+var Enemy = function(x, y) {
+    this._x = x;
+    this._y = y;
+    this._draw();
+}
+
+Enemy.prototype.getSpeed = function() { return 100; }
+
+Enemy.prototype.act = function() {
+    
+    var x = Game.player.getX();
+    var y = Game.player.getY();
+
+    var astar = new ROT.Path.AStar(x, y, passableCallback, {topology:4});
+
+    var path = [];
+    var pathCallback = function(x, y) {
+        path.push([x, y]);
+    }
+    astar.compute(this._x, this._y, pathCallback);
+
+    path.shift();
+    if (path.length == 1 || path.length == 0) {
+//      Game.engine.lock();
+        //do text based combat here
+        
+
+        //remove enemy from game after player wins
+        //End game if player loses
+        //Game.scheduler.remove(Game.mouse)
+        //Game.mouse = null;
+    }
+    else {
+        x = path[0][0];
+        y = path[0][1];
+        Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
+        this._x = x;
+        this._y = y;
+        this._draw();
+    }
+}
+
+Enemy.prototype._draw = function() {
+    Game.display.draw(this._x, this._y, "SS", "blue");
+}
+
 
 /*
 var Mouse = function(x, y) {
@@ -421,51 +480,6 @@ Mouse.prototype._draw = function() {
     Game.display.draw(this._x, this._y, "mm", "grey");
 }
 
-var Snake = function(x, y) {
-    this._x = x;
-    this._y = y;
-    this._draw();
-}
-
-Snake.prototype.getSpeed = function() { return 100; }
-
-Snake.prototype.act = function() {
-    if (!Game.mouse) {
-        this._draw();
-        return
-    }
-    var x = Game.mouse._x;
-    var y = Game.mouse._y;
-
-    var astar = new ROT.Path.AStar(x, y, passableCallback, {topology:4});
-
-    var path = [];
-    var pathCallback = function(x, y) {
-        path.push([x, y]);
-    }
-    astar.compute(this._x, this._y, pathCallback);
-
-    path.shift();
-    if (path.length == 1 || path.length == 0) {
-//      Game.engine.lock();
-        displayText("Mouse captured by snake!");
-        Game.display.draw(Game.mouse._x, Game.mouse._y, Game.map[Game.mouse._x+","+ Game.mouse._y]);
-        Game.scheduler.remove(Game.mouse)
-        Game.mouse = null;
-    }
-    else {
-        x = path[0][0];
-        y = path[0][1];
-        Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
-        this._x = x;
-        this._y = y;
-        this._draw();
-    }
-}
-
-Snake.prototype._draw = function() {
-    Game.display.draw(this._x, this._y, "SS", "blue");
-}
 
 
 
@@ -480,13 +494,13 @@ var Hawk = function(x, y) {
 Hawk.prototype.getSpeed = function() { return 50; }
 
 Hawk.prototype.act = function() {
-    if (!Game.snake) {
+    if (!Game.enemy) {
         Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
         this._draw()
         return
     }
-    var x = Game.snake._x;
-    var y = Game.snake._y;
+    var x = Game.enemy._x;
+    var y = Game.enemy._y;
 
   //SHOW(Game.display.getContainer());
 
@@ -502,12 +516,12 @@ Hawk.prototype.act = function() {
     path.shift();
     if (path.length == 1 || path.length == 0) {
 //      Game.engine.lock();
-    //  alert("Snake captured by Hawk!");
+    //  alert("Enemy captured by Hawk!");
     //  var str = "Goodbye %c{red}cr%b{blue}u%b{}el %c{}world"
-        displayText("Snake captured by Hawk!");
-        Game.display.draw(Game.snake._x, Game.snake._y, Game.map[Game.snake._x+","+ Game.snake._y]);
-        Game.scheduler.remove(Game.snake);
-        Game.snake = null;
+        displayText("Enemy captured by Hawk!");
+        Game.display.draw(Game.enemy._x, Game.enemy._y, Game.map[Game.enemy._x+","+ Game.enemy._y]);
+        Game.scheduler.remove(Game.enemy);
+        Game.enemy = null;
     } 
     else {
         x = path[0][0];
