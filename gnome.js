@@ -420,6 +420,26 @@ Player.prototype.handleEvent = function(e) {
     }
     else 
     {
+        //runs if mouse click
+        if (typeof code === 'undefined')
+        {
+            var[x,y] = Game.display.eventToPosition(e);
+            document.getElementById("clickedCoords").innerHTML = [x,y];
+            var newX = this._x;
+            var newY = this._y;
+            if(x >= 0 && y >=0)
+            {
+                Game.grasshopper._x_t = x;
+                Game.grasshopper._y_t = y;
+                console.log("this coords: " + this._x + ", " + this._y);
+                if (getTile(x, y) == "..") {
+                    Game.grasshopper.building = true;
+                }
+            Game.grasshopper.wandering = false;
+            }
+        }
+        else //runs if button press
+        {
         Game.simulateGrass();
 
         var keyMap = {};
@@ -469,65 +489,10 @@ Player.prototype.handleEvent = function(e) {
                     this.thirst = Math.min(100, this.thirst + 25);
                 }
             }
-        //runs if mouse click
-        if (typeof code === 'undefined')
-        {
-            var[x,y] = Game.display.eventToPosition(e);
-            document.getElementById("clickedCoords").innerHTML = [x,y];
-            var newX = this._x;
-            var newY = this._y;
-            if(x >= 0 && y >=0)
-            {
-                Game.grasshopper._x_t = x;
-                Game.grasshopper._y_t = y;
-                console.log("this coords: " + this._x + ", " + this._y);
-                if (getTile(x, y) == "..") {
-                    Game.grasshopper.building = true;
-                }
-            Game.grasshopper.wandering = false;
-            }
         }
-        else //runs if button press
-        {
-            //console.log(code);
-            if (code == 13 || code == 32) {
-                this._checkBox();
-                return;
-            }
-            Game.simulateGrass();
 
-            var keyMap = {};
-            keyMap[38] = 0;
-            keyMap[33] = 1;
-            keyMap[39] = 2;
-            keyMap[34] = 3;
-            keyMap[40] = 4;
-            keyMap[35] = 5;
-            keyMap[37] = 6;
-            keyMap[36] = 7;
-
-            /* one of numpad directions? */
-            if (!(code in keyMap)) 
-            {   
-                //dont move if invalid keypress
-                var newX = this._x;
-                var newY = this._y;
-            }
-
-            else
-            {
-                /* is there a free space? */
-                var dir = ROT.DIRS[8][keyMap[code]];
-                var newX = this._x + dir[0];
-                var newY = this._y + dir[1];
-            }
-
-
-            var newKey = newX + "," + newY;
-            e.preventDefault();
-            if (!(newKey in Game.map)) { return; }
-        }
     }
+}
 
     
 
