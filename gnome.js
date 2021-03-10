@@ -4,6 +4,9 @@ var tileSet = document.createElement("img");
 
 tileSet.src = "tileset.png";
 
+const tile_chars = {
+    WALL: "|",
+}
 
 var display_options = {
     layout: "tile",
@@ -18,9 +21,10 @@ var display_options = {
         "**": [96, 0],
         "GG": [160, 0],
         "HH": [64, 0],
-        "SS": [96, 0],
+        "SS": [288, 0],
         "mm": [64, 0],
         "ww": [128, 0],
+        "|": [256, 0],
     },
     width: map_width,
     height: map_height,
@@ -296,6 +300,9 @@ Player.prototype.handleEvent = function(e) {
             Game.grasshopper._x_t = x;
             Game.grasshopper._y_t = y;
             console.log("this coords: " + this._x + ", " + this._y);
+            if (getTile(x, y) == "..") {
+            Game.grasshopper.building = true;
+            }
         }        
     }
     else //runs if button press
@@ -317,6 +324,10 @@ Player.prototype.handleEvent = function(e) {
         keyMap[37] = 6;
         keyMap[36] = 7;
 
+        keyMap[65] = 6;
+        keyMap[68] = 2;
+        keyMap[87] = 0;
+        keyMap[83] = 4;
         /* one of numpad directions? */
         if (!(code in keyMap)) 
         {   
@@ -431,6 +442,7 @@ var Grasshopper = function(x, y) {
     this._y = y;
     this._x_t = Game.player.getX();
     this._y_t = Game.player.getY();
+    this.building = false;  // if the grasshopper is on its way to build something
     this._draw();
     this._move_ticker = 0
 }
@@ -467,12 +479,14 @@ Grasshopper.prototype.act = function() {
 
     path.shift();
     if (/*path.length == 1 ||*/ path.length == 0) {
-//      Game.engine.lock();
-//      displayText("You, grass, were eaten by a Grasshopper! Game over!");
+        displayText("Frogman has arrived at their destination.");
         tile = getTile(x, y);
         if (tile == "**"){
             Game.player.wood += 1;
-            setTile(x, y, "..");
+            setTile(x, y, tile_chars.WALL);
+        }
+        else if (tile == ".." && this.building) {
+            setTile()
         }
     }
     else {
