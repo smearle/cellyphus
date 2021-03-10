@@ -220,7 +220,12 @@ var passableCallback = function(x, y) {
 //    return (x+","+y in Game.map);
       key = x+","+y;
       tile_type = Game.map[key];
-      return (tile_type != "ww");
+//    var passable = impassable.indexOf(tile_type) == -1;
+//    return passable;
+//    return ((tile_type != "ww") && (tile_type != "|"));
+      var passable = (tile_type != "ww");
+      console.log(passable);
+      return passable;
 }
 
 
