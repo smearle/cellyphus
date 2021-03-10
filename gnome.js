@@ -6,7 +6,14 @@ tileSet.src = "tileset.png";
 
 const tile_chars = {
     WALL: "|",
+    GRASS: "gg",
+    PLAYER: "@",
+    EMPTY: "..",
+    FROGMAN: "GG",
+    WATER: "ww",
 }
+
+impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN]
 
 var display_options = {
     layout: "tile",
@@ -48,6 +55,8 @@ var Game = {
 
     init: function() {
         this.display = new ROT.Display(display_options);
+        this.resource_display = new ROT.Display({width:map_width, height:8})
+        document.body.appendChild(this.resource_display.getContainer());
         this.log_display = new ROT.Display({width:map_width, height:8})
         document.body.appendChild(this.log_display.getContainer());
 
@@ -71,7 +80,7 @@ var Game = {
         this.scheduler = scheduler;
         //this.tick = 0;
         this.combatTarget = "None";
-        console.log(this.combatTarget);
+//      console.log(this.combatTarget);
         this.engine.start();
     },
 
@@ -217,9 +226,7 @@ var passableCallback = function(x, y) {
 
 
 var displayText = function(str) {
-    var empty = "                                                                                      "
-    Game.log_display.drawText(5, 6, empty);
-    Game.log_display.drawText(5, 6, str);
+    Game.log_display.drawText(0, 6, str);
 }
 
 var combatText = function(str) {
@@ -234,7 +241,7 @@ var Player = function(x, y) {
     this.health = 100;
     this.thirst = 100;
     this.hunger = 100;
-    this.seed = 0;
+    this.seeds = 0;
     this.wood = 0;
     this.meat = 0;
     this._draw();
@@ -270,7 +277,7 @@ Player.prototype.handleEvent = function(e) {
             case 49: //pressed 1: punch
                 Game.barbarian.health -= 7;
                 combatText("You landed your punch for 7 damage");
-                console.log("punch text");                
+//              console.log("punch text");
                 break;
             case 50: //pressed 2: kick
                 Game.barbarian.health -= 10;
@@ -280,7 +287,7 @@ Player.prototype.handleEvent = function(e) {
                 Game.barbarian.health -= 15;
                 combatText("You body slammed doing 15 damage");
         }
-        console.log(Game.barbarian.getHealth());
+//      console.log(Game.barbarian.getHealth());
 
 
         //deal damage to 
@@ -299,19 +306,15 @@ Player.prototype.handleEvent = function(e) {
         {
             Game.grasshopper._x_t = x;
             Game.grasshopper._y_t = y;
-            console.log("this coords: " + this._x + ", " + this._y);
+//          console.log("this coords: " + this._x + ", " + this._y);
             if (getTile(x, y) == "..") {
-            Game.grasshopper.building = true;
+                Game.grasshopper.building = true;
             }
-        }        
+            Game.grasshopper.wandering = false;
+        }
     }
     else //runs if button press
     {
-        console.log(code);
-        if (code == 13 || code == 32) {
-            this._checkBox();
-            return;
-        }
         Game.simulateGrass();
 
         var keyMap = {};
@@ -329,11 +332,21 @@ Player.prototype.handleEvent = function(e) {
         keyMap[87] = 0;
         keyMap[83] = 4;
         /* one of numpad directions? */
-        if (!(code in keyMap)) 
+        if (!(code in keyMap))
         {   
             //dont move if invalid keypress
             newX = this._x;
             newY = this._y;
+            if (code == 32) {
+                if (Game.player.seeds > 0) {
+                    Game.log_display.drawText(0, 0, "You plant seeds.");
+                    setTile(this._x, this._y, tile_chars.GRASS);
+                }
+                else {
+                    Game.log_display.drawText(0, 0, "You have no seeds to plant.");
+                }
+
+            }
         }
 
         else
@@ -343,11 +356,19 @@ Player.prototype.handleEvent = function(e) {
             console.log("dir: " + dir);
             var newX = this._x + dir[0];
             var newY = this._y + dir[1];
+            trg_tile = getTile(newX, newY);
+            if (impassable.indexOf(trg_tile) >= 0) {
+                newX = this._x;
+                newY = this._y;
+                if (trg_tile == tile_chars.WATER) {
+                    this.thirst = Math.min(100, this.thirst + 25);
+                }
+            }
         }
 
     
 
-        console.log("new x and y: " + newX + ", " + newY);
+//      console.log("new x and y: " + newX + ", " + newY);
         var newKey = newX + "," + newY;
         e.preventDefault();
         if (!(newKey in Game.map)) { return; }
@@ -372,10 +393,14 @@ Player.prototype.handleEvent = function(e) {
     this.thirst = Math.max(this.thirst-1, 0);
     curr_tile = Game.map[this._x+","+this._y];
     if (curr_tile == "ww") {
-        this.thirst = Math.min(100, this.thirst + 25);
         }
     else if (curr_tile == "gg") {
+        Game.log_display.drawText(0, 0, "You eat grass.")
         this.hunger = Math.min(100, this.hunger + 25);
+        setTile(this._x, this._y, "..");
+        drawTile(this._x, this._y);
+        this.seeds += 1;
+
     }
     Game.engine.unlock();
 }
@@ -384,17 +409,8 @@ Player.prototype._draw = function() {
     Game.display.draw(this._x, this._y, "@", "#ff0");
 }
 
-Player.prototype._checkBox = function() {
-    var key = this._x + "," + this._y;
-    if (Game.map[key] != "*") {
-        displayText("There is no box here!");
-    } else if (key == Game.ananas) {
-        displayText("Hooray! You found an ananas and won this game.");
-        Game.engine.lock();
-        window.removeEventListener("keydown", this);
-    } else {
-        displayText("This box is empty :-(");
-    }
+function drawTile(x, y) {
+    Game.display.draw(x, y, getTile(x, y));
 }
 
 
@@ -404,17 +420,16 @@ var displayHUD = function() {
     health_str = "Health: " + Game.player.getHealth().toString().padStart(3, " ");
     hunger_str = "Hunger: " + Game.player.getHunger().toString().padStart(3, " ");
     thirst_str = "Thirst: " + Game.player.getThirst().toString().padStart(3, " ");
-    seed_str = "Seeds: " + Game.player.seed.toString().padStart(3, " ");
+    seed_str = "Seeds: " + Game.player.seeds.toString().padStart(3, " ");
     wood_str = "Wood:  " + Game.player.wood.toString().padStart(3, " ");
     meat_str = "Meat:  " + Game.player.meat.toString().padStart(3, " ");
-    Game.log_display.drawText(0, 0, day_str);
-    Game.log_display.drawText(0, 2, health_str);
-    Game.log_display.drawText(0, 3, thirst_str);
-    Game.log_display.drawText(0, 4, hunger_str);
-
-    Game.log_display.drawText(15, 2, seed_str);
-    Game.log_display.drawText(15, 3, wood_str);
-    Game.log_display.drawText(15, 4, meat_str);
+    Game.resource_display.drawText(0, 0, day_str);
+    Game.resource_display.drawText(0, 2, health_str);
+    Game.resource_display.drawText(0, 3, thirst_str);
+    Game.resource_display.drawText(0, 4, hunger_str);
+    Game.resource_display.drawText(15, 2, seed_str);
+    Game.resource_display.drawText(15, 3, wood_str);
+    Game.resource_display.drawText(15, 4, meat_str);
     //combat info
     if (Game.combatTarget == "None") {
         target_str = "Combat: " + Game.combatTarget.padStart(8, " ");
@@ -459,6 +474,24 @@ function setTile(x, y, char) {
     Game.map[key] = char;
 }
 
+function getWanderTile(x, y) {
+    var dirs = [[0, 1], [1, 0], [-1,0], [0,-1]]
+    for (i=0; i<dirs.length; i++) {
+        console.log(x, y);
+        var dx;
+        var dy;
+        [dx, dy] = dirs[i];
+        console.log(dx, dy);
+        var x1 = x + dx
+        var y1 = y + dy;
+        if (!(impassable.indexOf(getTile(x1, y1)))) {
+            return x1, y1;
+        }
+    }
+    return [x, y];
+
+}
+
 Grasshopper.prototype.act = function() {
     var x = this._x_t;
     var y = this._y_t;
@@ -469,32 +502,57 @@ Grasshopper.prototype.act = function() {
     }
     this._move_ticker = 0;
 
-    var astar = new ROT.Path.AStar(x, y, passableCallback, {topology:4});
-
-    var path = [];
-    var pathCallback = function(x, y) {
-        path.push([x, y]);
+    // Wander about
+    if (this.wandering) {
+        // Randomly move to a valid tile
+        var newX;
+        var newY;
+        [newX, newY] = getWanderTile(this._x, this._y);
+        drawTile(this._x, this._y);
+        console.log(newX, newY);
+        this._x = newX;
+        this._y = newY;
     }
-    astar.compute(this._x, this._y, pathCallback);
 
-    path.shift();
-    if (/*path.length == 1 ||*/ path.length == 0) {
-        displayText("Frogman has arrived at their destination.");
-        tile = getTile(x, y);
-        if (tile == "**"){
-            Game.player.wood += 1;
-            setTile(x, y, tile_chars.WALL);
-        }
-        else if (tile == ".." && this.building) {
-            setTile()
-        }
-    }
+    // Head to some target
     else {
-        x = path[0][0];
-        y = path[0][1];
-        Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
-        this._x = x;
-        this._y = y;
+        var astar = new ROT.Path.AStar(x, y, passableCallback, {topology:4});
+
+        var path = [];
+        var pathCallback = function(x, y) {
+            path.push([x, y]);
+        }
+        astar.compute(this._x, this._y, pathCallback);
+
+        path.shift();
+        if (/*path.length == 1 ||*/ path.length == 0) {
+            Game.log_display.drawText(0, 4, "Frogman has arrived at their destination.");
+            tile = getTile(x, y);
+            if (tile == "**"){
+                Game.player.wood += 1;
+                setTile(x, y, tile_chars.EMPTY);
+            }
+            else if (tile == ".." && this.building) {
+                if (Game.player.wood > 0) {
+                    displayText("Frogman builds the wall.");
+                    setTile(x, y, tile_chars.WALL);
+                    drawTile(x, y);
+                    Game.player.wood -= 1;
+                }
+                else {
+                    displayText("Cannot build wall without wood.");
+                }
+                this.building = false;
+            }
+            this.wandering = true;
+        }
+        else {
+            x = path[0][0];
+            y = path[0][1];
+            Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
+            this._x = x;
+            this._y = y;
+        }
     }
     this._draw();
 }
