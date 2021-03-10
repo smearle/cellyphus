@@ -84,6 +84,9 @@ var Game = {
     },
 
     simulateGrass: function() {
+      if (!(Game.gameTicks % 5 == 0)) {
+        return;
+      }
       live = [];
       dead = [];
       for (var iy = map_width - 1; iy >= 0; iy--) {
@@ -223,7 +226,7 @@ var passableCallback = function(x, y) {
 //    return passable;
 //    return ((tile_type != "ww") && (tile_type != "|"));
       var passable = (tile_type != "ww");
-      console.log(passable);
+//    console.log(passable);
       return passable;
 }
 
@@ -344,7 +347,7 @@ Player.prototype.handleEvent = function(e) {
     if (Game.combatTarget != "None") {
         //freeze movement
         rand = Math.floor(Math.random() * 101);
-        console.log("random: " + rand);
+//      console.log("random: " + rand);
 
         //add attack for number press
         switch(code) {
@@ -431,7 +434,7 @@ Player.prototype.handleEvent = function(e) {
             {
                 Game.grasshopper._x_t = x;
                 Game.grasshopper._y_t = y;
-                console.log("this coords: " + this._x + ", " + this._y);
+//              console.log("this coords: " + this._x + ", " + this._y);
                 if (getTile(x, y) == "..") {
                     Game.grasshopper.building = true;
                 }
@@ -465,7 +468,10 @@ Player.prototype.handleEvent = function(e) {
             if (code == 32) {
                 if (Game.player.seeds > 0) {
                     Game.log_display.drawText(0, 0, "You plant seeds.");
-                    setTile(this._x, this._y, tile_chars.GRASS);
+                    var[seed_x, seed_y] = getPlantTile(this._x, this._y);
+//                  var[seed_x, seed_y] = [this._x, this._y];
+                    setTile(seed_x, seed_y, tile_chars.GRASS);
+                    drawTile(seed_x, seed_y);
                 }
                 else {
                     Game.log_display.drawText(0, 0, "You have no seeds to plant.");
@@ -478,7 +484,7 @@ Player.prototype.handleEvent = function(e) {
         {
             /* is there a free space? */
             var dir = ROT.DIRS[8][keyMap[code]];
-            console.log("dir: " + dir);
+//          console.log("dir: " + dir);
             var newX = this._x + dir[0];
             var newY = this._y + dir[1];
             trg_tile = getTile(newX, newY);
@@ -502,7 +508,6 @@ Player.prototype.handleEvent = function(e) {
     // Move the player
     this._x = newX;
     this._y = newY;
-    this._draw();
     window.removeEventListener("keydown", this);
     
     displayHUD();
@@ -523,6 +528,7 @@ Player.prototype.handleEvent = function(e) {
         this.seeds += 1;
 
     }
+    this._draw();
     Game.engine.unlock();
 }
 
@@ -598,20 +604,41 @@ function setTile(x, y, char) {
 function getWanderTile(x, y) {
     var dirs = [[0, 1], [1, 0], [-1,0], [0,-1]]
     for (i=0; i<dirs.length; i++) {
-        console.log(x, y);
+//      console.log(x, y);
         var dx;
         var dy;
-        [dx, dy] = dirs[i];
-        console.log(dx, dy);
+        j = Math.floor(Math.random() * dirs.length);
+        [dx, dy] = dirs[j];
+//      console.log(dx, dy);
         var x1 = x + dx
         var y1 = y + dy;
-        if (!(impassable.indexOf(getTile(x1, y1)))) {
-            return x1, y1;
+        if (!(impassable.indexOf(getTile(x1, y1)) >= 0)) {
+            return [x1, y1];
         }
     }
     return [x, y];
 
 }
+
+
+function getPlantTile(x, y) {
+    var dirs = [[0, 1], [1, 0], [-1,0], [0,-1]]
+    for (i=0; i<dirs.length; i++) {
+//      console.log(x, y);
+        var dx;
+        var dy;
+        [dx, dy] = dirs[i];
+//      console.log(dx, dy);
+        var x1 = x + dx
+        var y1 = y + dy;
+        var tile_type = getTile(x1, y1);
+        if (!(impassable.indexOf(tile_type) >= 0) && !(tile_type == tile_chars.GRASS)) {
+            return [x1, y1];
+        }
+    }
+    return [x, y];
+}
+
 
 Grasshopper.prototype.act = function() {
     var x = this._x_t;
@@ -633,6 +660,7 @@ Grasshopper.prototype.act = function() {
         console.log(newX, newY);
         this._x = newX;
         this._y = newY;
+        Game.log_display.drawText(0, 4, "Idle Frogman wanders.");
     }
 
     // Head to some target
@@ -650,7 +678,7 @@ Grasshopper.prototype.act = function() {
             Game.log_display.drawText(0, 4, "Frogman has arrived at their destination.");
             tile = getTile(x, y);
             if (tile == "**"){
-                Game.player.wood += 1;
+                Game.player.wood += 5;
                 setTile(x, y, tile_chars.EMPTY);
             }
             else if (tile == ".." && this.building) {
@@ -713,11 +741,11 @@ Barbarian.prototype.act = function() {
         //do text based combat here
         
         //attack player
-        console.log("Barbarian attack, health: " + this.getHealth());
+//      console.log("Barbarian attack, health: " + this.getHealth());
         if (this.getHealth() > 0)
         {
             var atk = Math.floor(Math.random() * this.power) + 1; //random damage between 0 to power
-            console.log("attack: " + atk);
+//          console.log("attack: " + atk);
             Game.player.health -= atk;
             
             combatTextEnemy("The Barbarian bashed you for " + atk + " damage!");
