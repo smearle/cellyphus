@@ -16,7 +16,7 @@ var display_options = {
         "..": [32, 0],
         "gg": [64, 0],
         "**": [96, 0],
-        "GG": [128, 0],
+        "GG": [160, 0],
         "HH": [64, 0],
         "SS": [96, 0],
         "mm": [64, 0],
@@ -230,6 +230,9 @@ var Player = function(x, y) {
     this.health = 100;
     this.thirst = 100;
     this.hunger = 100;
+    this.seed = 0;
+    this.wood = 0;
+    this.meat = 0;
     this._draw();
 }
 
@@ -390,11 +393,17 @@ var displayHUD = function() {
     health_str = "Health: " + Game.player.getHealth().toString().padStart(3, " ");
     hunger_str = "Hunger: " + Game.player.getHunger().toString().padStart(3, " ");
     thirst_str = "Thirst: " + Game.player.getThirst().toString().padStart(3, " ");
+    seed_str = "Seeds: " + Game.player.seed.toString().padStart(3, " ");
+    wood_str = "Wood:  " + Game.player.wood.toString().padStart(3, " ");
+    meat_str = "Meat:  " + Game.player.meat.toString().padStart(3, " ");
     Game.log_display.drawText(0, 0, day_str);
     Game.log_display.drawText(0, 2, health_str);
     Game.log_display.drawText(0, 3, thirst_str);
     Game.log_display.drawText(0, 4, hunger_str);
 
+    Game.log_display.drawText(15, 2, seed_str);
+    Game.log_display.drawText(15, 3, wood_str);
+    Game.log_display.drawText(15, 4, meat_str);
     //combat info
     if (Game.combatTarget == "None") {
         target_str = "Combat: " + Game.combatTarget.padStart(8, " ");
@@ -428,6 +437,16 @@ var Grasshopper = function(x, y) {
 
 Grasshopper.prototype.getSpeed = function() { return 100; }
 
+function getTile(x, y) {
+    key = x+","+y;
+    return Game.map[key]
+}
+
+function setTile(x, y, char) {
+    key = x+","+y;
+    Game.map[key] = char;
+}
+
 Grasshopper.prototype.act = function() {
     var x = this._x_t;
     var y = this._y_t;
@@ -449,8 +468,13 @@ Grasshopper.prototype.act = function() {
     path.shift();
     if (/*path.length == 1 ||*/ path.length == 0) {
 //      Game.engine.lock();
-        displayText("You, grass, were eaten by a Grasshopper! Game over!");
-    } 
+//      displayText("You, grass, were eaten by a Grasshopper! Game over!");
+        tile = getTile(x, y);
+        if (tile == "**"){
+            Game.player.wood += 1;
+            setTile(x, y, "..");
+        }
+    }
     else {
         x = path[0][0];
         y = path[0][1];

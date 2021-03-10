@@ -6,6 +6,7 @@ misc = cv2.imread("imgs/Dwarf Fortress/data/art/_Meph_32x32.png", cv2.IMREAD_UNC
 dec = cv2.imread("imgs/Dwarf Fortress/data/art/_Meph_decorations.png", cv2.IMREAD_UNCHANGED)
 #dec_2 = cv2.imread("imgs/Dwarf Fortress/data/art/_Meph_decorations_2.png", cv2.IMREAD_UNCHANGED)
 water = cv2.imread("imgs/water.png", cv2.IMREAD_UNCHANGED)
+amphibians = cv2.imread("imgs/Dwarf Fortress/raw/graphics/amphibians.png", cv2.IMREAD_UNCHANGED)
 
 w = 32
 
@@ -15,8 +16,9 @@ shrub = misc[4*w:5*w, 6*w:7*w]
 tree = misc[-7*w:-6*w, 12*w:13*w]
 #water_tiles = dec_2[-2*w:-1*w, 10*w:11*w]
 water = water[1*w:2*w, 1*w:2*w]
+frogman = amphibians[0*w:1*w, 0*w:1*w]
 
-tiles = (player, grass, shrub, tree, water)
+tiles = (player, grass, shrub, tree, water, frogman)
 v = np.concatenate(tiles, axis=1)
 
 cv2.imwrite('tileset.png', v)
