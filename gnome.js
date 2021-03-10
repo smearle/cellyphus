@@ -11,6 +11,7 @@ const tile_chars = {
     EMPTY: "..",
     FROGMAN: "GG",
     WATER: "ww",
+    TREE: "**",
 }
 
 impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN]
@@ -88,13 +89,18 @@ var Game = {
         return;
       }
       live = [];
+      trees = [];
       dead = [];
       for (var iy = map_width - 1; iy >= 0; iy--) {
         for (var ix = map_height - 1; ix >= 0; ix--) {
             var key = ix+","+iy;
+            // check for grass on valid tiles
+            cur_tile = getTile(ix, iy);
             if (this.map[key] == "gg" || this.map[key] == "..") {
 
-                if (census(ix, iy)) {
+                next_state = census(ix, iy);
+                console.log(next_state);
+                if (next_state == 1) {
     //          live.push(key);
                     live.push([ix, iy]);
     //            live.push({
@@ -102,8 +108,16 @@ var Game = {
     //              y: iy,
     //            });
                 }
+                else if (next_state == 2) {
+                    trees.push([ix, iy]);
+                }
                 else {
-                  dead.push([ix, iy]);
+                    if (cur_tile == tile_chars.TREE && Math.Random() < 0.2) {
+                        dead.push([ix, iy]);
+                    }
+                    else {
+                         dead.push([ix, iy]);
+                    }
                 }
             }
           }
@@ -113,6 +127,11 @@ var Game = {
               var key = x+","+y;
               this.map[key] = "gg";
               this.display.draw(x, y, this.map[key]);
+        }
+        for (var i = 0; i < trees.length; i++) {
+              [x, y] = trees[i];
+              setTile(x, y, tile_chars.TREE);
+              drawTile(x, y);
         }
         for (var i = 0; i < dead.length; i++) {
             [x, y] = dead[i];
@@ -127,10 +146,10 @@ var Game = {
         var freeCells = [];
         var map = new ROT.Map.Cellular(map_width, map_height, {
             born: [4, 5, 6, 7, 8],
-            survive: [3, 4, 5],
+            survive: [2, 3, 4, 5],
         })
         map.randomize(0.9);
-        for (var i = 9; i>=0; i--) {
+        for (var i = 10; i>=0; i--) {
             map.create(i ? null: this.display.DEBUG);
         }
         for (x=0; x<map_width; x++) {
@@ -173,7 +192,7 @@ var Game = {
         this._drawWholeMap();
 
         this.player = this._createBeing(Player, freeCells);
-        //this.mouse = this._createBeing(Mouse, freeCells);
+        //this.mouse = this._createBeing(Cow, freeCells);
         //this.hawk = this._createBeing(Hawk, freeCells);
         this.grasshopper = this._createBeing(Grasshopper, freeCells);
         this.barbarian = this._createBeing(Barbarian, freeCells);
@@ -200,7 +219,7 @@ var Game = {
     },
 
     _generateGrass: function(freeCells) {
-        for (var i=0;i<200;i++) {
+        for (var i=0;i<130;i++) {
             var index = Math.floor(ROT.RNG.getUniform() * freeCells.length);
             var key = freeCells.splice(index, 1)[0];
             this.map[key] = "gg";
@@ -222,15 +241,27 @@ var passableCallback = function(x, y) {
 //    return (x+","+y in Game.map);
       key = x+","+y;
       tile_type = Game.map[key];
-//    var passable = impassable.indexOf(tile_type) == -1;
+      var passable = (!(impassable.indexOf(tile_type) >= 0));
 //    return passable;
 //    return ((tile_type != "ww") && (tile_type != "|"));
-      var passable = (tile_type != "ww");
+//    var passable = (tile_type != "ww");
 //    console.log(passable);
       return passable;
 }
 
 
+var frogPassableCallback = function(x, y) {
+//    return (x+","+y in Game.map);
+      key = x+","+y;
+      tile_type = Game.map[key];
+      var passable = ((!(impassable.indexOf(tile_type)) >= 0) || (tile_type == tile_chars.WATER));
+    //var passable = (!(impassable.indexOf(tile_type)));
+//    return passable;
+//    return ((tile_type != "ww") && (tile_type != "|"));
+//    var passable = (tile_type != "ww");
+//    console.log(passable);
+      return passable;
+}
 
 var displayText = function(str) {
     Game.log_display.drawText(0, 6, str);
@@ -612,7 +643,8 @@ function getWanderTile(x, y) {
 //      console.log(dx, dy);
         var x1 = x + dx
         var y1 = y + dy;
-        if (!(impassable.indexOf(getTile(x1, y1)) >= 0)) {
+        tile_type = getTile(x1, y1);
+        if (!(impassable.indexOf(tile_type) >= 0) || (tile_type == tile_chars.WATER)) {
             return [x1, y1];
         }
     }
@@ -665,7 +697,7 @@ Grasshopper.prototype.act = function() {
 
     // Head to some target
     else {
-        var astar = new ROT.Path.AStar(x, y, passableCallback, {topology:4});
+        var astar = new ROT.Path.AStar(x, y, frogPassableCallback, {topology:4});
 
         var path = [];
         var pathCallback = function(x, y) {
@@ -674,14 +706,9 @@ Grasshopper.prototype.act = function() {
         astar.compute(this._x, this._y, pathCallback);
 
         path.shift();
-        if (/*path.length == 1 ||*/ path.length == 0) {
-            Game.log_display.drawText(0, 4, "Frogman has arrived at their destination.");
-            tile = getTile(x, y);
-            if (tile == "**"){
-                Game.player.wood += 5;
-                setTile(x, y, tile_chars.EMPTY);
-            }
-            else if (tile == ".." && this.building) {
+        tile = getTile(x, y);
+        if (path.length == 1) {
+            if (tile == ".." && this.building) {
                 if (Game.player.wood > 0) {
                     displayText("Frogman builds the wall.");
                     setTile(x, y, tile_chars.WALL);
@@ -692,6 +719,14 @@ Grasshopper.prototype.act = function() {
                     displayText("Cannot build wall without wood.");
                 }
                 this.building = false;
+            this.wandering = true;
+            }
+        }
+        if (/*path.length == 1 ||*/ path.length == 0) {
+            Game.log_display.drawText(0, 4, "Frogman has arrived at their destination.");
+            if (tile == "**"){
+                Game.player.wood += 5;
+                setTile(x, y, tile_chars.EMPTY);
             }
             this.wandering = true;
         }
@@ -736,25 +771,30 @@ Barbarian.prototype.act = function() {
 
     path.shift();
     if (path.length == 1 || path.length == 0) {
-        Game.combatTarget = "Barbarian";
-//      Game.engine.lock();
-        //do text based combat here
-        
-        //attack player
-//      console.log("Barbarian attack, health: " + this.getHealth());
-        if (this.getHealth() > 0)
-        {
-            var atk = Math.floor(Math.random() * this.power) + 1; //random damage between 0 to power
-//          console.log("attack: " + atk);
-            Game.player.health -= atk;
-            
-            combatTextEnemy("The Barbarian bashed you for " + atk + " damage!");
+        if (Math.abs(this._x - x) > 1 || Math.abs(this._y - y) > 1) {
+            this._draw();
         }
+        else {
+            Game.combatTarget = "Barbarian";
+    //      Game.engine.lock();
+            //do text based combat here
 
-        //remove barbarian from game after player wins
-        //End game if player loses
-        //Game.scheduler.remove(Game.mouse)
-        //Game.mouse = null;
+            //attack player
+    //      console.log("Barbarian attack, health: " + this.getHealth());
+            if (this.getHealth() > 0)
+            {
+                var atk = Math.floor(Math.random() * this.power) + 1; //random damage between 0 to power
+    //          console.log("attack: " + atk);
+                Game.player.health -= atk;
+
+                combatTextEnemy("The Barbarian bashed you for " + atk + " damage!");
+            }
+
+            //remove barbarian from game after player wins
+            //End game if player loses
+            //Game.scheduler.remove(Game.mouse)
+            //Game.mouse = null;
+        }
     }
     else {
         if (Game.combatTarget == "Barbarian") {Game.combatTarget = "None";}
@@ -773,59 +813,37 @@ Barbarian.prototype._draw = function() {
 }
 
 
-/*
-var Mouse = function(x, y) {
+var Cow = function(x, y) {
     this._x = x;
     this._y = y;
+    this.wandering = true;
     this._draw();
 }
 
-Mouse.prototype.getSpeed = function() { return 100; }
+Cow.prototype.getSpeed = function() { return 100; }
 
-Mouse.prototype.act = function() {
-    if (!Game.grasshopper) {
-        this._draw();
-        return
+Cow.prototype.act = function() {
+    // Wander about
+    if (this.wandering) {
+        // Randomly move to a valid tile
+        var newX;
+        var newY;
+        [newX, newY] = getWanderTile(this._x, this._y);
+        drawTile(this._x, this._y);
+        console.log(newX, newY);
+        this._x = newX;
+        this._y = newY;
     }
 
-    var x = Game.grasshopper._x;
-    var y = Game.grasshopper._y;
-
-    var astar = new ROT.Path.AStar(x, y, passableCallback, {topology:4});
-
-    var path = [];
-    var pathCallback = function(x, y) {
-        path.push([x, y]);
-    }
-    astar.compute(this._x, this._y, pathCallback);
-
-    path.shift();
-    if (path.length == 1 || path.length == 0) {
-    //  Game.engine.lock();
-        displayText("Grasshopper captured by Mouse!");
-        Game.display.draw(Game.grasshopper._x, Game.grasshopper._y, Game.map[Game.grasshopper._x+","+ Game.grasshopper._y]);
-        Game.scheduler.remove(Game.grasshopper);
-        Game.grasshopper = null;
-    }
-    else if (path.length == 0)
-    {
-    }
-    else {
-        x = path[0][0];
-        y = path[0][1];
-        Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
-        this._x = x;
-        this._y = y;
-        this._draw();
-    }
 }
 
-Mouse.prototype._draw = function() {
+Cow.prototype._draw = function() {
     Game.display.draw(this._x, this._y, "mm", "grey");
 }
 
 
 
+/*
 
 
 
@@ -893,7 +911,7 @@ function coinFlip() {
 function isLive(x, y) {
   var key = x+","+y;
   var cell = Game.map[key];
-  return (cell == "gg") ? true : false;
+  return (cell == "gg" || cell == tile_chars.TREE) ? true : false;
 }
 
 function getNeighbors(x, y) {
@@ -941,21 +959,29 @@ function isBorn(c) {
   return (c == 3);
 }
 
+function isSpawnTree(c) {
+  return (c == 3 && Math.random() < 0.01);
+}
+
 function census(x, y) {
   c = getNeighbors(x, y);
-  underPopulated = healthy = overPopulated = born = false;
+  underPopulated = healthy = overPopulated = born = spawn_tree = false;
   if (isLive(x, y)) {
     underPopulated = isUnderPopulated(c);
     healthy = isHealthy(c);
     overPopulated = isOverPopulated(c);
+    spawn_tree = isSpawnTree(c);
   } else {
     born = isBorn(c);
   }
   if (underPopulated || overPopulated) {
-    return false;
+    return 0;
+  }
+  if (spawn_tree) {
+    return 2;
   }
   if (healthy || born) {
-    return true;
+    return 1;
   }
 }
 
