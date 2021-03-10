@@ -1,7 +1,9 @@
 var map_width = 40;
 var map_height = 40;
 var tileSet = document.createElement("img");
+
 tileSet.src = "tileset.png";
+
 
 var display_options = {
     layout: "tile",
@@ -16,7 +18,7 @@ var display_options = {
         "**": [96, 0],
         "GG": [128, 0],
         "HH": [64, 0],
-        "SS": [64, 0],
+        "SS": [96, 0],
         "mm": [64, 0],
         "ww": [128, 0],
     },
@@ -37,11 +39,17 @@ var Game = {
     gameTicks: 0,
     ticksPerDay: 3,
     days: 0,
+    //combatSubjects: {"None": 1, "Barbarian": 2},
+    combatTarget: null,
 
     init: function() {
         this.display = new ROT.Display(display_options);
-        this.log_display = new ROT.Display({width:map_width, height:5})
+        this.log_display = new ROT.Display({width:map_width, height:8})
         document.body.appendChild(this.log_display.getContainer());
+
+        this.log_combat = new ROT.Display({width:map_width, height:8})
+        document.body.appendChild(this.log_combat.getContainer());
+
         const div = document.createElement("div");
         document.body.appendChild(div);
         document.body.appendChild(this.display.getContainer());
@@ -52,12 +60,14 @@ var Game = {
         scheduler.add(this.player, true);
         //scheduler.add(this.mouse, true);
         scheduler.add(this.grasshopper, true);
-        scheduler.add(this.enemy, true);
+        scheduler.add(this.barbarian, true);
         //scheduler.add(this.hawk, true);
 
         this.engine = new ROT.Engine(scheduler);
         this.scheduler = scheduler;
-        this.tick = 0;
+        //this.tick = 0;
+        this.combatTarget = "None";
+        console.log(this.combatTarget);
         this.engine.start();
     },
 
@@ -151,7 +161,7 @@ var Game = {
         //this.mouse = this._createBeing(Mouse, freeCells);
         //this.hawk = this._createBeing(Hawk, freeCells);
         this.grasshopper = this._createBeing(Grasshopper, freeCells);
-        this.enemy = this._createBeing(Enemy, freeCells);
+        this.barbarian = this._createBeing(Barbarian, freeCells);
 
         this.freeCells = freeCells;
     },
@@ -204,8 +214,14 @@ var passableCallback = function(x, y) {
 
 var displayText = function(str) {
     var empty = "                                                                                      "
-    Game.log_display.drawText(5, 4, empty);
-    Game.log_display.drawText(5, 4, str);
+    Game.log_display.drawText(5, 6, empty);
+    Game.log_display.drawText(5, 6, str);
+}
+
+var combatText = function(str) {
+    var empty = "                                                                                      "
+    Game.log_combat.drawText(5, 6, empty);
+    Game.log_combat.drawText(5, 6, str);
 }
 
 var Player = function(x, y) {
@@ -226,6 +242,7 @@ Player.prototype.getThirst = function() { return this.thirst; }
 
 Player.prototype.act = function() {
     Game.gameTicks += 1;
+
     if(Game.gameTicks % Game.ticksPerDay == 0) {Game.days += 1;}
 
 
@@ -237,6 +254,32 @@ Player.prototype.act = function() {
 
 Player.prototype.handleEvent = function(e) {
     var code = e.keyCode;
+
+    if (Game.combatTarget != "None") {
+        //freeze movement
+
+        //add attack for number press
+        switch(code) {
+            case 49: //pressed 1: punch
+                Game.barbarian.health -= 7;
+                combatText("You landed your punch for 7 damage");
+                console.log("punch text");                
+                break;
+            case 50: //pressed 2: kick
+                Game.barbarian.health -= 10;
+                combatText("You kicked hard doing 10 damage");
+                break;
+            case 51: //pressed 3: slam
+                Game.barbarian.health -= 15;
+                combatText("You body slammed doing 15 damage");
+        }
+        console.log(Game.barbarian.getHealth());
+
+
+        //deal damage to 
+
+        //add attack for enemy
+    }
 
     //runs if mouse click
     if (typeof code === 'undefined')
@@ -254,6 +297,7 @@ Player.prototype.handleEvent = function(e) {
     }
     else //runs if button press
     {
+        console.log(code);
         if (code == 13 || code == 32) {
             this._checkBox();
             return;
@@ -271,12 +315,25 @@ Player.prototype.handleEvent = function(e) {
         keyMap[36] = 7;
 
         /* one of numpad directions? */
-        if (!(code in keyMap)) { return; }
+        if (!(code in keyMap)) 
+        {   
+            //dont move if invalid keypress
+            newX = this._x;
+            newY = this._y;
+        }
 
-        /* is there a free space? */
-        var dir = ROT.DIRS[8][keyMap[code]];
-        var newX = this._x + dir[0];
-        var newY = this._y + dir[1];
+        else
+        {
+            /* is there a free space? */
+            var dir = ROT.DIRS[8][keyMap[code]];
+            console.log("dir: " + dir);
+            var newX = this._x + dir[0];
+            var newY = this._y + dir[1];
+        }
+
+    
+
+        console.log("new x and y: " + newX + ", " + newY);
         var newKey = newX + "," + newY;
         e.preventDefault();
         if (!(newKey in Game.map)) { return; }
@@ -291,8 +348,9 @@ Player.prototype.handleEvent = function(e) {
     this._draw();
     window.removeEventListener("keydown", this);
     Game.log_display.clear();
+    Game.log_combat.clear();
     displayHUD();
-    Game.tick ++;
+    //Game.tick ++;
     if (this.hunger == 0 && this.thirst == 0) {
         this.health--;
     }
@@ -327,14 +385,36 @@ Player.prototype._checkBox = function() {
 
 
 var displayHUD = function() {
+    //general player info
     day_str = "Day: " + Game.days.toString().padStart(6, " ");
     health_str = "Health: " + Game.player.getHealth().toString().padStart(3, " ");
     hunger_str = "Hunger: " + Game.player.getHunger().toString().padStart(3, " ");
     thirst_str = "Thirst: " + Game.player.getThirst().toString().padStart(3, " ");
     Game.log_display.drawText(0, 0, day_str);
-    Game.log_display.drawText(0, 1, health_str);
-    Game.log_display.drawText(0, 2, thirst_str);
-    Game.log_display.drawText(0, 3, hunger_str);
+    Game.log_display.drawText(0, 2, health_str);
+    Game.log_display.drawText(0, 3, thirst_str);
+    Game.log_display.drawText(0, 4, hunger_str);
+
+    //combat info
+    if (Game.combatTarget == "None") {
+        target_str = "Combat: " + Game.combatTarget.padStart(8, " ");
+        Game.log_combat.drawText(0, 0, target_str);
+    }
+    else if (Game.combatTarget == "Barbarian") {
+        target_str = "Combat: " + Game.combatTarget.padStart(10, " ") + "  " + Game.barbarian.getHealth() + "HP";
+        punch_str = "1.(7atk) Punch: " + Game.player.getHealth().toString().padStart(7, " ") + "%";
+        kick_str = "2.(10atk)Kick: " + Game.player.getHunger().toString().padStart(8, " ") + "%";
+        slam_str = "3.(15atk)Body Slam: " + Game.player.getHunger().toString().padStart(3, " ") + "%";
+
+        //work on these
+        Game.log_combat.drawText(0, 0, target_str);
+        Game.log_combat.drawText(0, 2, punch_str);
+        Game.log_combat.drawText(0, 3, kick_str);
+        Game.log_combat.drawText(0, 4, slam_str);
+    }
+
+    
+    
 }
 
 var Grasshopper = function(x, y) {
@@ -385,15 +465,17 @@ Grasshopper.prototype._draw = function() {
     Game.display.draw(this._x, this._y, "GG", "green");
 }
 
-var Enemy = function(x, y) {
+var Barbarian = function(x, y) {
     this._x = x;
     this._y = y;
+    this.health = 100;
     this._draw();
 }
 
-Enemy.prototype.getSpeed = function() { return 100; }
+Barbarian.prototype.getSpeed = function() { return 100; }
+Barbarian.prototype.getHealth = function() { return this.health; }
 
-Enemy.prototype.act = function() {
+Barbarian.prototype.act = function() {
     
     var x = Game.player.getX();
     var y = Game.player.getY();
@@ -408,16 +490,19 @@ Enemy.prototype.act = function() {
 
     path.shift();
     if (path.length == 1 || path.length == 0) {
+        Game.combatTarget = "Barbarian";
 //      Game.engine.lock();
         //do text based combat here
         
 
-        //remove enemy from game after player wins
+        //remove barbarian from game after player wins
         //End game if player loses
         //Game.scheduler.remove(Game.mouse)
         //Game.mouse = null;
     }
     else {
+        if (Game.combatTarget == "Barbarian") {Game.combatTarget = "None";}
+
         x = path[0][0];
         y = path[0][1];
         Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
@@ -427,7 +512,7 @@ Enemy.prototype.act = function() {
     }
 }
 
-Enemy.prototype._draw = function() {
+Barbarian.prototype._draw = function() {
     Game.display.draw(this._x, this._y, "SS", "blue");
 }
 
@@ -497,13 +582,13 @@ var Hawk = function(x, y) {
 Hawk.prototype.getSpeed = function() { return 50; }
 
 Hawk.prototype.act = function() {
-    if (!Game.enemy) {
+    if (!Game.barbarian) {
         Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
         this._draw()
         return
     }
-    var x = Game.enemy._x;
-    var y = Game.enemy._y;
+    var x = Game.barbarian._x;
+    var y = Game.barbarian._y;
 
   //SHOW(Game.display.getContainer());
 
@@ -519,12 +604,12 @@ Hawk.prototype.act = function() {
     path.shift();
     if (path.length == 1 || path.length == 0) {
 //      Game.engine.lock();
-    //  alert("Enemy captured by Hawk!");
+    //  alert("Barbarian captured by Hawk!");
     //  var str = "Goodbye %c{red}cr%b{blue}u%b{}el %c{}world"
-        displayText("Enemy captured by Hawk!");
-        Game.display.draw(Game.enemy._x, Game.enemy._y, Game.map[Game.enemy._x+","+ Game.enemy._y]);
-        Game.scheduler.remove(Game.enemy);
-        Game.enemy = null;
+        displayText("Barbarian captured by Hawk!");
+        Game.display.draw(Game.barbarian._x, Game.barbarian._y, Game.map[Game.barbarian._x+","+ Game.barbarian._y]);
+        Game.scheduler.remove(Game.barbarian);
+        Game.barbarian = null;
     } 
     else {
         x = path[0][0];
