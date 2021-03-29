@@ -82,6 +82,11 @@ var Game = {
         //this.tick = 0;
         this.combatTarget = "None";
         this.engine.start();
+
+
+        //scaling
+        this.display.getContainer().getContext('2d').imageSmoothingEnabled = false;
+        this.display.getContainer().getContext('2d').scale(0.5,0.5);
     },
 
     simulateGrass: function() {
