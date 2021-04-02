@@ -842,64 +842,6 @@ Cow.prototype._draw = function() {
 }
 
 
-
-/*
-
-
-
-var Hawk = function(x, y) {
-    this._x = x;
-    this._y = y;
-    this._draw();
-}
-
-Hawk.prototype.getSpeed = function() { return 50; }
-
-Hawk.prototype.act = function() {
-    if (!Game.barbarian) {
-        Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
-        this._draw()
-        return
-    }
-    var x = Game.barbarian._x;
-    var y = Game.barbarian._y;
-
-  //SHOW(Game.display.getContainer());
-
-
-    var astar = new ROT.Path.AStar(x, y, passableCallback, {topology:4});
-
-    var path = [];
-    var pathCallback = function(x, y) {
-        path.push([x, y]);
-    }
-    astar.compute(this._x, this._y, pathCallback);
-
-    path.shift();
-    if (path.length == 1 || path.length == 0) {
-//      Game.engine.lock();
-    //  alert("Barbarian captured by Hawk!");
-    //  var str = "Goodbye %c{red}cr%b{blue}u%b{}el %c{}world"
-        displayText("Barbarian captured by Hawk!");
-        Game.display.draw(Game.barbarian._x, Game.barbarian._y, Game.map[Game.barbarian._x+","+ Game.barbarian._y]);
-        Game.scheduler.remove(Game.barbarian);
-        Game.barbarian = null;
-    } 
-    else {
-        x = path[0][0];
-        y = path[0][1];
-        Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
-        this._x = x;
-        this._y = y;
-        this._draw();
-    }
-}
-
-Hawk.prototype._draw = function() {
-    Game.display.draw(this._x, this._y, "HH", "brown");
-}
-*/
-
 /*
  * Logic
  */
@@ -988,11 +930,6 @@ function census(x, y) {
 
 window.onload = function() {
     Game.init();
-//    window.addEventListener("click", function(e) {
-//      clicked_coords = Game.display.eventToPosition(e);
-//      document.getElementById("clickedCoords").innerHTML = clicked_coords;
-//      displayText("Tile ("+clicked_coords+")");
-//    });
 }
 
 
