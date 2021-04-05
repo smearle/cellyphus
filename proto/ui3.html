@@ -1,0 +1,128 @@
+<html>
+	<head>
+		<title>UI 3 Design</title>
+		<style>
+			body{
+				background-color:#2F5434;
+				text-align: center;
+			}
+			/* crispy pixel rendering */
+			canvas{
+				width:768px;
+				height:600px;
+				image-rendering: -moz-crisp-edges;
+				image-rendering: -webkit-crisp-edges;
+				image-rendering: pixelated;
+				image-rendering: crisp-edges;
+				border:2px solid #000000;
+			}
+			#console{
+				/*
+				width:100%;
+				height:15%;
+				*/
+				width:980px;
+				height:96px;
+				background-color:#000;
+			}
+			#game{
+				/*
+				width:68%;
+				height:100%;
+				*/
+			}
+			.sidebar{
+				/*
+				width:15%;
+				height:100%;
+				*/
+				width:212px;
+				height:640px;
+				border:2px solid #000;
+				background-color: #dedede;
+				display: block;
+			}
+			.sidebar button{
+				width: 150px;
+				font-size:2vw;
+				margin-top: 4vw;
+			}
+			#container{
+				width:980px;
+				height:756px;
+				margin-left: auto;
+				margin-right:auto;
+
+			}
+			#gameArea{
+				display: flex;
+				width:980px;
+				height:640px;
+				border:1px solid black;
+			}
+			.icon{
+				width: 100%;
+			}
+			.icon:hover{
+				border:2px solid #bcbcbc;
+			}
+			.camFocus{
+				border:2px solid green;
+			}
+
+
+			#build{
+				background-color:#dedede;
+			}
+
+			#build div{
+				margin-top: 2vw;
+			}
+
+			.tab{
+				border:2px solid black;
+				background-color: #dedede;
+				width:20%;
+				height:100%;
+				margin-left: auto;
+				margin-right: auto;
+				padding-top: 0.5vw;
+			}
+
+		</style>
+	</head>
+	<body onload="init();canvas.width='768';canvas.height='600';">
+		<!--<div id="debugBar"><p id="debug" style="color:white">...</p></div>-->
+		<div id='container'>
+			<div id='consoleArea'>
+				<canvas id='console'></canvas>
+			</div>
+			<div id='gameArea'>
+				<div style='display: grid'>
+					<div style='width:640px;height:32px;display:flex;text-align: center;'>
+							<div class='tab' onclick='changeMenu("overworld",this)' style='background-color: #ffff00'>Overworld</div>
+							<div class='tab' onclick='changeMenu("minimap",this)'>Minimap</div>
+							<div class='tab' onclick='changeMenu("build",this)'>Build</div>
+							<div class='tab' >???</div>
+					</div>
+					<div style='display: block'>
+						<canvas id='game'></canvas>
+						<canvas id='minimapCanvas' style='display: none'></canvas>
+					</div>
+				</div>
+				<div class='sidebar' id='stats'>
+					<img src='img/player_stat.png' class='icon' id='playerIcon' onclick='gotoChar("player",this)'>
+					<img src='img/frog_stat.png' class='icon' id='frog1Icon' onclick='gotoChar("frog1",this)'>
+					<img src='img/frog_stat.png' class='icon' id='frog2Icon' onclick='gotoChar("frog2",this)'>
+					<img src='img/frog_stat.png' class='icon' id='frog3Icon' onclick='gotoChar("frog3",this)'>
+				</div>
+				<div class='sidebar' id='build' style='display: none;'>
+					<div>Chair</div>
+					<div>Wall</div>
+					<div>Bed</div>
+				</div>
+			</div>
+		</div>
+		<script src="game.js"></script>
+	</body>
+</html>

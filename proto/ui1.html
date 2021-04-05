@@ -1,0 +1,126 @@
+<html>
+	<head>
+		<title>UI 1 Design</title>
+		<style>
+			body{
+				background-color:#2F5434;
+				text-align: center;
+			}
+			/* crispy pixel rendering */
+			canvas{
+				image-rendering: -moz-crisp-edges;
+				image-rendering: -webkit-crisp-edges;
+				image-rendering: pixelated;
+				image-rendering: crisp-edges;
+			}
+			#console{
+				/*
+				width:100%;
+				height:15%;
+				*/
+				width:980px;
+				height:96px;
+				background-color:#000;
+			}
+			#game{
+				/*
+				width:68%;
+				height:100%;
+				*/
+				width:640px;
+				height:640px;
+				border:2px solid #000000;
+			}
+			.sidebar{
+				/*
+				width:15%;
+				height:100%;
+				*/
+				width:332px;
+				height:300px;
+				border:2px solid #000;
+				background-color: #dedede;
+				display: block;
+			}
+			.sidebar button{
+				width: 128px;
+				font-size:2vw;
+				margin-top: 1vw;
+			}
+			
+			#container{
+				width:980px;
+				height:756px;
+				margin-left: auto;
+				margin-right:auto;
+
+			}
+			#gameArea{
+				display: flex;
+				width:980px;
+				height:640px;
+			}
+			#drops{
+				width:332px;
+				height:32px;
+				border:2px solid #000;
+				background-color: #dedede;
+			}
+			.icon{
+				width: 45%;
+			}
+			.icon:hover{
+				border:2px solid #bcbcbc;
+			}
+			.camFocus{
+				border:2px solid green;
+			}
+
+			#build_opt div{
+				margin-top: 1vw;
+			}
+
+		</style>
+	</head>
+	<body onload="init();">
+		<!--<div id="debugBar"><p id="debug" style="color:white">...</p></div>-->
+		<div id='container'>
+			<div id='consoleArea'>
+				<canvas id='console'></canvas>
+			</div>
+			<div id='gameArea'>
+				
+				<div style='display: block'>
+					<canvas id='game'>Game canvas</canvas>
+				</div>
+				<div style='display: grid'>
+					<div id='drops'>
+						<select onchange='changeSection(this.value)'>
+							<option value='minimap'>Minimap</option>
+							<option value='build'>Build</option>
+						</select>
+					</div>
+					<div class='sidebar' id='minimap'>
+						<!--<img src='img/cellyphus_demo.png' width='320' height='300'>-->
+						<canvas id='minimapCanvas'>Minimap canvas</canvas>
+						<div class='sidebar' id='build_opt' style="display: none;">
+							<div>Chair</div>
+							<div>Wall</div>
+							<div>Bed</div>
+						</div>
+					</div> 
+					
+					<div class='sidebar' id='stats'>
+						<br>
+						<img src='img/player_stat.png' class='icon' id='playerIcon' onclick='gotoChar("player",this)'>
+						<img src='img/frog_stat.png' class='icon' id='frog1Icon' onclick='gotoChar("frog1",this)'>
+						<img src='img/frog_stat.png' class='icon' id='frog2Icon' onclick='gotoChar("frog2",this)'>
+						<img src='img/frog_stat.png' class='icon' id='frog3Icon' onclick='gotoChar("frog3",this)'>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		<script src="game.js"></script>
+	</body>
+</html>
