@@ -242,10 +242,6 @@ var passableCallback = function(x, y) {
       key = x+","+y;
       tile_type = Game.map[key];
       var passable = (!(impassable.indexOf(tile_type) >= 0));
-//    return passable;
-//    return ((tile_type != "ww") && (tile_type != "|"));
-//    var passable = (tile_type != "ww");
-//    console.log(passable);
       return passable;
 }
 
@@ -255,11 +251,6 @@ var frogPassableCallback = function(x, y) {
       key = x+","+y;
       tile_type = Game.map[key];
       var passable = ((!(impassable.indexOf(tile_type)) >= 0) || (tile_type == tile_chars.WATER));
-    //var passable = (!(impassable.indexOf(tile_type)));
-//    return passable;
-//    return ((tile_type != "ww") && (tile_type != "|"));
-//    var passable = (tile_type != "ww");
-//    console.log(passable);
       return passable;
 }
 
@@ -529,11 +520,7 @@ Player.prototype.handleEvent = function(e) {
         }
 
     }
-}
-
-    
-
-    
+}    
 
     Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
     // Move the player
@@ -567,251 +554,7 @@ Player.prototype._draw = function() {
     Game.display.draw(this._x, this._y, "@", "#ff0");
 }
 
-function drawTile(x, y) {
-    Game.display.draw(x, y, getTile(x, y));
-}
-
-
-var displayHUD = function() {
-    //general player info
-    day_str = "Day: " + Game.days.toString().padStart(6, " ");
-    health_str = "Health: " + Game.player.getHealth().toString().padStart(3, " ");
-    hunger_str = "Hunger: " + Game.player.getHunger().toString().padStart(3, " ");
-    thirst_str = "Thirst: " + Game.player.getThirst().toString().padStart(3, " ");
-    seed_str = "Seeds: " + Game.player.seeds.toString().padStart(3, " ");
-    wood_str = "Wood:  " + Game.player.wood.toString().padStart(3, " ");
-    meat_str = "Meat:  " + Game.player.meat.toString().padStart(3, " ");
-    Game.resource_display.drawText(0, 0, day_str);
-    Game.resource_display.drawText(0, 2, health_str);
-    Game.resource_display.drawText(0, 3, thirst_str);
-    Game.resource_display.drawText(0, 4, hunger_str);
-    Game.resource_display.drawText(15, 2, seed_str);
-    Game.resource_display.drawText(15, 3, wood_str);
-    Game.resource_display.drawText(15, 4, meat_str);
-    //combat info
-    if (Game.combatTarget == "None") {
-        target_str = "Combat: " + Game.combatTarget.padStart(8, " ");
-        Game.log_combat.drawText(0, 0, target_str);
-    }
-    else if (Game.combatTarget == "Barbarian") {
-        target_str = "Combat: " + Game.combatTarget.padStart(10, " ") + "  " + Game.barbarian.getHealth() + "HP";
-        slam_str = "1.(" + Game.player.slamDmg +"atk)Body Slam: " + Game.player.slamChance().toString().padStart(3, " ") + "%";
-        kick_str = "2.(" + Game.player.kickDmg +"atk)Kick: " + Game.player.kickChance().toString().padStart(8, " ") + "%";
-        punch_str = "3.(" + Game.player.punchDmg +"atk) Punch: " + Game.player.punchChance().toString().padStart(7, " ") + "%";
-
-        //work on these
-        Game.log_combat.drawText(0, 0, target_str);
-        Game.log_combat.drawText(0, 2, slam_str);
-        Game.log_combat.drawText(0, 3, kick_str);
-        Game.log_combat.drawText(0, 4, punch_str);
-    }
-
-    
-    
-}
-
-var Grasshopper = function(x, y) {
-    this._x = x;
-    this._y = y;
-    this._x_t = Game.player.getX();
-    this._y_t = Game.player.getY();
-    this.building = false;  // if the grasshopper is on its way to build something
-    this._draw();
-    this._move_ticker = 0
-}
-
-Grasshopper.prototype.getSpeed = function() { return 100; }
-
-function getTile(x, y) {
-    key = x+","+y;
-    return Game.map[key]
-}
-
-function setTile(x, y, char) {
-    key = x+","+y;
-    Game.map[key] = char;
-}
-
-function getWanderTile(x, y) {
-    var dirs = [[0, 1], [1, 0], [-1,0], [0,-1]]
-    for (i=0; i<dirs.length; i++) {
-//      console.log(x, y);
-        var dx;
-        var dy;
-        j = Math.floor(Math.random() * dirs.length);
-        [dx, dy] = dirs[j];
-//      console.log(dx, dy);
-        var x1 = x + dx
-        var y1 = y + dy;
-        tile_type = getTile(x1, y1);
-        if (!(impassable.indexOf(tile_type) >= 0) || (tile_type == tile_chars.WATER)) {
-            return [x1, y1];
-        }
-    }
-    return [x, y];
-
-}
-
-
-function getPlantTile(x, y) {
-    var dirs = [[0, 1], [1, 0], [-1,0], [0,-1]]
-    for (i=0; i<dirs.length; i++) {
-//      console.log(x, y);
-        var dx;
-        var dy;
-        [dx, dy] = dirs[i];
-//      console.log(dx, dy);
-        var x1 = x + dx
-        var y1 = y + dy;
-        var tile_type = getTile(x1, y1);
-        if (!(impassable.indexOf(tile_type) >= 0) && !(tile_type == tile_chars.GRASS)) {
-            return [x1, y1];
-        }
-    }
-    return [x, y];
-}
-
-
-Grasshopper.prototype.act = function() {
-    var x = this._x_t;
-    var y = this._y_t;
-
-    if (!(this._move_ticker == 0)) {
-        this._move_ticker += 1;
-        return
-    }
-    this._move_ticker = 0;
-
-    // Wander about
-    if (this.wandering) {
-        // Randomly move to a valid tile
-        var newX;
-        var newY;
-        [newX, newY] = getWanderTile(this._x, this._y);
-        drawTile(this._x, this._y);
-        console.log(newX, newY);
-        this._x = newX;
-        this._y = newY;
-        Game.log_display.drawText(0, 4, "Idle Frogman wanders.");
-    }
-
-    // Head to some target
-    else {
-        var astar = new ROT.Path.AStar(x, y, frogPassableCallback, {topology:4});
-
-        var path = [];
-        var pathCallback = function(x, y) {
-            path.push([x, y]);
-        }
-        astar.compute(this._x, this._y, pathCallback);
-
-        path.shift();
-        tile = getTile(x, y);
-        if (path.length == 1) {
-            if (tile == ".." && this.building) {
-                if (Game.player.wood > 0) {
-                    displayText("Frogman builds the wall.");
-                    setTile(x, y, tile_chars.WALL);
-                    drawTile(x, y);
-                    Game.player.wood -= 1;
-                }
-                else {
-                    displayText("Cannot build wall without wood.");
-                }
-                this.building = false;
-            this.wandering = true;
-            }
-        }
-        if (/*path.length == 1 ||*/ path.length == 0) {
-            Game.log_display.drawText(0, 4, "Frogman has arrived at their destination.");
-            if (tile == "**"){
-                Game.player.wood += 5;
-                setTile(x, y, tile_chars.EMPTY);
-            }
-            this.wandering = true;
-        }
-        else {
-            x = path[0][0];
-            y = path[0][1];
-            Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
-            this._x = x;
-            this._y = y;
-        }
-    }
-    this._draw();
-}
-
-Grasshopper.prototype._draw = function() {
-    Game.display.draw(this._x, this._y, "GG", "green");
-}
-
-var Barbarian = function(x, y) {
-    this._x = x;
-    this._y = y;
-    this.health = 100;
-    this.power = 5;
-    this._draw();
-}
-
-Barbarian.prototype.getSpeed = function() { return 100; }
-Barbarian.prototype.getHealth = function() { return this.health; }
-
-Barbarian.prototype.act = function() {
-    
-    var x = Game.player.getX();
-    var y = Game.player.getY();
-
-    var astar = new ROT.Path.AStar(x, y, passableCallback, {topology:4});
-
-    var path = [];
-    var pathCallback = function(x, y) {
-        path.push([x, y]);
-    }
-    astar.compute(this._x, this._y, pathCallback);
-
-    path.shift();
-    if (path.length == 1 || path.length == 0) {
-        if (Math.abs(this._x - x) > 1 || Math.abs(this._y - y) > 1) {
-            this._draw();
-        }
-        else {
-            Game.combatTarget = "Barbarian";
-    //      Game.engine.lock();
-            //do text based combat here
-
-            //attack player
-    //      console.log("Barbarian attack, health: " + this.getHealth());
-            if (this.getHealth() > 0)
-            {
-                var atk = Math.floor(Math.random() * this.power) + 1; //random damage between 0 to power
-    //          console.log("attack: " + atk);
-                Game.player.health -= atk;
-
-                combatTextEnemy("The Barbarian bashed you for " + atk + " damage!");
-            }
-
-            //remove barbarian from game after player wins
-            //End game if player loses
-            //Game.scheduler.remove(Game.mouse)
-            //Game.mouse = null;
-        }
-    }
-    else {
-        if (Game.combatTarget == "Barbarian") {Game.combatTarget = "None";}
-
-        x = path[0][0];
-        y = path[0][1];
-        Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
-        this._x = x;
-        this._y = y;
-        this._draw();
-    }
-}
-
-Barbarian.prototype._draw = function() {
-    Game.display.draw(this._x, this._y, "SS", "blue");
-}
-
+//AI stuff
 
 var Cow = function(x, y) {
     this._x = x;
