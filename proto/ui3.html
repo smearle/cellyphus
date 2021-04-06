@@ -75,10 +75,6 @@
 				background-color:#dedede;
 			}
 
-			#build div{
-				margin-top: 2vw;
-			}
-
 			.tab{
 				border:2px solid black;
 				background-color: #dedede;
@@ -87,6 +83,13 @@
 				margin-left: auto;
 				margin-right: auto;
 				padding-top: 0.5vw;
+			}
+			.item{
+				padding:1vw;
+			}
+
+			.item:hover{
+				border:1px solid blue;
 			}
 
 		</style>
@@ -117,9 +120,9 @@
 					<img src='img/frog_stat.png' class='icon' id='frog3Icon' onclick='gotoChar("frog3",this)'>
 				</div>
 				<div class='sidebar' id='build' style='display: none;'>
-					<div>Chair</div>
-					<div>Wall</div>
-					<div>Bed</div>
+					<div class='item'>Chair</div>
+					<div class='item'>Wall</div>
+					<div class='item'>Bed</div>
 				</div>
 			</div>
 		</div>

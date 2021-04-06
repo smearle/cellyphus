@@ -81,6 +81,14 @@
 				margin-top: 2vw;
 			}
 
+			.item{
+				padding:1vw;
+			}
+
+			.item:hover{
+				border:1px solid blue;
+			}
+
 		</style>
 	</head>
 	<body onload="init();">
@@ -100,9 +108,9 @@
 					<canvas id='game'></canvas>
 					<canvas id='minimapCanvas' style='display: none'></canvas>
 					<div id='build' style='display: none;width:640px;height:640px;border:2px solid #000000;'>
-						<div>Chair</div>
-						<div>Wall</div>
-						<div>Bed</div>
+						<div class='item'>Chair</div>
+						<div class='item'>Wall</div>
+						<div class='item'>Bed</div>
 					</div>
 				</div>
 				<div class='sidebar' id='menu'>'

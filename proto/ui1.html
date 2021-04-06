@@ -80,6 +80,14 @@
 				margin-top: 1vw;
 			}
 
+			.item{
+				padding:1vw;
+			}
+
+			.item:hover{
+				border:1px solid blue;
+			}
+
 		</style>
 	</head>
 	<body onload="init();">
@@ -104,9 +112,9 @@
 						<!--<img src='img/cellyphus_demo.png' width='320' height='300'>-->
 						<canvas id='minimapCanvas'>Minimap canvas</canvas>
 						<div class='sidebar' id='build_opt' style="display: none;">
-							<div>Chair</div>
-							<div>Wall</div>
-							<div>Bed</div>
+							<div class='item'>Chair</div>
+							<div class='item'>Wall</div>
+							<div class='item'>Bed</div>
 						</div>
 					</div> 
 					
