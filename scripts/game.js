@@ -72,6 +72,7 @@ var Game = {
 
         var scheduler = new ROT.Scheduler.Simple();
         //scheduler.add()
+        //make instance of game loop to run game loop stuff
         scheduler.add(this.player, true);
         //scheduler.add(this.mouse, true);
         scheduler.add(this.grasshopper, true);
