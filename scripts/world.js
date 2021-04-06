@@ -1,5 +1,85 @@
 /*
- * Logic
+ * Tile functions
+ */
+
+function drawTile(x, y) {
+    Game.display.draw(x, y, getTile(x, y));
+}
+
+function getTile(x, y) {
+    key = x+","+y;
+    return Game.map[key]
+}
+
+function setTile(x, y, char) {
+    key = x+","+y;
+    Game.map[key] = char;
+}
+
+function getWanderTile(x, y) {
+    var dirs = [[0, 1], [1, 0], [-1,0], [0,-1]]
+    for (i=0; i<dirs.length; i++) {
+//      console.log(x, y);
+        var dx;
+        var dy;
+        j = Math.floor(Math.random() * dirs.length);
+        [dx, dy] = dirs[j];
+//      console.log(dx, dy);
+        var x1 = x + dx
+        var y1 = y + dy;
+        tile_type = getTile(x1, y1);
+        if (!(impassable.indexOf(tile_type) >= 0) || (tile_type == tile_chars.WATER)) {
+            return [x1, y1];
+        }
+    }
+    return [x, y];
+
+}
+
+function getPlantTile(x, y) {
+    var dirs = [[0, 1], [1, 0], [-1,0], [0,-1]]
+    for (i=0; i<dirs.length; i++) {
+//      console.log(x, y);
+        var dx;
+        var dy;
+        [dx, dy] = dirs[i];
+//      console.log(dx, dy);
+        var x1 = x + dx
+        var y1 = y + dy;
+        var tile_type = getTile(x1, y1);
+        if (!(impassable.indexOf(tile_type) >= 0) && !(tile_type == tile_chars.GRASS)) {
+            return [x1, y1];
+        }
+    }
+    return [x, y];
+}
+
+
+/*
+ * Passable tile controls
+ */
+
+ //var passableCallback = function(x, y) {
+function passableCallback(x, y) {
+//    return (x+","+y in Game.map);
+      key = x+","+y;
+      tile_type = Game.map[key];
+      var passable = (!(impassable.indexOf(tile_type) >= 0));
+      return passable;
+}
+
+//var frogPassableCallback = function(x, y) {
+function frogPassableCallback(x, y) {
+//    return (x+","+y in Game.map);
+      key = x+","+y;
+      tile_type = Game.map[key];
+      var passable = ((!(impassable.indexOf(tile_type)) >= 0) || (tile_type == tile_chars.WATER));
+      return passable;
+}
+
+
+/*
+ * Logic functions
  */
 
 function coinFlip() {
