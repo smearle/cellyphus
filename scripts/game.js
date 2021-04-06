@@ -71,6 +71,7 @@ var Game = {
         this._generateMap();
 
         var scheduler = new ROT.Scheduler.Simple();
+        //scheduler.add()
         scheduler.add(this.player, true);
         //scheduler.add(this.mouse, true);
         scheduler.add(this.grasshopper, true);
@@ -236,47 +237,9 @@ var Game = {
     }
 };
 
-
-//player start
-
-//player end
-
 Player.prototype._draw = function() {
     Game.display.draw(this._x, this._y, "@", "#ff0");
 }
-
-//AI stuff
-
-// var Cow = function(x, y) {
-//     this._x = x;
-//     this._y = y;
-//     this.wandering = true;
-//     this._draw();
-// }
-
-// Cow.prototype.getSpeed = function() { return 100; }
-
-// Cow.prototype.act = function() {
-//     // Wander about
-//     if (this.wandering) {
-//         // Randomly move to a valid tile
-//         var newX;
-//         var newY;
-//         [newX, newY] = getWanderTile(this._x, this._y);
-//         drawTile(this._x, this._y);
-//         console.log(newX, newY);
-//         this._x = newX;
-//         this._y = newY;
-//     }
-
-// }
-
-// Cow.prototype._draw = function() {
-//     Game.display.draw(this._x, this._y, "mm", "grey");
-// }
-
-
-
 
 window.onload = function() {
     Game.init();
@@ -285,4 +248,3 @@ window.onload = function() {
 
 
 //Game.init();
-

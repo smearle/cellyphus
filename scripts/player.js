@@ -63,7 +63,6 @@ Player.prototype.act = function() {
     }
 
     Game.engine.lock();
-    //window.addEventListener("click", this);
     window.addEventListener("click", this);
     window.addEventListener("keydown", this);
 }
