@@ -1,4 +1,6 @@
-var Barbarian = function(x, y) {
+//change to barbarian class
+//var Barbarian = function(x, y) {
+function Barbarian(x, y) {
     this._x = x;
     this._y = y;
     this.health = 100;

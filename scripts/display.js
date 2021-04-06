@@ -1,3 +1,22 @@
+//var displayText = function(str) {
+function displayText(str) {
+    Game.log_display.drawText(0, 6, str);
+}
+
+//var combatTextPlayer = function(str) {
+function combatTextPlayer(str) {
+    var empty = "                                                                                      "
+    Game.log_combat.drawText(1, 6, empty);
+    Game.log_combat.drawText(1, 6, str);
+}
+
+//var combatTextEnemy = function(str) {
+function combatTextEnemy(str) {
+    var empty = "                                                                                      "
+    Game.log_combat.drawText(1, 7, empty);
+    Game.log_combat.drawText(1, 7, str);
+}
+
 //var displayHUD = function() {
 function displayHUD() {
   //general player info

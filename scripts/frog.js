@@ -1,3 +1,4 @@
+//change to frog / grasshopper class
 var Grasshopper = function(x, y) {
     this._x = x;
     this._y = y;
@@ -9,7 +10,6 @@ var Grasshopper = function(x, y) {
 }
 
 Grasshopper.prototype.getSpeed = function() { return 100; }
-
 
 
 Grasshopper.prototype.act = function() {

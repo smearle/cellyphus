@@ -36,7 +36,6 @@ function getWanderTile(x, y) {
 
 }
 
-
 function getPlantTile(x, y) {
     var dirs = [[0, 1], [1, 0], [-1,0], [0,-1]]
     for (i=0; i<dirs.length; i++) {
@@ -53,6 +52,29 @@ function getPlantTile(x, y) {
         }
     }
     return [x, y];
+}
+
+
+/*
+ * Passable tile controls
+ */
+
+ //var passableCallback = function(x, y) {
+function passableCallback(x, y) {
+//    return (x+","+y in Game.map);
+      key = x+","+y;
+      tile_type = Game.map[key];
+      var passable = (!(impassable.indexOf(tile_type) >= 0));
+      return passable;
+}
+
+//var frogPassableCallback = function(x, y) {
+function frogPassableCallback(x, y) {
+//    return (x+","+y in Game.map);
+      key = x+","+y;
+      tile_type = Game.map[key];
+      var passable = ((!(impassable.indexOf(tile_type)) >= 0) || (tile_type == tile_chars.WATER));
+      return passable;
 }
 
 
