@@ -98,20 +98,23 @@
 				<canvas id='console'></canvas>
 			</div>
 			<div id='gameArea'>
-				<div class='sidebar' id='stats'>
-					<img src='img/player_stat.png' class='icon' id='playerIcon' onclick='gotoChar("player",this)'>
-					<img src='img/frog_stat.png' class='icon' id='frog1Icon' onclick='gotoChar("frog1",this)'>
-					<img src='img/frog_stat.png' class='icon' id='frog2Icon' onclick='gotoChar("frog2",this)'>
-					<img src='img/frog_stat.png' class='icon' id='frog3Icon' onclick='gotoChar("frog3",this)'>
-				</div>
-				<div style='display: block'>
-					<canvas id='game'></canvas>
-					<canvas id='minimapCanvas' style='display: none'></canvas>
-					<div id='build' style='display: none;width:640px;height:640px;border:2px solid #000000;'>
+				<div class='sidebar'>
+					<div id='stats'>
+						<img src='img/player_stat.png' class='icon' id='playerIcon' onclick='gotoChar("player",this)'>
+						<img src='img/frog_stat.png' class='icon' id='frog1Icon' onclick='gotoChar("frog1",this)'>
+						<img src='img/frog_stat.png' class='icon' id='frog2Icon' onclick='gotoChar("frog2",this)'>
+						<img src='img/frog_stat.png' class='icon' id='frog3Icon' onclick='gotoChar("frog3",this)'>
+					</div>
+					<div id='build' style='display: none'>
 						<div class='item'>Chair</div>
 						<div class='item'>Wall</div>
 						<div class='item'>Bed</div>
 					</div>
+				</div>
+				
+				<div style='display: block'>
+					<canvas id='game'></canvas>
+					<canvas id='minimapCanvas' style='display: none'></canvas>
 				</div>
 				<div class='sidebar' id='menu'>'
 					<h1 style="margin:auto;">Display</h3>

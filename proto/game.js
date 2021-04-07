@@ -337,12 +337,17 @@ function changeScreen(scr){
 	document.getElementById("game").style.display = "none";
 	document.getElementById("build").style.display = "none";
 	document.getElementById("minimapCanvas").style.display = "none";
+	document.getElementById("stats").style.display = "none";
 	if(scr == "overworld"){
 		document.getElementById("game").style.display = "block";
+		document.getElementById("stats").style.display = "block";
 	}else if(scr == "minimap"){
 		document.getElementById("minimapCanvas").style.display = "block";
+		document.getElementById("stats").style.display = "block";
 	}else if(scr == "build"){
 		document.getElementById("build").style.display = "block";
+		document.getElementById("game").style.display = "block";
+
 	}
 }
 
