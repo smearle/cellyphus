@@ -28,7 +28,7 @@ function getWanderTile(x, y) {
         var x1 = x + dx
         var y1 = y + dy;
         tile_type = getTile(x1, y1);
-        if (!(impassable.indexOf(tile_type) >= 0) || (tile_type == tile_chars.WATER)) {
+        if (!(frog_impassable.indexOf(tile_type) >= 0)) {
             return [x1, y1];
         }
     }
@@ -60,11 +60,20 @@ function getPlantTile(x, y) {
  */
 
  //var passableCallback = function(x, y) {
-function passableCallback(x, y) {
+function humanPassableCallback(x, y) {
 //    return (x+","+y in Game.map);
       key = x+","+y;
       tile_type = Game.map[key];
-      var passable = (!(impassable.indexOf(tile_type) >= 0));
+      var passable = (!(human_impassable.indexOf(tile_type) >= 0));
+      return passable;
+}
+
+ //var passableCallback = function(x, y) {
+function barbPassableCallback(x, y) {
+//    return (x+","+y in Game.map);
+      key = x+","+y;
+      tile_type = Game.map[key];
+      var passable = (!(barb_impassable.indexOf(tile_type) >= 0));
       return passable;
 }
 
@@ -73,7 +82,7 @@ function frogPassableCallback(x, y) {
 //    return (x+","+y in Game.map);
       key = x+","+y;
       tile_type = Game.map[key];
-      var passable = ((!(impassable.indexOf(tile_type)) >= 0) || (tile_type == tile_chars.WATER));
+      var passable = (!(frog_impassable.indexOf(tile_type)) >= 0);
       return passable;
 }
 

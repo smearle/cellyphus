@@ -1,3 +1,9 @@
+
+// Will the barbarian come for you?
+var BARBARIAN = true;
+// Will you die of any cause?
+var PLAYER_DEATH = false;
+
 var map_width = 40;
 var map_height = 40;
 var tileSet = document.createElement("img");
@@ -12,9 +18,13 @@ const tile_chars = {
     FROGMAN: "GG",
     WATER: "ww",
     TREE: "**",
+    DOOR: "dd",
 }
 
-impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN]
+
+frog_impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER]
+barb_impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.DOOR]
+player_impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN]
 
 var display_options = {
     layout: "tile",
@@ -33,6 +43,7 @@ var display_options = {
         "mm": [64, 0],
         "ww": [128, 0],
         "|": [256, 0],
+        "dd": [320, 0],
     },
     width: map_width,
     height: map_height,
@@ -75,8 +86,10 @@ var Game = {
         //make instance of game loop to run game loop stuff
         scheduler.add(this.player, true);
         //scheduler.add(this.mouse, true);
-        scheduler.add(this.grasshopper, true);
-        scheduler.add(this.barbarian, true);
+        scheduler.add(this.frog, true);
+        if (BARBARIAN) {
+            scheduler.add(this.barbarian, true);
+        }
         //scheduler.add(this.hawk, true);
 
         this.engine = new ROT.Engine(scheduler);
@@ -101,7 +114,7 @@ var Game = {
             if (this.map[key] == "gg" || this.map[key] == "..") {
 
                 next_state = census(ix, iy);
-                console.log(next_state);
+//              console.log(next_state);
                 if (next_state == 1) {
     //          live.push(key);
                     live.push([ix, iy]);
@@ -196,7 +209,7 @@ var Game = {
         this.player = this._createBeing(Player, freeCells);
         //this.mouse = this._createBeing(Cow, freeCells);
         //this.hawk = this._createBeing(Hawk, freeCells);
-        this.grasshopper = this._createBeing(Grasshopper, freeCells);
+        this.frog = this._createBeing(Frog, freeCells);
         this.barbarian = this._createBeing(Barbarian, freeCells);
 
         this.freeCells = freeCells;
@@ -247,5 +260,12 @@ window.onload = function() {
 }
 
 
+//prevent scrolling with the game
+window.addEventListener("keydown", function(e) {
+    // space and arrow keys
+    if(([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1)){
+        e.preventDefault();
+    }
+}, false);
 
 //Game.init();

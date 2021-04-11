@@ -1,5 +1,6 @@
+
 //change to frog / grasshopper class
-var Grasshopper = function(x, y) {
+var Frog = function(x, y) {
     this._x = x;
     this._y = y;
     this._x_t = Game.player.getX();
@@ -9,10 +10,10 @@ var Grasshopper = function(x, y) {
     this._move_ticker = 0
 }
 
-Grasshopper.prototype.getSpeed = function() { return 100; }
+Frog.prototype.getSpeed = function() { return 100; }
 
 
-Grasshopper.prototype.act = function() {
+Frog.prototype.act = function() {
     var x = this._x_t;
     var y = this._y_t;
 
@@ -29,7 +30,7 @@ Grasshopper.prototype.act = function() {
         var newY;
         [newX, newY] = getWanderTile(this._x, this._y);
         drawTile(this._x, this._y);
-        console.log(newX, newY);
+//      console.log(newX, newY);
         this._x = newX;
         this._y = newY;
         Game.log_display.drawText(0, 4, "Idle Frogman wanders.");
@@ -49,17 +50,27 @@ Grasshopper.prototype.act = function() {
         tile = getTile(x, y);
         if (path.length == 1) {
             if (tile == ".." && this.building) {
-                if (Game.player.wood > 0) {
-                    displayText("Frogman builds the wall.");
-                    setTile(x, y, tile_chars.WALL);
+                curr_build = build_orders[(x, y)];
+                console.log(curr_build);
+                if (curr_build == build_items.WALL) {
+                    if (Game.player.wood > 0) {
+                        displayText("Frogman builds the wall.");
+                        setTile(x, y, tile_chars.WALL);
+                        drawTile(x, y);
+                        Game.player.wood -= 1;
+                    }
+                    else {
+                        displayText("Cannot build wall without wood.");
+                    }
+                    this.building = false;
+                this.wandering = true;
+                }
+                else if (curr_build == build_items.DOOR) {
+                    displayText("build a door");
+                    displayText("Frogman builds the door.");
+                    setTile(x, y, tile_chars.DOOR);
                     drawTile(x, y);
-                    Game.player.wood -= 1;
                 }
-                else {
-                    displayText("Cannot build wall without wood.");
-                }
-                this.building = false;
-            this.wandering = true;
             }
         }
         if (/*path.length == 1 ||*/ path.length == 0) {
@@ -79,8 +90,9 @@ Grasshopper.prototype.act = function() {
         }
     }
     this._draw();
+    return "frogman acted";
 }
 
-Grasshopper.prototype._draw = function() {
+Frog.prototype._draw = function() {
     Game.display.draw(this._x, this._y, "GG", "green");
 }

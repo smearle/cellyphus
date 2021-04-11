@@ -1,3 +1,4 @@
+
 //change to player class
 var Player = function(x, y) {
     this._x = x;
@@ -10,7 +11,7 @@ var Player = function(x, y) {
     this.thirst = 100;
     this.hunger = 100;
     this.seeds = 0;
-    this.wood = 0;
+    this.wood = 30;
     this.meat = 0;
 
     this.punchDmg = 7;
@@ -74,6 +75,36 @@ Player.prototype.handleEvent = function(e) {
     Game.log_display.clear();
     Game.log_combat.clear();
 
+    if (await_build_select) {
+        if (code == 87) {
+            displayText('Build wall. Select location.');
+            next_build = build_items.WALL;
+        }
+        else if (code == 68) {
+            displayText('Build door. Select location.');
+            next_build = build_items.DOOR;
+        }
+        else if (code == 70) {
+            displayText('Build fire. Select location.');
+            next_build = build_items.FIRE;
+        }
+        else if (code == 66) {
+            displayText('Build bed. Select location.');
+            next_build = build_items.BED;
+        }
+        await_build_select = false;
+        await_build_location = true;
+    }
+    else if (await_build_location) {
+        if (typeof code === 'undefined') {
+            var[x,y] = Game.display.eventToPosition(e);
+            displayText('Ordered build at: ('+x.toString()+", "+y.toString()+")");
+            build_orders[(x, y)] = next_build;
+            console.log(build_orders.toString());
+        }
+//    await_build_location = false;
+    }
+
     if (Game.player.getHealth() <= 0 || Game.player.getThirst() <= 0 || Game.player.getHunger() <= 0)
     {
         var message = "You survived " + Game.days + " days. ";
@@ -89,7 +120,9 @@ Player.prototype.handleEvent = function(e) {
         {
             message += "You starved to death!";
         }
-        Game.engine.lock();
+        if (PLAYER_DEATH) {
+            Game.engine.lock();
+        }
         displayText(message);
     }
 
@@ -97,6 +130,7 @@ Player.prototype.handleEvent = function(e) {
         //freeze movement
         rand = Math.floor(Math.random() * 101);
 //      console.log("random: " + rand);
+        did_combat = true;
 
         //add attack for number press
         switch(code) {
@@ -137,18 +171,9 @@ Player.prototype.handleEvent = function(e) {
                     combatTextPlayer("You swung and missed!");
                 }
                 break;
-            default: //default to punch
-                if (rand <= Game.player.punchChance())
-                {
-                    Game.barbarian.health -= Game.player.punchDmg;
-                    Game.player.hunger -= 2;
-                    combatTextPlayer("You landed your punch for " + Game.player.punchDmg +" damage");
-                }
-                else
-                {
-                    combatTextPlayer("You swung and missed!");
-                }
-                
+            default: //default to ignoring the barb
+                combatTextPlayer("You ignore the barbarian and it slaps you in the head, in disbelief.");
+                did_combat = false;  // this will allow player to take a non-combat action
         }
 
 
@@ -170,7 +195,11 @@ Player.prototype.handleEvent = function(e) {
         var newY = this._y;
 
     }
-    else 
+    else {
+        did_combat = false;
+    }
+
+    if (!did_combat) 
     {
         //runs if mouse click
         if (typeof code === 'undefined')
@@ -181,20 +210,22 @@ Player.prototype.handleEvent = function(e) {
             var newY = this._y;
             if(x >= 0 && y >=0)
             {
-                Game.grasshopper._x_t = x;
-                Game.grasshopper._y_t = y;
+                Game.frog._x_t = x;
+                Game.frog._y_t = y;
 //              console.log("this coords: " + this._x + ", " + this._y);
                 if (getTile(x, y) == "..") {
-                    Game.grasshopper.building = true;
+                    Game.frog.building = true;
                 }
-            Game.grasshopper.wandering = false;
+            Game.frog.wandering = false;
             }
         }
-        else //runs if button press
+        else //runs if button press (and player is not fighting barbarian)
         {
         Game.simulateGrass();
 
         var keyMap = {};
+        // mapping keys to directions
+        // arrow keys
         keyMap[38] = 0;
         keyMap[33] = 1;
         keyMap[39] = 2;
@@ -204,16 +235,19 @@ Player.prototype.handleEvent = function(e) {
         keyMap[37] = 6;
         keyMap[36] = 7;
 
+        // WASE
         keyMap[65] = 6;
         keyMap[68] = 2;
         keyMap[87] = 0;
         keyMap[83] = 4;
+        
         /* one of numpad directions? */
         if (!(code in keyMap))
         {   
             //dont move if invalid keypress
             newX = this._x;
             newY = this._y;
+            // spacebar to plant seeds
             if (code == 32) {
                 if (Game.player.seeds > 0) {
                     Game.log_display.drawText(0, 0, "You plant seeds.");
@@ -227,6 +261,12 @@ Player.prototype.handleEvent = function(e) {
                 }
 
             }
+            // detect "[b]uild" command
+            else if (code == 66) {
+                Game.log_display.drawText(0, 0, "Build: [w]all, [d]oor, [f]ire, [b]ed.");
+                await_build_select = true;
+                };
+
         }
 
         else
@@ -237,7 +277,7 @@ Player.prototype.handleEvent = function(e) {
             var newX = this._x + dir[0];
             var newY = this._y + dir[1];
             trg_tile = getTile(newX, newY);
-            if (impassable.indexOf(trg_tile) >= 0) {
+            if (player_impassable.indexOf(trg_tile) >= 0) {
                 newX = this._x;
                 newY = this._y;
                 if (trg_tile == tile_chars.WATER) {
