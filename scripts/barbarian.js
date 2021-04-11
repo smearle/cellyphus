@@ -16,7 +16,7 @@ Barbarian.prototype.act = function() {
     var x = Game.player.getX();
     var y = Game.player.getY();
 
-    var astar = new ROT.Path.AStar(x, y, passableCallback, {topology:4});
+    var astar = new ROT.Path.AStar(x, y, barbPassableCallback, {topology:4});
 
     var path = [];
     var pathCallback = function(x, y) {

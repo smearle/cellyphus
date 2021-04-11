@@ -10,6 +10,7 @@ amphibians = cv2.imread("imgs/Dwarf Fortress/raw/graphics/amphibians.png", cv2.I
 domestic = cv2.imread("imgs/Dwarf Fortress/raw/graphics/domestic.png", cv2.IMREAD_UNCHANGED)
 constructions = cv2.imread("imgs/Dwarf Fortress/data/art/_Meph_constructions.png", cv2.IMREAD_UNCHANGED)
 kobolds = cv2.imread("imgs/Dwarf Fortress/raw/graphics/Vordak/kobolds.png", cv2.IMREAD_UNCHANGED)
+furniture = cv2.imread("imgs/Dwarf Fortress/data/art/_Meph_furniture.png", cv2.IMREAD_UNCHANGED)
 
 w = 32
 def im_coords(im, x0, y0):
@@ -27,8 +28,9 @@ dog = domestic[0*2:1*w, 0*w:1*w]
 small_cow = im_coords(domestic, 1, 5)
 wall = im_coords(constructions, 2, 12)
 goblin = im_coords(kobolds, 0, 0)
+door = im_coords(furniture, 2, 15)
 
-tiles = (player, grass, shrub, tree, water, frogman, dog, small_cow, wall, goblin)
+tiles = (player, grass, shrub, tree, water, frogman, dog, small_cow, wall, goblin, door)
 v = np.concatenate(tiles, axis=1)
 
 cv2.imwrite('tileset.png', v)
