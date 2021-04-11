@@ -112,25 +112,25 @@ function render(){
 }
 
 //switch focus from one character to another on the main game screen
-function gotoChar(c,b){
+function gotoChar(b){
 	let ent = Game.player;
 
-	if(c == "player")
+	if(b.id == "player")
 		ent = Game.player;
 
 	/*     NOTE!   CHANGE THIS FOR ARRAY OF FROGS      */
-	else if(c == "frog1")
-		ent = Grasshopper
+	//else if(b.id == "frog0")
+	//	ent = Grasshopper
 
 	camera.focus = ent;
 	panCamera();
 
 	//set highlight
-	let icons = document.getElementsByClassName("icon");
+	let icons = document.getElementsByClassName("charItem");
 	for(let i =0;i<icons.length;i++){
-		icons[i].classList.remove("camFocus");
+		icons[i].style.backgroundColor = "#ffffff00";
 	}
-	b.classList.add("camFocus")
+	b.style.backgroundColor = "#ECCE0E";
 }
 
 //move the camera 
@@ -233,7 +233,7 @@ function changeSection(sec,tab){
 	for(let t=0;t<allTabs.length;t++){
 		allTabs[t].style.backgroundColor = "#dedede";
 	}
-	tab.style.backgroundColor = "#ffff00";
+	tab.style.backgroundColor = "#ECCE0E";
 
 	if(sec == "minimap"){
 		document.getElementById("minimapCanvas").style.display = "block";

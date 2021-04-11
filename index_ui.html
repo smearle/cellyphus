@@ -102,6 +102,28 @@
 
             }
 
+            .charItem{
+                width:330px;
+                height:85px;
+                display: flex;
+                border:1px solid #bcbcbc;
+            }
+            .charItem:hover{
+                border:1px solid #3F7138;
+            }
+
+            .charItemIMG{
+                width:64px;
+                height:64px;
+                margin: auto 8px auto 8px;
+            }
+            .charItemStats{
+                width:228px;
+                margin: auto 0px auto 0px;
+                padding: 20px 0px;
+                font-size:18px;
+            }
+
         </style>
     </head>
     <body onload="Game.init()">
@@ -126,7 +148,7 @@
                 <div style='display: grid'>
                     <!-- mode tabs -->
                     <div id='drops'>
-                        <div class='tabs' onclick='changeSection("minimap",this)' style='background-color: #ffff00'>Minimap</div>
+                        <div class='tabs' onclick='changeSection("minimap",this)' style='background-color: #ECCE0E'>Minimap</div>
                         <div class='tabs' onclick='changeSection("build",this)'>Build</div>
                     </div>
 
@@ -137,7 +159,32 @@
                     </div> 
                     
                     <!-- character focus selection -->
-                    <div class='sidebar' id='stats'>
+                    <div class='sidebar' id='stats' style='overflow: auto'>
+                        <div class='charItem' id='player' onclick='gotoChar(this)' style='background-color: #ECCE0E'>
+                            <img class='charItemIMG' src='imgs/sprites/player.png'>
+                            <div class='charItemStats' id='playerSideStats'>
+                                Player
+                            </div>
+                        </div>
+                        <div class='charItem' id='frog0' onclick='gotoChar(this)'>
+                            <img class='charItemIMG' src='imgs/sprites/frog.png'>
+                            <div class='charItemStats' id='frog1SideStats'>
+                                Primus the Frog
+                            </div>
+                        </div>
+                        <div class='charItem' id='frog2' >
+                            <img class='charItemIMG' src='imgs/sprites/frog.png'>
+                            <div class='charItemStats' id='frog2SideStats'>
+                                Secondus the Frog
+                            </div>
+                        </div>
+                        <div class='charItem' id='frog3'>
+                            <img class='charItemIMG' src='imgs/sprites/frog.png'>
+                            <div class='charItemStats' id='frog3SideStats'>
+                                Tertius the Frog
+                            </div>
+                        </div>
+
                         <!--
                         <br>
                         <img src='img/player_stat.png' class='icon' id='playerIcon' onclick='gotoChar("player",this)'>
