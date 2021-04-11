@@ -169,7 +169,6 @@ function render(){
 	drawMain();
 	drawConsole();
 	drawMiniMap();
-
 }
 
 //draw main game screen
@@ -352,8 +351,14 @@ function changeScreen(scr){
 }
 
 //change section (used in ui1.html)
-function changeSection(sec){
-	console.log(sec)
+function changeSection(sec,tab){
+	//set background color
+	let allTabs = document.getElementsByClassName("tabs");
+	for(let t=0;t<allTabs.length;t++){
+		allTabs[t].style.backgroundColor = "#dedede";
+	}
+	tab.style.backgroundColor = "#ffff00";
+
 	if(sec == "minimap"){
 		document.getElementById("minimapCanvas").style.display = "block";
 		document.getElementById("build_opt").style.display = "none";

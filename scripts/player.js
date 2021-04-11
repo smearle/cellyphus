@@ -275,4 +275,10 @@ Player.prototype.handleEvent = function(e) {
     }
     this._draw();
     Game.engine.unlock();
+
+    /*
+    //draw ui
+    panCamera();
+    render();
+    */
 }

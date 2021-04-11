@@ -55,18 +55,17 @@ var Game = {
     combatTarget: null,
 
     init: function() {
+        ///  top console  ///
         this.display = new ROT.Display(display_options);
-        this.resource_display = new ROT.Display({width:map_width, height:8})
-        document.body.appendChild(this.resource_display.getContainer());
-        this.log_display = new ROT.Display({width:map_width, height:8})
-        document.body.appendChild(this.log_display.getContainer());
+        this.resource_display = new ROT.Display({width:32, height:8})
+        document.getElementById("consoleArea").appendChild(this.resource_display.getContainer());
+        this.log_display = new ROT.Display({width:32, height:8})
+        document.getElementById("consoleArea").appendChild(this.log_display.getContainer());
+        this.log_combat = new ROT.Display({width:32, height:8})
+        document.getElementById("consoleArea").appendChild(this.log_combat.getContainer());
 
-        this.log_combat = new ROT.Display({width:map_width, height:8})
-        document.body.appendChild(this.log_combat.getContainer());
-
-        const div = document.createElement("div");
-        document.body.appendChild(div);
-        document.body.appendChild(this.display.getContainer());
+        /// game area  ///
+        //document.body.appendChild(this.display.getContainer());
 
         this._generateMap();
 
@@ -84,6 +83,12 @@ var Game = {
         //this.tick = 0;
         this.combatTarget = "None";
         this.engine.start();
+
+
+        //reset camera UI
+        camera.focus = this.player;
+        panCamera();
+        render();
     },
 
     simulateGrass: function() {
@@ -101,7 +106,7 @@ var Game = {
             if (this.map[key] == "gg" || this.map[key] == "..") {
 
                 next_state = census(ix, iy);
-                console.log(next_state);
+    //          console.log(next_state);
                 if (next_state == 1) {
     //          live.push(key);
                     live.push([ix, iy]);

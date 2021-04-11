@@ -1,3 +1,43 @@
+///////////      GLOBAL VARIABLES       ///////////////////
+
+//main game
+var canvas = document.getElementById("game");
+var ctx = canvas.getContext("2d");
+canvas.width = 640;
+canvas.height = 640;
+
+//minimap canvas
+var miniCanvas = document.getElementById("minimapCanvas");
+var mtx = minimapCanvas.getContext("2d");
+miniCanvas.width = 332;
+miniCanvas.height = 300;
+
+var testImg = new Image();
+testImg.src = "proto/img/map.png"
+
+//rot.js map to redraw on the canvas
+var gameMapCanvas = null;
+
+//sizing
+var tw = null;
+var th = null;
+var scw = null;
+var sch = null;
+
+
+//camera
+var camera = {
+  x : 0,
+  y : 0,
+  focus : {_x : 0, _y : 0},
+  zoom : 1
+};
+
+
+
+/////////     ROT.JS BASED CODE       /////////////
+
+
 //var displayText = function(str) {
 function displayText(str) {
     Game.log_display.drawText(0, 6, str);
@@ -52,3 +92,156 @@ function displayHUD() {
       Game.log_combat.drawText(0, 4, punch_str);
   }  
 }
+
+
+////////      UI BASED CODE      ////////
+
+
+//draw everything (copies from the ROT.display output to the canvas shown on the screen)
+function render(){
+	//draw always
+	requestAnimationFrame(render);
+
+	//game not set yet
+	if(Game == null)
+		return;
+
+  	drawMain();
+  	drawMiniMap();
+
+}
+
+//switch focus from one character to another on the main game screen
+function gotoChar(c,b){
+	let ent = Game.player;
+
+	if(c == "player")
+		ent = Game.player;
+
+	/*     NOTE!   CHANGE THIS FOR ARRAY OF FROGS      */
+	else if(c == "frog1")
+		ent = Grasshopper
+
+	camera.focus = ent;
+	panCamera();
+
+	//set highlight
+	let icons = document.getElementsByClassName("icon");
+	for(let i =0;i<icons.length;i++){
+		icons[i].classList.remove("camFocus");
+	}
+	b.classList.add("camFocus")
+}
+
+//move the camera 
+function panCamera(){
+	//game object not set yet
+	if(Game == null || Game.display == null)
+		return;
+
+	let cw = (tw*camera.zoom);
+	let ch = (th*camera.zoom)
+
+	//center the camera on the focus point
+	camera.x = (camera.focus._x)*cw - (canvas.width/2)
+	camera.y = (camera.focus._y)*ch - (canvas.height/2)
+
+	let mw = Game.display.getContainer().width;
+	let mh = Game.display.getContainer().height;
+	
+	//if out of bounds, lock it
+	if(camera.x < 0)
+		camera.x = 0;
+	else if (camera.x > (mw - canvas.width))
+		camera.x = (mw - canvas.width)
+
+	if(camera.y < 0)
+		camera.y = 0;
+	else if (camera.y > (mh - canvas.height))
+		camera.y = (mh - canvas.height)
+}
+
+//draw the main game screen (camera focuses on a certain point)
+function drawMain(){
+	if(Game == null || Game.display == null)		//wait until game object is available
+		return;
+
+	//set the canvas if available and not already set 
+	if(gameMapCanvas == null){
+	   gameMapCanvas = Game.display.getContainer()
+	}
+
+	//reset
+	//ctx.save();
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	//move camera if needed
+	panCamera();
+
+
+
+	//draw part of the map based on the current focal point
+	ctx.drawImage(gameMapCanvas,
+		camera.x/camera.zoom,camera.y/camera.zoom,canvas.width/camera.zoom,canvas.height/camera.zoom,
+		0,0,canvas.width,canvas.height);
+
+	//ctx.restore();
+}
+
+//draw entire map as a minimap on the sidebar
+function drawMiniMap(){
+	if(Game == null || Game.display == null)		//wait until game object is available
+		return;
+
+	//set ui variables if Game object is available
+	if(gameMapCanvas == null || tw == null || th == null || scw == null || sch == null){
+	   gameMapCanvas = Game.display.getContainer();		//set the canvas if available (Game object set)
+
+	   //scale down (this would normally be calculated by the map size relative to the canvas size)
+		tw = Game.display.getOptions().tileWidth;
+		th = Game.display.getOptions().tileHeight;
+		scw = miniCanvas.width/(Game.display.getOptions().width);
+		sch = miniCanvas.height/(Game.display.getOptions().height);
+	}
+
+	//reset
+	//mtx.save();
+	mtx.clearRect(0, 0, miniCanvas.width, miniCanvas.height);
+
+	//draw entire map from the game onto the minimap
+	mtx.drawImage(gameMapCanvas, 0,0,miniCanvas.width,miniCanvas.height);
+
+	//maybe add icons for the characters?
+
+	//draw camera box on minimap
+	let cw = (tw*camera.zoom);
+	let ch = (th*camera.zoom)
+
+	mtx.strokeStyle = "#fff";
+	mtx.strokeRect((camera.x/cw)*scw,(camera.y/ch)*sch,(canvas.width/cw)*scw,(canvas.height/ch)*sch)
+
+
+	//mtx.restore();
+}
+
+
+
+//change menu section (minimap - build)
+function changeSection(sec,tab){
+	//set background color
+	let allTabs = document.getElementsByClassName("tabs");
+	for(let t=0;t<allTabs.length;t++){
+		allTabs[t].style.backgroundColor = "#dedede";
+	}
+	tab.style.backgroundColor = "#ffff00";
+
+	if(sec == "minimap"){
+		document.getElementById("minimapCanvas").style.display = "block";
+		document.getElementById("build_opt").style.display = "none";
+	}else if(sec == "build"){
+		document.getElementById("minimapCanvas").style.display = "none";
+		document.getElementById("build_opt").style.display = "block";
+	}
+}
+
+render();
