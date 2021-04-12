@@ -98,13 +98,25 @@ function displayHUD() {
 
 //gets a point relative to the map in pixels 
 //ex. ([3,9] = 3 tiles from the left, 9 tiles from the top -> [3*tw,9*th]) 
-function mapLoc(p){
+function map2Pix(p){
 	return [p[0]*tw,p[1]*th];
 }
 //same as above but for 1d value on a specific axis (x,y)
-function mapLocAx(pi,axis){
+function map2PixAx(pi,axis){
 	return (axis == "x" ? pi*tw : pi*th);
 }
+
+//convert raw pixel point on canvas to map tile location (offset by camera)
+function pix2Map(p){
+	return [(camera.x/tw)+Math.floor(p[0]/tw),(camera.y/th)+Math.floor(p[1]/th)];
+}
+
+//convert raw pixel point on canvas to minimap tile location
+function pix2Minimap(p){
+	return [Math.floor(p[0]/scw),Math.floor(p[1]/sch)];
+}
+
+
 
 //draw everything (copies from the ROT.display output to the canvas shown on the screen)
 function render(){
@@ -121,15 +133,19 @@ function render(){
 }
 
 //switch focus from one character to another on the main game screen
-function gotoChar(b){
+function camFocusChar(b){
 	let ent = Game.player;
 
+	//player
 	if(b.id == "player")
 		ent = Game.player;
 
-	/*     NOTE!   CHANGE THIS FOR ARRAY OF FROGS      */
-	else if(b.id == "frog0")
-		ent = Game.frog
+	//get frog in the array of frogs
+	else if(b.id.includes("frog")){
+		let fi = parseInt(b.id.replace("frog",""));
+		if(fi < Game.frog_manager.frogs.length)
+			ent = Game.frog_manager.frogs[fi];
+	}
 
 	camera.focus = ent;
 	panCamera();
@@ -142,6 +158,18 @@ function gotoChar(b){
 	b.style.backgroundColor = "#ECCE0E";
 }
 
+//switches focus to a point clicked on the minimap
+function camFocusPt(p){
+	camera.focus = {_x:p[0], _y:p[1]};
+	panCamera();
+
+	//set highlight
+	let icons = document.getElementsByClassName("charItem");
+	for(let i =0;i<icons.length;i++){
+		icons[i].style.backgroundColor = "#ffffff00";
+	}
+}
+
 //move the camera 
 function panCamera(){
 	//game object not set yet
@@ -149,7 +177,7 @@ function panCamera(){
 		return;
 
 	//center the camera on the focus point
-	let t = mapLoc([camera.focus._x,camera.focus._y]);
+	let t = map2Pix([camera.focus._x,camera.focus._y]);
 	camera.x = t[0] - ((canvas.width/camera.zoom)/(2));
 	camera.y = t[1] - ((canvas.height/camera.zoom)/(2));
 
@@ -226,14 +254,7 @@ function drawMiniMap(){
 
 	mtx.strokeStyle = "#fff";
 	mtx.strokeRect((camera.x/tw)*scw,(camera.y/th)*sch,((canvas.width/camera.zoom)/tw)*scw,((canvas.height/camera.zoom)/tw)*sch)
-
-
-	//mtx.restore();
-
-	//mtx.strokeStyle="#ff0000";
-	//mtx.strokeRect((camera.focus._x)*scw-((canvas.width/cw)*scw)/2,(camera.focus._y)*sch-((canvas.height/ch)*sch)/2,(canvas.width/cw)*scw,(canvas.height/ch)*sch)
 }
-
 
 
 //change menu section (minimap - build)

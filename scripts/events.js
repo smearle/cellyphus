@@ -152,13 +152,46 @@ EventHandler.prototype.handleEvent = function(e) {
         //runs if mouse click
         if (typeof code === 'undefined')
         {
+            var x = -1;
+            var y = -1;
+
+            //main map
             if (e.target.id == 'game') {
-                console.log("Get main map coordinates here.");
+                //get raw pixel location relative to the canvas
+                let rect = e.target.getBoundingClientRect();
+                let rx = Math.round(e.clientX - rect.left);
+                let ry = Math.round(e.clientY - rect.top);
+
+                //convert to map coordinates based on windowed main screen
+                [x,y] = pix2Map([rx,ry]);
+
+                console.log("Main Screen: (" + rx + "," + ry + ")  -->  (" + x + "," + y + ")");
             }
+
+            //minimap
             else if (e.target.id == 'minimapCanvas') {
-                console.log("Get minimap coordinates here.");
+                //get raw pixel location relative to the canvas
+                let rect = e.target.getBoundingClientRect();
+                let rx = Math.round(e.clientX - rect.left);
+                let ry = Math.round(e.clientY - rect.top);
+
+                //convert to map coordinates based on minimap
+                [x,y] = pix2Minimap([rx,ry]);
+
+                console.log("Minimap: (" + rx + "," + ry + ")  -->  ("+  x + "," + y + ")");
+
+
+                //move camera to location clicked on map
+                camFocusPt([x,y]);
             }
-            var[x,y] = Game.display.eventToPosition(e);
+
+
+            //all other clicks are outside the map bounds
+            if(x == -1 && y == -1)
+                console.log("Out of bounds!");
+            //console.log(x,y)
+
+            //var[x,y] = Game.display.eventToPosition(e);
             // help
 //          var x = Math.floor(e.clientX / 32);
 //          var y = Math.floor(e.clientY / 32);
