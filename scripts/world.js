@@ -47,7 +47,7 @@ function getPlantTile(x, y) {
         var x1 = x + dx
         var y1 = y + dy;
         var tile_type = getTile(x1, y1);
-        if (!(impassable.indexOf(tile_type) >= 0) && !(tile_type == tile_chars.GRASS)) {
+        if (!(player_impassable.indexOf(tile_type) >= 0) && !(tile_type == tile_chars.GRASS)) {
             return [x1, y1];
         }
     }

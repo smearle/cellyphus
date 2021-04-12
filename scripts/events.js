@@ -63,7 +63,9 @@ EventHandler.prototype.handleEvent = function(e) {
     }
     else if (await_build_location) {
         if (typeof code === 'undefined') {
-            var[x,y] = Game.display.eventToPosition(e);
+//          var[x,y] = Game.display.eventToPosition(e);
+            // just use the player as a command brush for now :~D
+            var[x, y] = [Game.player._x, Game.player._y];
             displayText('Ordered build at: ('+x.toString()+", "+y.toString()+")");
             build_orders[(x, y)] = next_build;
             console.log(build_orders.toString());
@@ -157,18 +159,25 @@ EventHandler.prototype.handleEvent = function(e) {
                 console.log("Get minimap coordinates here.");
             }
             var[x,y] = Game.display.eventToPosition(e);
+            // help
+//          var x = Math.floor(e.clientX / 32);
+//          var y = Math.floor(e.clientY / 32);
+
+            // just use the player as a command brush for now :~D
+            var x = player._x;
+            var y = player._y;
             document.getElementById("clickedCoords").innerHTML = [x,y];
             var newX = player._x;
             var newY = player._y;
             if(x >= 0 && y >=0)
             {
-                Game.frog._x_t = x;
-                Game.frog._y_t = y;
+                Game.frog_manager.frogs[0]._x_t = x;
+                Game.frog_manager.frogs[0]._y_t = y;
 //              console.log("this coords: " + this._x + ", " + this._y);
                 if (getTile(x, y) == "..") {
-                    Game.frog.building = true;
+                    Game.frog_manager.frogs[0].building = true;
                 }
-            Game.frog.wandering = false;
+            Game.frog_manager.frogs[0].wandering = false;
             }
         }
         else //runs if button press (and player is not fighting barbarian)
