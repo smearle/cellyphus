@@ -33,22 +33,6 @@
                 height:640px;
                 border:2px solid #000000;
             }
-            .sidebar{
-                /*
-                width:15%;
-                height:100%;
-                */
-                width:332px;
-                height:300px;
-                border:2px solid #000;
-                background-color: #dedede;
-                display: block;
-            }
-            .sidebar button{
-                width: 128px;
-                font-size:2vw;
-                margin-top: 1vw;
-            }
             
             #container{
                 width:980px;
@@ -63,6 +47,21 @@
                 height:640px;
                 border: 2px solid black
             }
+
+            /* side bar */
+
+            .sidebar{
+                /*
+                width:15%;
+                height:100%;
+                */
+                width:332px;
+                height:300px;
+                border:2px solid #000;
+                background-color: #dedede;
+                display: block;
+            }
+
             #drops{
                 width:332px;
                 height:32px;
@@ -70,27 +69,6 @@
                 background-color: #787878;
                 display:flex;
                 text-align: center;
-            }
-            .icon{
-                width: 45%;
-            }
-            .icon:hover{
-                border:2px solid #bcbcbc;
-            }
-            .camFocus{
-                border:2px solid green;
-            }
-
-            #build_opt div{
-                margin-top: 1vw;
-            }
-
-            .item{
-                padding:1vw;
-            }
-
-            .item:hover{
-                border:1px solid blue;
             }
 
             .tabs{
@@ -102,14 +80,39 @@
 
             }
 
+
+            /* BUILD SCREEN */
+            #buildList{
+                width:50%;
+                height:300px;
+                overflow: auto;
+                border-right: 1px solid #787878;
+            }
+
+            #buildList > div{
+                border-bottom:1px solid #a0a0a0;
+                font-size:1.5vw;
+                padding:10px 0px;
+            }   
+
+            #buildIcon{
+                padding: 15px 0px;
+            }
+
+            #buildList > div:hover{
+                border:2px solid #3F7138;
+            }
+
+
+            /* CHARACTER CAMERA FOCUS SELECTION */
             .charItem{
                 width:330px;
                 height:85px;
-                display: flex;
+                display:flex;
                 border:1px solid #bcbcbc;
             }
             .charItem:hover{
-                border:1px solid #3F7138;
+                border:2px solid #3F7138;
             }
 
             .charItemIMG{
@@ -148,14 +151,28 @@
                 <div style='display: grid'>
                     <!-- mode tabs -->
                     <div id='drops'>
-                        <div class='tabs' onclick='changeSection("minimap",this)' style='background-color: #ECCE0E'>Minimap</div>
-                        <div class='tabs' onclick='changeSection("build",this)'>Build</div>
+                        <div class='tabs' onclick='changeSection("minimap",this)' style='background-color: #ECCE0E' id='minimapTab'>Minimap</div>
+                        <div class='tabs' onclick='changeSection("build",this)' id='buildTab'>Build</div>
                     </div>
 
                     <!-- minimap and build menu -->
                     <div class='sidebar' id='minimap'>
                         <canvas id='minimapCanvas'>Minimap canvas</canvas>
-                        <div id='build_opt' style="display: none;"></div>
+                        <div id='build_opt' style="display: none;">
+                             <div style='display: flex'>
+                                <div id='buildList'>
+                                    <div class='buildItem' onmouseenter="showBuildDesc('wall',this)">Wall</div>
+                                    <div class='buildItem' onmouseenter="showBuildDesc('chair',this)">Chair</div>
+                                    <div class='buildItem' onmouseenter="showBuildDesc('fire',this)">Fire</div>
+                                    <div class='buildItem' onmouseenter="showBuildDesc('bed',this)">Bed</div>
+                                    <div class='buildItem' onmouseenter="showBuildDesc('door',this)">Door</div>
+                                </div>
+                                <div style='display:grid;width:50%;height:300px'>
+                                    <div style='height:130px;width:100%'><img src='imgs/sprites/Froggy_Chair.png' id='buildIcon' width='120' height='120'></div>
+                                    <div id='buildDesc' style='padding:10px 0px;border:1px solid red;height:100px'>Item description goes here</div>
+                                </div>
+                            </div>
+                        </div>
                     </div> 
                     
                     <!-- character focus selection -->

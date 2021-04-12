@@ -108,7 +108,7 @@ function map2PixAx(pi,axis){
 
 //convert raw pixel point on canvas to map tile location (offset by camera)
 function pix2Map(p){
-	return [(camera.x/tw)+Math.floor(p[0]/tw),(camera.y/th)+Math.floor(p[1]/th)];
+	return [(camera.x/(tw*camera.zoom))+Math.floor(p[0]/(tw*camera.zoom)),(camera.y/(th*camera.zoom))+Math.floor(p[1]/(th*camera.zoom))];
 }
 
 //convert raw pixel point on canvas to minimap tile location
@@ -207,20 +207,18 @@ function drawMain(){
 	}
 
 	//reset
-	ctx.save();
+	//ctx.save();
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	//move camera if needed
 	panCamera();
-
-
 
 	//draw part of the map based on the current focal point
 	ctx.drawImage(gameMapCanvas,
 		camera.x,camera.y,canvas.width/camera.zoom,canvas.height/camera.zoom,
 		0,0,canvas.width,canvas.height);
 
-	ctx.restore();
+	//ctx.restore();
 }
 
 //draw entire map as a minimap on the sidebar
@@ -254,6 +252,21 @@ function drawMiniMap(){
 
 	mtx.strokeStyle = "#fff";
 	mtx.strokeRect((camera.x/tw)*scw,(camera.y/th)*sch,((canvas.width/camera.zoom)/tw)*scw,((canvas.height/camera.zoom)/tw)*sch)
+}
+
+//shows icon and build description in build tab when hovered over
+function showBuildDesc(b,r){
+	//set background color
+	let allTabs = document.getElementsByClassName("buildItem");
+	for(let t=0;t<allTabs.length;t++){
+		allTabs[t].style.backgroundColor = "#dedede";
+	}
+	r.style.backgroundColor = "#ECCE0E";
+
+	//set description based on item TODO
+	document.getElementById("buildDesc").innerHTML = build_info[b];
+
+	//set icon TODO
 }
 
 

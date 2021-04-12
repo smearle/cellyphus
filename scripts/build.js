@@ -10,6 +10,14 @@ const build_items = {
     BED: "bed",
 }
 
+//temp build item descriptions
+const build_info = {
+	"wall": "Prevents movement from all characters",
+	"door" : "Only allows the player and frogs to enter",
+	"fire" : "For a bit of arson ;)",
+	"bed" : "Replenish health and pass time"
+}
+
 // For when the player is selecting an order to give, will be used to enter a build_order (x, y): build_type pair
 let next_build = build_items.NONE;
 

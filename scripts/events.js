@@ -36,6 +36,11 @@ EventHandler.prototype.handleEvent = function(e) {
     if (code == 66) {
         Game.log_display.drawText(0, 0, "Build: [w]all, [d]oor, [f]ire, [b]ed.");
         await_build_select = true;
+
+
+        //open build menu
+        changeSection("build",document.getElementById("buildTab"));
+
         // go ahead and wait for another event
         return
     };
@@ -180,7 +185,6 @@ EventHandler.prototype.handleEvent = function(e) {
 
                 console.log("Minimap: (" + rx + "," + ry + ")  -->  ("+  x + "," + y + ")");
 
-
                 //move camera to location clicked on map
                 camFocusPt([x,y]);
             }
@@ -189,6 +193,7 @@ EventHandler.prototype.handleEvent = function(e) {
             //all other clicks are outside the map bounds
             if(x == -1 && y == -1)
                 console.log("Out of bounds!");
+
             //console.log(x,y)
 
             //var[x,y] = Game.display.eventToPosition(e);
