@@ -55,6 +55,7 @@ var Game = {
     map: {},
     engine: null,
     player: null,
+    event_handler: null,
     mouse: null,
     hawk: null,
     ananas: null,
@@ -79,9 +80,11 @@ var Game = {
         //document.body.appendChild(this.display.getContainer());
 
         this._generateMap();
+        this.event_handler = new EventHandler();
 
         var scheduler = new ROT.Scheduler.Simple();
         //scheduler.add()
+        scheduler.add(this.event_handler, true);
         //make instance of game loop to run game loop stuff
         scheduler.add(this.player, true);
         //scheduler.add(this.mouse, true);
