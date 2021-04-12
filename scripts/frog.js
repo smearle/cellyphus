@@ -1,11 +1,23 @@
+var FrogManager = function() {
+    init_frog = Game._createBeing(Frog, freeCells);
+    this.frogs = [init_frog];
+}
 
-//change to frog / grasshopper class
+FrogManager.prototype.act = function () {
+    for (i = 0; i < this.frogs.length; i++) {
+        this.frogs[i].act();
+    }
+}
+
+
+
+
 var Frog = function(x, y) {
     this._x = x;
     this._y = y;
     this._x_t = Game.player.getX();
     this._y_t = Game.player.getY();
-    this.building = false;  // if the grasshopper is on its way to build something
+    this.building = false;  // if the frog is on its way to build something
     this._draw();
     this._move_ticker = 0
 }
@@ -30,7 +42,6 @@ Frog.prototype.act = function() {
         var newY;
         [newX, newY] = getWanderTile(this._x, this._y);
         drawTile(this._x, this._y);
-//      console.log(newX, newY);
         this._x = newX;
         this._y = newY;
         Game.log_display.drawText(0, 4, "Idle Frogman wanders.");
@@ -51,7 +62,6 @@ Frog.prototype.act = function() {
         if (path.length == 1) {
             if (tile == ".." && this.building) {
                 curr_build = build_orders[(x, y)];
-                console.log(curr_build);
                 if (curr_build == build_items.WALL) {
                     if (Game.player.wood > 0) {
                         displayText("Frogman builds the wall.");

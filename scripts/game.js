@@ -59,6 +59,7 @@ var Game = {
     mouse: null,
     hawk: null,
     ananas: null,
+    frog_manager: null,
 
     gameTicks: 0,
     ticksPerDay: 3,
@@ -83,12 +84,11 @@ var Game = {
         this.event_handler = new EventHandler();
 
         var scheduler = new ROT.Scheduler.Simple();
-        //scheduler.add()
-        scheduler.add(this.event_handler, true);
         //make instance of game loop to run game loop stuff
+        scheduler.add(this.event_handler, true);
         scheduler.add(this.player, true);
-        //scheduler.add(this.mouse, true);
-        scheduler.add(this.frog, true);
+        scheduler.add(this.frog_manager, true);
+        //TODO: multi-barbis!
         if (BARBARIAN) {
             scheduler.add(this.barbarian, true);
         }
@@ -107,6 +107,7 @@ var Game = {
         render();
     },
 
+    //TODO: factor this out, into vegetation code
     simulateGrass: function() {
       if (!(Game.gameTicks % 5 == 0)) {
         return;
@@ -217,7 +218,7 @@ var Game = {
         this.player = this._createBeing(Player, freeCells);
         //this.mouse = this._createBeing(Cow, freeCells);
         //this.hawk = this._createBeing(Hawk, freeCells);
-        this.frog = this._createBeing(Frog, freeCells);
+        this.frog_manager = new FrogManager();
         this.barbarian = this._createBeing(Barbarian, freeCells);
 
         this.freeCells = freeCells;
@@ -256,6 +257,26 @@ var Game = {
             var y = parseInt(parts[1]);
             this.display.draw(x, y, this.map[key]);
         }
+    },
+
+    // Iterate through tiles in the map and return a set consisting of valid spawn points for a new frog
+    _getFreeFrogSpawnCells: function() {
+        freeCells = [];
+        for (x=0; x<map_width; x++) {
+            for (y=0; y<map_height; y++) {
+                var key = x+","+y;
+                if (this.map[key] == ".."){
+                    freeCells.push(key);
+                }
+            }
+        }
+        return freeCells;
+    },
+
+    spawnFrog: function() {
+        freeCells = this._getFreeFrogSpawnCells();
+        new_frog = this._createBeing(Frog, freeCells);
+        this.frog_manager.frogs.push(new_frog);
     }
 };
 
