@@ -96,6 +96,15 @@ function displayHUD() {
 
 ////////      UI BASED CODE      ////////
 
+//gets a point relative to the map in pixels 
+//ex. ([3,9] = 3 tiles from the left, 9 tiles from the top -> [3*tw,9*th]) 
+function mapLoc(p){
+	return [p[0]*tw,p[1]*th];
+}
+//same as above but for 1d value on a specific axis (x,y)
+function mapLocAx(pi,axis){
+	return (axis == "x" ? pi*tw : pi*th);
+}
 
 //draw everything (copies from the ROT.display output to the canvas shown on the screen)
 function render(){
@@ -119,8 +128,8 @@ function gotoChar(b){
 		ent = Game.player;
 
 	/*     NOTE!   CHANGE THIS FOR ARRAY OF FROGS      */
-	//else if(b.id == "frog0")
-	//	ent = Grasshopper
+	else if(b.id == "frog0")
+		ent = Game.frog
 
 	camera.focus = ent;
 	panCamera();
@@ -139,12 +148,10 @@ function panCamera(){
 	if(Game == null || Game.display == null)
 		return;
 
-	let cw = (tw*camera.zoom);
-	let ch = (th*camera.zoom)
-
 	//center the camera on the focus point
-	camera.x = (camera.focus._x)*cw - (canvas.width/2)
-	camera.y = (camera.focus._y)*ch - (canvas.height/2)
+	let t = mapLoc([camera.focus._x,camera.focus._y]);
+	camera.x = t[0] - ((canvas.width/camera.zoom)/(2));
+	camera.y = t[1] - ((canvas.height/camera.zoom)/(2));
 
 	let mw = Game.display.getContainer().width;
 	let mh = Game.display.getContainer().height;
@@ -152,13 +159,13 @@ function panCamera(){
 	//if out of bounds, lock it
 	if(camera.x < 0)
 		camera.x = 0;
-	else if (camera.x > (mw - canvas.width))
-		camera.x = (mw - canvas.width)
+	else if (camera.x > (mw - canvas.width/camera.zoom))
+		camera.x = (mw - canvas.width/camera.zoom)
 
 	if(camera.y < 0)
 		camera.y = 0;
-	else if (camera.y > (mh - canvas.height))
-		camera.y = (mh - canvas.height)
+	else if (camera.y > (mh - canvas.height/camera.zoom))
+		camera.y = (mh - canvas.height/camera.zoom)
 }
 
 //draw the main game screen (camera focuses on a certain point)
@@ -172,7 +179,7 @@ function drawMain(){
 	}
 
 	//reset
-	//ctx.save();
+	ctx.save();
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	//move camera if needed
@@ -182,10 +189,10 @@ function drawMain(){
 
 	//draw part of the map based on the current focal point
 	ctx.drawImage(gameMapCanvas,
-		camera.x/camera.zoom,camera.y/camera.zoom,canvas.width/camera.zoom,canvas.height/camera.zoom,
+		camera.x,camera.y,canvas.width/camera.zoom,canvas.height/camera.zoom,
 		0,0,canvas.width,canvas.height);
 
-	//ctx.restore();
+	ctx.restore();
 }
 
 //draw entire map as a minimap on the sidebar
@@ -218,10 +225,13 @@ function drawMiniMap(){
 	let ch = (th*camera.zoom)
 
 	mtx.strokeStyle = "#fff";
-	mtx.strokeRect((camera.x/cw)*scw,(camera.y/ch)*sch,(canvas.width/cw)*scw,(canvas.height/ch)*sch)
+	mtx.strokeRect((camera.x/tw)*scw,(camera.y/th)*sch,((canvas.width/camera.zoom)/tw)*scw,((canvas.height/camera.zoom)/tw)*sch)
 
 
 	//mtx.restore();
+
+	//mtx.strokeStyle="#ff0000";
+	//mtx.strokeRect((camera.focus._x)*scw-((canvas.width/cw)*scw)/2,(camera.focus._y)*sch-((canvas.height/ch)*sch)/2,(canvas.width/cw)*scw,(canvas.height/ch)*sch)
 }
 
 
