@@ -117,6 +117,8 @@ function pix2Minimap(p){
 }
 
 
+//////////////     MAP FUNCTIONS     //////////////////
+
 
 //draw everything (copies from the ROT.display output to the canvas shown on the screen)
 function render(){
@@ -254,6 +256,16 @@ function drawMiniMap(){
 	mtx.strokeRect((camera.x/tw)*scw,(camera.y/th)*sch,((canvas.width/camera.zoom)/tw)*scw,((canvas.height/camera.zoom)/tw)*sch)
 }
 
+//changes the zoom value on the minimap and the map screen
+function changeZoom(v){
+	camera.zoom = parseFloat(v);
+}
+
+
+/////////////////////       MENU ITEMS       ////////////////////////
+
+
+
 //shows icon and build description in build tab when hovered over
 function showBuildDesc(b){
 	//set description and icon based on item
@@ -290,13 +302,18 @@ function changeSection(sec,tab){
 	}
 	tab.style.backgroundColor = "#ECCE0E";
 
+	document.getElementById("build_opt").style.display = "none";
+	document.getElementById("minimapCanvas").style.display = "none";
+	document.getElementById("user_settings").style.display = "none";
+
 	if(sec == "minimap"){
 		document.getElementById("minimapCanvas").style.display = "block";
-		document.getElementById("build_opt").style.display = "none";
 	}else if(sec == "build"){
-		document.getElementById("minimapCanvas").style.display = "none";
 		document.getElementById("build_opt").style.display = "block";
+	}else if(sec == "settings"){
+		document.getElementById("user_settings").style.display = "block";
 	}
+
 }
 
 render();
