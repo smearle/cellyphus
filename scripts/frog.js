@@ -44,7 +44,7 @@ Frog.prototype.act = function() {
         drawTile(this._x, this._y);
         this._x = newX;
         this._y = newY;
-        Game.log_display.drawText(0, 4, "Idle Frogman wanders.");
+        Game.log_display.drawText(0, 4, "Idle frog wanders.");
     }
 
     // Head to some target
@@ -60,31 +60,31 @@ Frog.prototype.act = function() {
         path.shift();
         tile = getTile(x, y);
         if (path.length == 1) {
-            if (tile == ".." && this.building) {
-                curr_build = build_orders[(x, y)];
+            if ((tile == ".." || tile == "gg") && this.building) {
+                curr_build = build_orders[[x, y]];
                 if (curr_build == build_items.WALL) {
                     if (Game.player.wood > 0) {
-                        displayText("Frogman builds the wall.");
+                        displayText("Frog builds the wall.");
                         setTile(x, y, tile_chars.WALL);
                         drawTile(x, y);
                         Game.player.wood -= 1;
                     }
                     else {
-                        displayText("Cannot build wall without wood.");
+                        displayText("No wood, no wall.");
                     }
                     this.building = false;
                 this.wandering = true;
                 }
                 else if (curr_build == build_items.DOOR) {
                     displayText("build a door");
-                    displayText("Frogman builds the door.");
+                    displayText("Frog builds the door.");
                     setTile(x, y, tile_chars.DOOR);
                     drawTile(x, y);
                 }
             }
         }
         if (/*path.length == 1 ||*/ path.length == 0) {
-            Game.log_display.drawText(0, 4, "Frogman has arrived at their destination.");
+            Game.log_display.drawText(0, 4, "Frog arrives.");
             if (tile == "**"){
                 Game.player.wood += 5;
                 setTile(x, y, tile_chars.EMPTY);
