@@ -255,18 +255,32 @@ function drawMiniMap(){
 }
 
 //shows icon and build description in build tab when hovered over
-function showBuildDesc(b,r){
-	//set background color
-	let allTabs = document.getElementsByClassName("buildItem");
-	for(let t=0;t<allTabs.length;t++){
-		allTabs[t].style.backgroundColor = "#dedede";
-	}
-	r.style.backgroundColor = "#ECCE0E";
+function showBuildDesc(b){
+	
 
 	//set description based on item TODO
 	document.getElementById("buildDesc").innerHTML = build_info[b];
 
 	//set icon TODO
+}
+
+//select item to build from the menu selection
+function selectBuildDiv(code,r){
+	resetBuildItemsColor();
+	r.style.backgroundColor = "#ECCE0E";
+
+	//set build item
+	buildSelect(code)
+	//displayText("Select location!");
+}
+
+//reset colors of build item tabs
+function resetBuildItemsColor(){
+	//set background color
+	let allTabs = document.getElementsByClassName("buildItem");
+	for(let t=0;t<allTabs.length;t++){
+		allTabs[t].style.backgroundColor = "#dedede";
+	}
 }
 
 

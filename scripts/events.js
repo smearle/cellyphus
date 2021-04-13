@@ -160,6 +160,10 @@ EventHandler.prototype.handleEvent = function(e) {
                             Game.frog_manager.frogs[0].building = true;
                         }
                     Game.frog_manager.frogs[0].wandering = false;
+
+                    
+                        //reset menu colors
+                        resetBuildItemsColor();
                     }
                 }
             }

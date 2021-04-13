@@ -78,7 +78,7 @@ var Game = {
         document.getElementById("consoleArea").appendChild(this.resource_display.getContainer());
         this.log_display = new ROT.Display({width:32, height:8})
         document.getElementById("consoleArea").appendChild(this.log_display.getContainer());
-        this.log_combat = new ROT.Display({width:32, height:8})
+        this.log_combat = new ROT.Display({width:34, height:8, fontSize:10})
         document.getElementById("consoleArea").appendChild(this.log_combat.getContainer());
 
         /// game area  ///

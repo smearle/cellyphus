@@ -161,11 +161,10 @@
                         <div id='build_opt' style="display: none;">
                              <div style='display: flex'>
                                 <div id='buildList'>
-                                    <div class='buildItem' onmouseenter="showBuildDesc('wall',this)">Wall</div>
-                                    <div class='buildItem' onmouseenter="showBuildDesc('chair',this)">Chair</div>
-                                    <div class='buildItem' onmouseenter="showBuildDesc('fire',this)">Fire</div>
-                                    <div class='buildItem' onmouseenter="showBuildDesc('bed',this)">Bed</div>
-                                    <div class='buildItem' onmouseenter="showBuildDesc('door',this)">Door</div>
+                                    <div class='buildItem' onmouseenter="showBuildDesc('wall')" onclick="selectBuildDiv(87,this)">Wall</div>
+                                    <div class='buildItem' onmouseenter="showBuildDesc('fire')" onclick="selectBuildDiv(70,this)">Fire</div>
+                                    <div class='buildItem' onmouseenter="showBuildDesc('bed')" onclick="selectBuildDiv(66,this)">Bed</div>
+                                    <div class='buildItem' onmouseenter="showBuildDesc('door')" onclick="selectBuildDiv(68,this)">Door</div>
                                 </div>
                                 <div style='display:grid;width:50%;height:300px'>
                                     <div style='height:130px;width:100%'><img src='imgs/sprites/Froggy_Chair.png' id='buildIcon' width='120' height='120'></div>
