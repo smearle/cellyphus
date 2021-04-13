@@ -61,26 +61,7 @@ Frog.prototype.act = function() {
         tile = getTile(x, y);
         if (path.length == 1) {
             if ((tile == ".." || tile == "gg") && this.building) {
-                curr_build = build_orders[[x, y]];
-                if (curr_build == build_items.WALL) {
-                    if (Game.player.wood > 0) {
-                        displayText("Frog builds the wall.");
-                        setTile(x, y, tile_chars.WALL);
-                        drawTile(x, y);
-                        Game.player.wood -= 1;
-                    }
-                    else {
-                        displayText("No wood, no wall.");
-                    }
-                    this.building = false;
-                this.wandering = true;
-                }
-                else if (curr_build == build_items.DOOR) {
-                    displayText("build a door");
-                    displayText("Frog builds the door.");
-                    setTile(x, y, tile_chars.DOOR);
-                    drawTile(x, y);
-                }
+                build(x, y);
             }
         }
         if (/*path.length == 1 ||*/ path.length == 0) {

@@ -18,7 +18,9 @@ const tile_chars = {
     FROGMAN: "GG",
     WATER: "ww",
     TREE: "**",
-    DOOR: "dd",
+    DOOR: "d",
+    FIRE: "f",
+    BED: "b"
 }
 
 
@@ -43,7 +45,9 @@ var display_options = {
         "mm": [64, 0],
         "ww": [128, 0],
         "|": [256, 0],
-        "dd": [320, 0],
+        "d": [320, 0],
+        "f": [12*32, 0],
+        "b": [11*32, 0],
     },
     width: map_width,
     height: map_height,

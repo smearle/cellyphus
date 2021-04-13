@@ -32,6 +32,12 @@ EventHandler.prototype.handleEvent = function(e) {
         Game.spawnFrog();
     }
 
+    // we need to detect [b]ed before [b]uild
+    // TODO: refactor this harder forever
+    if (await_build_select) {
+        return buildSelect(code);
+    }
+
     // detect "[b]uild" command
     if (code == 66) {
         Game.log_display.drawText(0, 0, "Build: [w]all, [d]oor, [f]ire, [b]ed.");
@@ -44,28 +50,6 @@ EventHandler.prototype.handleEvent = function(e) {
         // go ahead and wait for another event
         return
     };
-
-    if (await_build_select) {
-        if (code == 87) {
-            displayText('Build wall. Select location.');
-            next_build = build_items.WALL;
-        }
-        else if (code == 68) {
-            displayText('Build door. Select location.');
-            next_build = build_items.DOOR;
-        }
-        else if (code == 70) {
-            displayText('Build fire. Select location.');
-            next_build = build_items.FIRE;
-        }
-        else if (code == 66) {
-            displayText('Build bed. Select location.');
-            next_build = build_items.BED;
-        }
-        await_build_select = false;
-        await_build_location = true;
-        return;
-    }
 
 
 

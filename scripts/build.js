@@ -21,15 +21,58 @@ const build_info = {
 // For when the player is selecting an order to give, will be used to enter a build_order (x, y): build_type pair
 let next_build = build_items.NONE;
 
-
-// NOT USING THIS YET //////////////////////////////////////
-var BuildManager = function() {
+function buildSelect(code) {
+    if (code == 87) {
+        displayText('Build wall. Select location.');
+        next_build = build_items.WALL;
+    }
+    else if (code == 68) {
+        displayText('Build door. Select location.');
+        next_build = build_items.DOOR;
+    }
+    else if (code == 70) {
+        displayText('Build fire. Select location.');
+        next_build = build_items.FIRE;
+    }
+    else if (code == 66) {
+        displayText('Build bed. Select location.');
+        next_build = build_items.BED;
+    }
+    await_build_select = false;
+    await_build_location = true;
+    return;
 }
 
-BuildManager.prototype.handleEvent = function(e) {
-    var code = e.keyCode;
+function build(x, y) {
+    curr_build = build_orders[[x, y]];
+    switch(curr_build) {
+        case build_items.WALL:
+//  if (curr_build == build_items.WALL) {
+            if (Game.player.wood > 0) {
+                displayText("Frog builds the wall.");
+                setTile(x, y, tile_chars.WALL);
+                drawTile(x, y);
+                Game.player.wood -= 1;
+            }
+            else {
+                displayText("No wood, no wall.");
+            }
+            this.building = false;
+            this.wandering = true;
 
-    if (keycode == 66) {
-        alert("dummi message for tweedle-don'ts");
+        case build_items.DOOR:
+            displayText("build a door");
+            displayText("Frog builds the door.");
+            setTile(x, y, tile_chars.DOOR);
+            drawTile(x, y);
+        case build_items.BED:
+            setTile(x, y, tile_chars.BED);
+            drawTile(x, y);
+        case build_items.FIRE:
+            setTile(x, y, tile_chars.FIRE);
+            drawTile(x, y);
+        default:
+            console.log("invalid build item my guy");
     }
 }
+
