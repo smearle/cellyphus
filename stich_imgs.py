@@ -19,22 +19,35 @@ def im_coords(im, x0, y0):
     return im[x0*w:x1*w, y0*w:y1*w]
 
 player = misc[8*w:9*w, 12*w:13*w]
+cv2.imwrite('imgs/player.png', player)
 #grass = misc[1*w:2*w, 7*w:8*w]
 grass = im_coords(misc, 11, 7)
+cv2.imwrite('imgs/grass.png', grass)
 shrub = misc[4*w:5*w, 6*w:7*w]
+cv2.imwrite('imgs/shrub.png', shrub)
 tree = misc[-7*w:-6*w, 12*w:13*w]
+cv2.imwrite('imgs/tree.png', tree)
 #water_tiles = dec_2[-2*w:-1*w, 10*w:11*w]
 water = water[1*w:2*w, 1*w:2*w]
-frogman = amphibians[0*w:1*w, 0*w:1*w]
+cv2.imwrite('imgs/water.png', water)
+frog = amphibians[0*w:1*w, 0*w:1*w]
+cv2.imwrite('imgs/frog.png', frog)
 dog = domestic[0*2:1*w, 0*w:1*w]
+cv2.imwrite('imgs/dog.png', dog)
 small_cow = im_coords(domestic, 1, 5)
+cv2.imwrite('imgs/small_cow.png', small_cow)
 wall = im_coords(constructions, 2, 12)
+cv2.imwrite('imgs/wall.png', wall)
 goblin = im_coords(kobolds, 0, 0)
+cv2.imwrite('imgs/goblin.png', goblin)
 door = im_coords(furniture, 2, 15)
+cv2.imwrite('imgs/door.png', door)
 bed = im_coords(furniture, 2, 6)
+cv2.imwrite('imgs/bed.png', bed)
 fire = im_coords(decorations, 15, 15)
+cv2.imwrite('imgs/fire.png', fire)
 
-tiles = (player, grass, shrub, tree, water, frogman, dog, small_cow, wall, goblin, door, bed, fire)
+tiles = (player, grass, shrub, tree, water, frog, dog, small_cow, wall, goblin, door, bed, fire)
 v = np.concatenate(tiles, axis=1)
 
 cv2.imwrite('tileset.png', v)

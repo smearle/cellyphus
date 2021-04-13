@@ -118,6 +118,7 @@ function getNeighbors(x, y) {
   return count;
 }
 
+// That grass
 /*
  * Any live cell with fewer than two live neighbors dies, as if by under population.
  */
