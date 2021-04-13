@@ -18,6 +18,13 @@ const build_info = {
 	"bed" : "Replenish health and pass time"
 }
 
+const build_imgs = {
+	"wall": "imgs/wall.png",
+	"door": "imgs/door.png",
+	"fire": "imgs/fire.png",
+	"bed": "imgs/bed.png"
+}
+
 // For when the player is selecting an order to give, will be used to enter a build_order (x, y): build_type pair
 let next_build = build_items.NONE;
 

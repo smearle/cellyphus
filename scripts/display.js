@@ -256,12 +256,9 @@ function drawMiniMap(){
 
 //shows icon and build description in build tab when hovered over
 function showBuildDesc(b){
-	
-
-	//set description based on item TODO
+	//set description and icon based on item
 	document.getElementById("buildDesc").innerHTML = build_info[b];
-
-	//set icon TODO
+	document.getElementById("buildIcon").src = build_imgs[b];
 }
 
 //select item to build from the menu selection
