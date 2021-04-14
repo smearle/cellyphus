@@ -66,18 +66,22 @@ function build(x, y) {
             }
             this.building = false;
             this.wandering = true;
+            break;
 
         case build_items.DOOR:
             displayText("build a door");
             displayText("Frog builds the door.");
             setTile(x, y, tile_chars.DOOR);
             drawTile(x, y);
+            break;
         case build_items.BED:
             setTile(x, y, tile_chars.BED);
             drawTile(x, y);
+            break;
         case build_items.FIRE:
             setTile(x, y, tile_chars.FIRE);
             drawTile(x, y);
+            break;
         default:
             console.log("invalid build item my guy");
     }
