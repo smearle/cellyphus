@@ -46,8 +46,10 @@ function buildSelect(code) {
 function build(x, y) {
     curr_build = build_orders[[x, y]];
     switch(curr_build) {
+
         case build_items.WALL:
 //  if (curr_build == build_items.WALL) {
+            console.log('it is wall');
             if (Game.player.wood > 0) {
                 displayText("Frog builds the wall.");
                 setTile(x, y, tile_chars.WALL);
@@ -61,6 +63,8 @@ function build(x, y) {
             this.wandering = true;
 
         case build_items.DOOR:
+            console.log('it is door');
+
             displayText("build a door");
             displayText("Frog builds the door.");
             setTile(x, y, tile_chars.DOOR);
@@ -71,8 +75,8 @@ function build(x, y) {
         case build_items.FIRE:
             setTile(x, y, tile_chars.FIRE);
             drawTile(x, y);
-        default:
-            console.log("invalid build item my guy");
+      //default:
+      //    console.log("invalid build item my guy");
     }
 }
 

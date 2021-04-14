@@ -61,6 +61,7 @@ Frog.prototype.act = function() {
         tile = getTile(x, y);
         if (path.length == 1) {
             if ((tile == ".." || tile == "gg") && this.building) {
+                setTile(x, y, tile_chars.EMPTY);
                 build(x, y);
             }
         }
