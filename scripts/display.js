@@ -212,6 +212,10 @@ function drawMain(){
 	//ctx.save();
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+	//set background "ocean"
+	ctx.fillStyle = "#4B97AA";
+	ctx.fillRect(0,0,canvas.width,canvas.height);
+
 	//move camera if needed
 	panCamera();
 
