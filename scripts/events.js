@@ -20,6 +20,9 @@ EventHandler.prototype.act = function() {
 
 //main game loop
 EventHandler.prototype.handleEvent = function(e) {
+
+    //console.log("me too")
+
     player = Game.player;
     var code = e.keyCode;
 

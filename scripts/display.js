@@ -33,6 +33,10 @@ var camera = {
   zoom : 1
 };
 
+//store console logs 
+var maxTxtLog = 100;
+var txtLog = []
+
 
 
 /////////     ROT.JS BASED CODE       /////////////
@@ -41,6 +45,7 @@ var camera = {
 //var displayText = function(str) {
 function displayText(str) {
     Game.log_display.drawText(0, 6, str);
+    addToLog(str)
 }
 
 //var combatTextPlayer = function(str) {
@@ -48,6 +53,7 @@ function combatTextPlayer(str) {
     var empty = "                                                                                      "
     Game.log_combat.drawText(1, 6, empty);
     Game.log_combat.drawText(1, 6, str);
+    addToLog(str)
 }
 
 //var combatTextEnemy = function(str) {
@@ -55,6 +61,7 @@ function combatTextEnemy(str) {
     var empty = "                                                                                      "
     Game.log_combat.drawText(1, 7, empty);
     Game.log_combat.drawText(1, 7, str);
+    addToLog(str)
 }
 
 //var displayHUD = function() {
@@ -309,6 +316,7 @@ function changeSection(sec,tab){
 	document.getElementById("build_opt").style.display = "none";
 	document.getElementById("minimapCanvas").style.display = "none";
 	document.getElementById("user_settings").style.display = "none";
+	document.getElementById("text_log").style.display = "none";
 
 	if(sec == "minimap"){
 		document.getElementById("minimapCanvas").style.display = "block";
@@ -316,7 +324,25 @@ function changeSection(sec,tab){
 		document.getElementById("build_opt").style.display = "block";
 	}else if(sec == "settings"){
 		document.getElementById("user_settings").style.display = "block";
+	}else if(sec == "log"){
+		document.getElementById("text_log").style.display = "block";
 	}
+
+}
+
+
+//adds console txt to the log and updates the screen accordingly
+function addToLog(txt){
+	//add to the log
+	txtLog.push(txt);
+	if(txtLog.length > maxTxtLog){
+		txtLog.shift();
+	}
+
+	//update the screen
+	let logger = document.getElementById("text_log");
+	document.getElementById("text_log").innerHTML = " - " + txtLog.join("<br> - ");
+	document.getElementById("text_log").scrollTop = logger.scrollHeight;
 
 }
 

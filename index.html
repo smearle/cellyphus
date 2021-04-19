@@ -81,7 +81,6 @@
 
             }
 
-
             /* BUILD SCREEN */
             #buildList{
                 width:50%;
@@ -109,6 +108,20 @@
                 margin-left:15px;
                 margin-top:15px;
                 text-align: left;
+            }
+
+            /* TEXT LOGGER */
+            #text_log{
+                background-color:#131313;
+                text-align: left;
+                padding-left: 10px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                color: #fff;
+                height:280px;
+                overflow: auto;
+                font-size:12px;
+                font-family:monospace;
             }
 
 
@@ -162,6 +175,7 @@
                         <div class='tabs' onclick='changeSection("minimap",this)' style='background-color: #ECCE0E' id='minimapTab'>Minimap</div>
                         <div class='tabs' onclick='changeSection("build",this)' id='buildTab'>Build</div>
                         <div class='tabs' onclick='changeSection("settings",this)' id='settingsTab'>Settings</div>
+                        <div class='tabs' onclick='changeSection("log",this)' id='logTab'>Log</div>
                     </div>
 
                     <!-- minimap and build menu -->
@@ -183,6 +197,9 @@
                         </div>
                         <div id='user_settings' style="display: none;">
                             Map Zoom: <input type='number' value='1' id='mapZoom' onchange='changeZoom(this.value)'>
+                        </div>
+                        <div id='text_log' style="display: none;">
+                            Some terrible things happened...
                         </div>
                     </div> 
                     
