@@ -240,7 +240,7 @@ EventHandler.prototype.handleEvent = function(e) {
                         var[seed_x, seed_y] = getPlantTile(player._x, player._y);
     //                  var[seed_x, seed_y] = [player._x, player._y];
                         setTile(seed_x, seed_y, tile_chars.GRASS);
-                        drawTile(seed_x, seed_y);
+                        //drawTile(seed_x, seed_y);
                     }
                     else {
                         Game.log_display.drawText(0, 0, "You have no seeds to plant.");
@@ -271,7 +271,7 @@ EventHandler.prototype.handleEvent = function(e) {
         }
     }    
 
-    Game.display.draw(player._x, player._y, Game.map[player._x+","+player._y]);
+    //Game.display.draw(player._x, player._y, Game.map[player._x+","+player._y]);
     // Move the player
     player._x = newX;
     player._y = newY;
@@ -296,11 +296,18 @@ EventHandler.prototype.handleEvent = function(e) {
 
     }
 
-    player._draw();
+    //player._draw();
 
 
     //DRAW EVERYTHING HERE ALL AT ONCE
+    Game._drawWholeMap();                                       //draw map
 
+    player._draw();                                             //draw player
+
+    Game.barbarian._draw();                                     //draw bararians
+
+    let frogSet = Game.frog_manager.frogs;                      //draw frogs
+    for(let f=0;f<frogSet.length;f++){frogSet[f]._draw();}
 
 
 

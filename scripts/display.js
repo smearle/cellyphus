@@ -39,7 +39,7 @@ var txtLog = []
 
 
 
-/////////     ROT.JS BASED CODE       /////////////
+/////////     TEXT CONSOLE CODE       /////////////
 
 
 //var displayText = function(str) {
@@ -101,7 +101,7 @@ function displayHUD() {
 }
 
 
-////////      UI BASED CODE      ////////
+////////      MAP CONVERSION CODE      ////////
 
 //gets a point relative to the map in pixels 
 //ex. ([3,9] = 3 tiles from the left, 9 tiles from the top -> [3*tw,9*th]) 

@@ -44,8 +44,8 @@ Barbarian.prototype.act = function() {
         
     }
 
-    Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
-    this._draw();
+    //Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
+    //this._draw();
 }
 
 //return Manhattan distance from this to another object
@@ -103,10 +103,10 @@ Barbarian.prototype.chase = function(){
 
         x = path[0][0];
         y = path[0][1];
-        Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
+        //Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
         this._x = x;
         this._y = y;
-        this._draw();
+        //this._draw();
         console.log("why are you running?! WHY ARE YOU RUNNING!?!?")
     }
 }
@@ -123,10 +123,10 @@ Barbarian.prototype.idle = function(){
     //valid spot to move to
     if(barbPassableCallback(x,y)){
         
-        Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
+        //Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
         this._x = x;
         this._y = y;
-        this._draw();
+        //this._draw();
         console.log("head empty... " + (x+","+y) +"?")
     }
 }
@@ -158,10 +158,10 @@ Barbarian.prototype.flee = function(){
 
             x = path[0][0];
             y = path[0][1];
-            Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
+            //Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
             this._x = x;
             this._y = y;
-            this._draw();
+            //this._draw();
         }
 
         console.log("screw you guys! i'm going home")
