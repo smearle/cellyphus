@@ -291,11 +291,24 @@ EventHandler.prototype.handleEvent = function(e) {
         Game.log_display.drawText(0, 0, "You eat grass.")
         player.hunger = Math.min(100, player.hunger + 25);
         setTile(player._x, player._y, "..");
-        drawTile(player._x, player._y);
+        //drawTile(player._x, player._y);
         player.seeds += 1;
 
     }
+
     player._draw();
+
+
+    //DRAW EVERYTHING HERE ALL AT ONCE
+
+
+
+
+
+
+
+
+
     Game.engine.unlock();
 
     /*

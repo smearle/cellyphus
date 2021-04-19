@@ -78,6 +78,7 @@
                 height:100%;
                 padding-top: 8px;
                 font-size:16px;
+                cursor:pointer;
 
             }
 
@@ -131,6 +132,7 @@
                 height:85px;
                 display:flex;
                 border:1px solid #bcbcbc;
+                cursor:pointer;
             }
             .charItem:hover{
                 border:2px solid #3F7138;
@@ -180,7 +182,7 @@
 
                     <!-- minimap and build menu -->
                     <div class='sidebar' id='minimap'>
-                        <canvas id='minimapCanvas'>Minimap canvas</canvas>
+                        <canvas id='minimapCanvas' style='cursor:crosshair;'>Minimap canvas</canvas>
                         <div id='build_opt' style="display: none;">
                              <div style='display: flex'>
                                 <div id='buildList'>
@@ -243,6 +245,7 @@
 
             <!-- imported scripts -->
             <script src="https://cdn.jsdelivr.net/npm/rot-js@2/dist/rot.js"></script>
+            <script src='scripts/utils.js'></script>
             <script src="scripts/frog.js"></script>
             <script src="scripts/barbarian.js"></script>
             <script src="scripts/build.js"></script>
