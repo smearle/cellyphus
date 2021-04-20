@@ -4,8 +4,8 @@ var BARBARIAN = true;
 // Will you die of any cause?
 var PLAYER_DEATH = false;
 
-var map_width = 80;
-var map_height = 80;
+var map_width = 64;
+var map_height = 64;
 var tileSet = document.createElement("img");
 
 tileSet.src = "tileset.png";
@@ -66,6 +66,7 @@ var Game = {
     ananas: null,
     frog_manager: null,
     barbarians: [],
+    blackLodge: null,
 
     gameTicks: 0,
     ticksPerDay: 3,
@@ -80,7 +81,7 @@ var Game = {
         document.getElementById("consoleArea").appendChild(this.resource_display.getContainer());
         this.log_display = new ROT.Display({width:32, height:8, fontSize:14})
         document.getElementById("consoleArea").appendChild(this.log_display.getContainer());
-        this.log_combat = new ROT.Display({width:40, height:8, fontSize:14})
+        this.log_combat = new ROT.Display({width:42, height:8, fontSize:14})
         document.getElementById("consoleArea").appendChild(this.log_combat.getContainer());
 
         /// game area  ///
@@ -221,13 +222,14 @@ var Game = {
 
         this._generateBoxes(freeCells);
         this._generateGrass(freeCells);
+        this._generateBlackLodge();
         this._drawWholeMap();
 
         this.player = this._createBeing(Player, freeCells);
         //this.mouse = this._createBeing(Cow, freeCells);
         //this.hawk = this._createBeing(Hawk, freeCells);
         this.frog_manager = new FrogManager();
-        this.barbarians.push(this._createBeing(Barbarian, freeCells));
+        this.barbarians.push(this._createBarbarian());
 
         this.freeCells = freeCells;
     },
@@ -241,6 +243,11 @@ var Game = {
         return new what(x, y);
     },
 
+    //generate a barbarian from the black lodge
+    _createBarbarian: function(){
+        return new Barbarian(this.blackLodge._x, this.blackLodge._y,this.blackLodge);
+    },
+
     _generateBoxes: function(freeCells) {
         for (var i=0;i<10;i++) {
             var index = Math.floor(ROT.RNG.getUniform() * freeCells.length);
@@ -248,6 +255,38 @@ var Game = {
             this.map[key] = "**";
             if (!i) { this.ananas = key; } /* first box contains an ananas */
         }
+    },
+
+    //create the base for the barbarians
+    _generateBlackLodge: function(){
+        var index = Math.floor(ROT.RNG.getUniform() * freeCells.length);
+        var key = freeCells.splice(index, 1)[0].split(",");
+        let x = parseInt(key[0]);
+        let y = parseInt(key[1]);
+
+        //set base of the black lodge
+        this.blackLodge = {_x:x+4, _y:y+4};
+
+        //build (black) walls around it
+        let lodge = [
+        [0,0,0,1,1,1,0,0,0],
+        [0,0,0,1,0,1,0,0,0],
+        [1,1,1,1,1,1,1,1,1],
+        [1,0,1,0,0,0,1,0,1],
+        [1,0,1,0,0,0,1,0,1],
+        [0,0,1,1,0,1,1,0,0],
+        ]
+        for(let r=0;r<lodge.length;r++){
+            for(let c=0;c<lodge[0].length;c++){
+                let nkey = ((x+c)+","+(y+r));
+                if(lodge[r][c] == 1){
+                    this.map[nkey] = "|";
+                }
+            }
+        }
+
+
+
     },
 
     _generateGrass: function(freeCells) {

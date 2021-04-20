@@ -1,14 +1,14 @@
 //change to barbarian class
 //var Barbarian = function(x, y) {
-function Barbarian(x, y) {
+function Barbarian(x, y,lodge) {
     this._x = x;
     this._y = y;
     this.health = 100;
     this.power = 5;
-    this.radar = 15;
+    this.radar = 25;
     this.speed = 100;
-    this.base = null;
-    this.at_base = false;
+    this.base = lodge;
+    this.at_base = true;
     this.recharge = 0;
     this._draw();
 }
@@ -134,9 +134,9 @@ Barbarian.prototype.idle = function(){
 //have barbarian run back to its base
 Barbarian.prototype.flee = function(){
     //ET go home
-    if(this.base != null && !this.at_base){
-        var x = this.base._x;
-        var y = this.base._y;
+    if(this.lodge != null && !this.at_base){
+        var x = this.lodge._x;
+        var y = this.lodge._y;
 
         var astar = new ROT.Path.AStar(x, y, barbPassableCallback, {topology:4});
 
