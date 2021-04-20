@@ -176,8 +176,8 @@
                     <div id='drops'>
                         <div class='tabs' onclick='changeSection("minimap",this)' style='background-color: #ECCE0E' id='minimapTab'>Minimap</div>
                         <div class='tabs' onclick='changeSection("build",this)' id='buildTab'>Build</div>
-                        <div class='tabs' onclick='changeSection("settings",this)' id='settingsTab'>Settings</div>
                         <div class='tabs' onclick='changeSection("log",this)' id='logTab'>Log</div>
+                        <div class='tabs' onclick='changeSection("settings",this)' id='settingsTab'>Settings</div>
                     </div>
 
                     <!-- minimap and build menu -->
@@ -197,11 +197,20 @@
                                 </div>
                             </div>
                         </div>
-                        <div id='user_settings' style="display: none;">
-                            Map Zoom: <input type='number' value='1' id='mapZoom' onchange='changeZoom(this.value)'>
-                        </div>
                         <div id='text_log' style="display: none;">
                             Some terrible things happened...
+                        </div>
+                        <div id='user_settings' style="display: none;">
+                            <div style='display: flex'>
+                                <div style="width:100px;">
+                                    Map Zoom: <br>
+                                    Icon Size: 
+                                </div>
+                                <div>
+                                    <input type='number' value='1' id='mapZoom' onchange='changeZoom(this.value)'><br>
+                                    <input type='number' value='12' id='iconSize' onchange='changeIconSize(this.value)'>
+                                </div>
+                            </div>
                         </div>
                     </div> 
                     

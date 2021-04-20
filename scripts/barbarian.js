@@ -74,7 +74,7 @@ Barbarian.prototype.chase = function(){
             //this._draw();
         }
         else {
-            Game.combatTarget = "Barbarian";
+            Game.combatTarget = this;
     //      Game.engine.lock();
             //do text based combat here
 
@@ -94,12 +94,12 @@ Barbarian.prototype.chase = function(){
             //Game.scheduler.remove(Game.mouse)
             //Game.mouse = null;
 
-            console.log("he attac")
+            //console.log("he attac")
         }
     }
     //move towards player
     else {
-        if (Game.combatTarget == "Barbarian") {Game.combatTarget = "None";}
+        if (Game.combatTarget == this) {Game.combatTarget = null;}
 
         x = path[0][0];
         y = path[0][1];
@@ -107,7 +107,7 @@ Barbarian.prototype.chase = function(){
         this._x = x;
         this._y = y;
         //this._draw();
-        console.log("why are you running?! WHY ARE YOU RUNNING!?!?")
+        //console.log("why are you running?! WHY ARE YOU RUNNING!?!?")
     }
 }
 
@@ -127,7 +127,7 @@ Barbarian.prototype.idle = function(){
         this._x = x;
         this._y = y;
         //this._draw();
-        console.log("head empty... " + (x+","+y) +"?")
+        //console.log("head empty... " + (x+","+y) +"?")
     }
 }
 
@@ -154,7 +154,7 @@ Barbarian.prototype.flee = function(){
         }
         //run forrest run!
         else{
-            if (Game.combatTarget == "Barbarian") {Game.combatTarget = "None";}
+            if (Game.combatTarget == this) {Game.combatTarget = null;}
 
             x = path[0][0];
             y = path[0][1];
@@ -164,16 +164,16 @@ Barbarian.prototype.flee = function(){
             //this._draw();
         }
 
-        console.log("screw you guys! i'm going home")
+        //console.log("screw you guys! i'm going home")
     }
     //hopeless, just run around
     else if(this.base == null){
         this.idle();
-        console.log("welp, guess i'll die")
+        //console.log("welp, guess i'll die")
     }
     //"what do we do now?" "nothing"
     else{
-        console.log("magic conch shell!")
+        //console.log("magic conch shell!")
         return;
     }
 }

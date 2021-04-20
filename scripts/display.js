@@ -12,8 +12,19 @@ var mtx = minimapCanvas.getContext("2d");
 miniCanvas.width = 332;
 miniCanvas.height = 300;
 
-var testImg = new Image();
-testImg.src = "proto/img/map.png"
+//minimap icons
+var playerIcon = new Image();
+playerIcon.src = "imgs/sprites/player_icon.png";
+
+var frogIcon = new Image();
+frogIcon.src = "imgs/sprites/frog_icon.png";
+
+var barbIcon = new Image();
+barbIcon.src = "imgs/sprites/barbarian_icon.png";
+
+var iconSize = 12;
+
+
 
 //rot.js map to redraw on the canvas
 var gameMapCanvas = null;
@@ -82,12 +93,14 @@ function displayHUD() {
   Game.resource_display.drawText(15, 3, wood_str);
   Game.resource_display.drawText(15, 4, meat_str);
   //combat info
-  if (Game.combatTarget == "None") {
-      target_str = "Combat: " + Game.combatTarget.padStart(8, " ");
+  if (Game.combatTarget == null) {
+  		let name = "None";
+      target_str = "Combat: " + name.padStart(8, " ");
       Game.log_combat.drawText(0, 0, target_str);
   }
-  else if (Game.combatTarget == "Barbarian") {
-      target_str = "Combat: " + Game.combatTarget.padStart(10, " ") + "  " + Game.barbarian.getHealth() + "HP";
+  else{
+  		let name = "Barbarian"
+      target_str = "Combat: " + name.padStart(10, " ") + "  " + Game.combatTarget.getHealth() + "HP";
       slam_str = "1.(" + Game.player.slamDmg +"atk)Body Slam: " + Game.player.slamChance().toString().padStart(3, " ") + "%";
       kick_str = "2.(" + Game.player.kickDmg +"atk)Kick: " + Game.player.kickChance().toString().padStart(8, " ") + "%";
       punch_str = "3.(" + Game.player.punchDmg +"atk) Punch: " + Game.player.punchChance().toString().padStart(7, " ") + "%";
@@ -258,6 +271,17 @@ function drawMiniMap(){
 	mtx.drawImage(gameMapCanvas, 0,0,miniCanvas.width,miniCanvas.height);
 
 	//maybe add icons for the characters?
+	mtx.drawImage(playerIcon, 0,0,16,16, (Game.player._x*scw)-(iconSize/2), (Game.player._y*sch)-(iconSize/2), iconSize,iconSize);
+	let frogs = Game.frog_manager.frogs;
+	for(let f=0;f<frogs.length;f++){
+		let frog = frogs[f];
+		mtx.drawImage(frogIcon, 0,0,16,16, (frog._x*scw)-(iconSize/2), (frog._y*sch)-(iconSize/2), iconSize,iconSize);
+	}
+	let barbs = Game.barbarians
+	for(let b=0;b<barbs.length;b++){
+		let barb = barbs[b];
+		mtx.drawImage(barbIcon, 0,0,16,16, (barb._x*scw)-(iconSize/2), (barb._y*sch)-(iconSize/2), iconSize,iconSize);
+	}
 
 	//draw camera box on minimap
 	let cw = (tw*camera.zoom);
@@ -272,6 +296,10 @@ function changeZoom(v){
 	camera.zoom = parseFloat(v);
 }
 
+//change minimap icon size
+function changeIconSize(v){
+	iconSize = parseInt(v);
+}
 
 /////////////////////       MENU ITEMS       ////////////////////////
 

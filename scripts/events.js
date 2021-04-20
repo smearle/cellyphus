@@ -7,9 +7,10 @@ EventHandler.prototype.act = function() {
     if(Game.gameTicks % Game.ticksPerDay == 0) 
     {
         Game.days += 1;
-        if (Game.barbarian === null && Game.days % 5 == 0) {
-            Game.barbarian = Game._createBeing(Barbarian, freeCells);
-            Game.scheduler.add(Game.barbarian, true);
+        if (Game.barbarians.length == 0 && Game.days % 5 == 0) {
+            let newBarbie = Game._createBeing(Barbarian, freeCells);
+            Game.barbarians.push(newBarbie); 
+            Game.scheduler.add(newBarbie, true);
         }
     }
 
@@ -64,7 +65,7 @@ EventHandler.prototype.handleEvent = function(e) {
     };
 
 
-    if (Game.combatTarget != "None") {
+    if (Game.combatTarget != null) {
         //freeze movement
         rand = Math.floor(Math.random() * 101);
 //      console.log("random: " + rand);
@@ -75,7 +76,7 @@ EventHandler.prototype.handleEvent = function(e) {
             case 49: //pressed 1: slam
                 if (rand <= Game.player.slamChance())
                 {
-                    Game.barbarian.health -= Game.player.slamDmg;
+                    Game.combatTarget.health -= Game.player.slamDmg;
                     Game.player.health -= 1;
                     combatTextPlayer("You body slammed doing " + Game.player.slamDmg +" damage");
                 }
@@ -88,7 +89,7 @@ EventHandler.prototype.handleEvent = function(e) {
             case 50: //pressed 2: kick
                 if (rand <= Game.player.kickChance())
                 {
-                    Game.barbarian.health -= Game.player.kickDmg;
+                    Game.combatTarget.health -= Game.player.kickDmg;
                     Game.player.thirst -= 2;
                     combatTextPlayer("You kicked hard doing " + Game.player.kickDmg +" damage");
                 }
@@ -100,7 +101,7 @@ EventHandler.prototype.handleEvent = function(e) {
             case 51: //pressed 3: punch
                 if (rand <= Game.player.punchChance())
                 {
-                    Game.barbarian.health -= Game.player.punchDmg;
+                    Game.combatTarget.health -= Game.player.punchDmg;
                     Game.player.hunger -= 2;
                     combatTextPlayer("You landed your punch for " + Game.player.punchDmg +" damage");
                 }
@@ -120,13 +121,16 @@ EventHandler.prototype.handleEvent = function(e) {
         //add attack for enemy
 
         //enemy has died
-        if (Game.barbarian.getHealth() <= 0)
+        if (Game.combatTarget.getHealth() <= 0)
         {
-            Game.barbarian.health = 0;
+            Game.combatTarget.health = 0;
             combatTextPlayer("You defeated the enemy");
-            Game.scheduler.remove(Game.barbarian)
-            Game.barbarian = null;
-            Game.combatTarget = "None";
+            Game.scheduler.remove(Game.combatTarget)
+            let i = Game.barbarians.indexOf(Game.combatTarget);
+            if (i > -1){
+                Game.barbarians.splice(i,1);
+            }
+            Game.combatTarget = null;
         }
 
         var newX = player._x;
@@ -304,13 +308,19 @@ EventHandler.prototype.handleEvent = function(e) {
 
     player._draw();                                             //draw player
 
-    Game.barbarian._draw();                                     //draw bararians
+    let barbSet = Game.barbarians;                               //draw bararians
+    for(let b=0;b<barbSet.length;b++){barbSet[b]._draw();}
+                                        
 
     let frogSet = Game.frog_manager.frogs;                      //draw frogs
     for(let f=0;f<frogSet.length;f++){frogSet[f]._draw();}
 
 
-
+    /*
+    //draw ui
+    panCamera();
+    render();
+    */
 
 
 
@@ -318,9 +328,5 @@ EventHandler.prototype.handleEvent = function(e) {
 
     Game.engine.unlock();
 
-    /*
-    //draw ui
-    panCamera();
-    render();
-    */
+    
 }

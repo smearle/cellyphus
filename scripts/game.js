@@ -4,8 +4,8 @@ var BARBARIAN = true;
 // Will you die of any cause?
 var PLAYER_DEATH = false;
 
-var map_width = 40;
-var map_height = 40;
+var map_width = 80;
+var map_height = 80;
 var tileSet = document.createElement("img");
 
 tileSet.src = "tileset.png";
@@ -16,6 +16,7 @@ const tile_chars = {
     PLAYER: "@",
     EMPTY: "..",
     FROGMAN: "GG",
+    BARBARIAN: "SS",
     WATER: "ww",
     TREE: "**",
     DOOR: "d",
@@ -24,9 +25,9 @@ const tile_chars = {
 }
 
 
-frog_impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER]
-barb_impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.DOOR]
-player_impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN]
+frog_impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.BARBARIAN]
+barb_impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.DOOR, tile_chars.BARBARIAN]
+player_impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.BARBARIAN]
 
 var display_options = {
     layout: "tile",
@@ -64,6 +65,7 @@ var Game = {
     hawk: null,
     ananas: null,
     frog_manager: null,
+    barbarians: [],
 
     gameTicks: 0,
     ticksPerDay: 3,
@@ -94,14 +96,16 @@ var Game = {
         scheduler.add(this.frog_manager, true);
         //TODO: multi-barbis!
         if (BARBARIAN) {
-            scheduler.add(this.barbarian, true);
+            for(let b=0;b<this.barbarians.length;b++){
+                scheduler.add(this.barbarians[b], true);
+            }
         }
         //scheduler.add(this.hawk, true);
 
         this.engine = new ROT.Engine(scheduler);
         this.scheduler = scheduler;
         //this.tick = 0;
-        this.combatTarget = "None";
+        this.combatTarget = null;
         this.engine.start();
 
 
@@ -223,7 +227,7 @@ var Game = {
         //this.mouse = this._createBeing(Cow, freeCells);
         //this.hawk = this._createBeing(Hawk, freeCells);
         this.frog_manager = new FrogManager();
-        this.barbarian = this._createBeing(Barbarian, freeCells);
+        this.barbarians.push(this._createBeing(Barbarian, freeCells));
 
         this.freeCells = freeCells;
     },
