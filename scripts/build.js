@@ -55,7 +55,7 @@ function orderBuild(item, x, y) {
 //  console.log('Order build item '+ item);
     displayText('Ordered build ' + item + ' at: ('+x+", "+y+")");
     build_orders[[x, y]] = item;
-    drawTile(item, x, y);
+    drawAlphaTile(item, x, y);
     console.log(build_orders.toString());
 //    await_build_location = false;
     // TODO: check all frogs, assign one closest to build?
@@ -91,6 +91,7 @@ function orderFrogBuild(frog, item, x, y) {
 
 function build(frog, x, y) {
     curr_build = build_orders[[x, y]];
+    delete build_orders[[x, y]];
     frog.isBuilding = false;
     frog.wandering = true;
     switch(curr_build) {

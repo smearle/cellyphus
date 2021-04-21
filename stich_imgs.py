@@ -4,7 +4,8 @@ import numpy as np
 from PIL import Image
 from varname import nameof
 
-os.mkdir('imgs/processed')
+if not os.path.isdir('imgs/processed'):
+    os.mkdir('imgs/processed')
 
 dwarves = cv2.imread("imgs/Dwarf Fortress/raw/graphics/Vordak/dwarves.png", cv2.IMREAD_UNCHANGED)
 misc = cv2.imread("imgs/Dwarf Fortress/data/art/_Meph_32x32.png", cv2.IMREAD_UNCHANGED)

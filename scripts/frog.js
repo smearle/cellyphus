@@ -44,6 +44,16 @@ Frog.prototype.act = function() {
         this._x = newX;
         this._y = newY;
         Game.log_display.drawText(0, 4, "Idle frog wanders.");
+        // random build
+        pending_builds = Object.keys(build_orders);
+      //if (pending_builds.length > 0) {
+      //    key = pending_builds[Math.floor(pending_builds.length * Math.random())];
+      //    val = build_orders[key];
+      //    console.log('key'+ key[0] + key[1]);
+      //    console.log(this, val);
+      //    orderFrogBuild(this, val, key[0], key[1]);
+      //    console.log('been ordered');
+      //}
     }
 
     // Head to some target
@@ -84,7 +94,7 @@ Frog.prototype.act = function() {
         }
     }
     //this._draw();
-    return "frogman acted";
+//  console.log("frogman acted");
 }
 
 Frog.prototype._draw = function() {
