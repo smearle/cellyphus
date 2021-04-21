@@ -120,6 +120,18 @@ var shieldL = {
 	collisionMask: null,
 }
 
+//diagonal shields
+var shieldUR = {
+	active : false,
+	x: null,
+	y: null,
+	height: 4,
+	width: 25,
+	buffer: 16,
+	corners: [],
+	collisionMask: null,
+}
+
 //attacking ai
 var ai = {
 	x : 75,
@@ -165,9 +177,48 @@ var paused = false;				//if players are currently paused
 
 //////////////////    GENERIC FUNCTIONS   ///////////////
 
+//returns the horizontal and vertical components that make up diagonal given diagonal len
+//second and third parameter indicate direction of x and y respectively
+function getDiagXY(x, y, diagLen, xDir, yDir){
+	let sqr = diagLen * diagLen;
+	let len =  Math.sqrt(sqr / 2);
+	return([x + (len * xDir), y + (len * yDir)]);
+}
+
+//gets corners of UR Shield given center, buffer, width, and height
+function getURShield(shield){
+	let x = shield.x;
+	let y = shield.y;
+	let buffer = shield.buffer;
+	let width = shield.width;
+	let height = shield.height;
+
+	let points = [];
+	let point = null;
+
+	//points on outer bound
+	let outerMidpoint = getDiagXY(x, y, (height/2), 1, -1);
+	point = getDiagXY(outerMidpoint[0], outerMidpoint[1], (width / 2), -1, -1);
+	points.push(point);
+
+	point = getDiagXY(outerMidpoint[0], outerMidpoint[1], (width / 2), 1, 1);
+	points.push(point);
+
+	//points on inner bound
+	let innerMidpoint = getDiagXY(x, y, (height/2), -1, 1);
+
+	point = getDiagXY(innerMidpoint[0], innerMidpoint[1], (width / 2), 1, 1);
+	points.push(point);
+
+	point = getDiagXY(innerMidpoint[0], innerMidpoint[1], (width / 2), -1, -1);
+	points.push(point);
+
+	return points;
+}
+
 //creates and returns collision mask for cardinal shields
 function createCollisionMask(shield) {
-	var rect = new P(new V(shield.x, shield.y), [
+	let rect = new P(new V(shield.x, shield.y), [
 	  new V(shield.x - shield.width / 2, shield.y - shield.height / 2), 
 	  new V(shield.x + shield.width / 2, shield.y - shield.height / 2),
 	  new V(shield.x + shield.width / 2, shield.y + shield.height / 2),
@@ -185,29 +236,21 @@ function inArr(arr, e){
 
 function defendUp() {
 	shieldU.active = true;
-	shieldR.active = false;
 	shieldD.active = false;
-	shieldL.active = false;
 }
 
 function defendRight() {
-	shieldU.active = false;
 	shieldR.active = true;
-	shieldD.active = false;
 	shieldL.active = false;
 }
 
 function defendDown() {
 	shieldU.active = false;
-	shieldR.active = false;
 	shieldD.active = true;
-	shieldL.active = false;
 }
 
 function defendLeft() {
-	shieldU.active = false;
 	shieldR.active = false;
-	shieldD.active = false;
 	shieldL.active = true;
 }
 
@@ -361,6 +404,17 @@ function shieldCollided(shield) {
 
 //////////////////  RENDER FUNCTIONS  ////////////////////
 
+//draws shield given corners
+function drawShield(corners) {
+	ctx.beginPath();
+  ctx.moveTo(corners[0][0], corners[0][1]);
+  ctx.lineTo(corners[1][0], corners[1][1]);
+  ctx.lineTo(corners[2][0], corners[2][1]);
+  ctx.lineTo(corners[3][0], corners[3][1]);
+  ctx.closePath();
+  ctx.stroke();
+}
+
 function render(){
 	ctx.save();
 	//ctx.setTransform(1,0,0,1,0,0);
@@ -427,7 +481,23 @@ function render(){
 	}
 
 	//draw defense
-	if (shieldU.active) {
+	if (shieldU.active && shieldR.active) {
+		drawShield(shieldUR.corners);
+	}
+
+	else if (shieldD.active && shieldR.active) {
+		drawShield(shieldDR.corners);
+	}
+
+	else if (shieldD.active && shieldL.active) {
+		drawShield(shieldDL.corners);
+	}
+
+	else if (shieldU.active && shieldL.active) {
+		drawShield(shieldUL.corners);
+	}
+
+	else if (shieldU.active) {
 		//console.log("defending up");
 		ctx.beginPath();
 		//ctx.moveTo(player.x - player.shieldSize / 2, player.y - player.size);
@@ -477,6 +547,9 @@ function render(){
 
 //game initialization function
 function init(){
+
+	[shieldUR.x, shieldUR.y] = getDiagXY(player.x, player.y, (shieldUR.buffer + shieldUR.height / 2), 1, -1);
+	shieldUR.corners = getURShield(shieldUR);
 
 	//setup collisionMask for AI
 	ai.collisionMask = createCollisionMask(ai);
@@ -567,8 +640,6 @@ function main(){
 	//panCamera();
 
 	//test
-	collisionResponse.clear();
-	var ch = SAT.testPolygonPolygon(ai.collisionMask, testMask.collisionMask, collisionResponse);
 
 	//uncomment this
 	//console.log(ch);
@@ -683,17 +754,16 @@ function main(){
 				ai.x += ai.vel.x;
 				ai.y += ai.vel.y;
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				ai.collisionMask.pos = new V(ai.x, ai.y);
-				console.log("ai pos: " + [ai.x, ai.y]);
-				console.log(ai.collisionMask.pos);
+				//console.log("ai pos: " + [ai.x, ai.y]);
+				//console.log(ai.collisionMask.pos);
 
 				collisionResponse.clear();
 				var ch = SAT.testPolygonPolygon(ai.collisionMask, testMask.collisionMask, collisionResponse);
 
-			//uncomment this
-				console.log(ch);
-
+				//console.log(ch);
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				// console.log("ai loc: " + [ai.x, ai.y]);
 				//console.log("collision mask: " + ai.collisionMask.pos);
 				// console.log("edges: " + ai.collisionMask.edges);
