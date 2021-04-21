@@ -652,36 +652,23 @@ function render(){
 
 	else if (shieldU.active) {
 		drawShield(shieldU.corners);
+		shieldCollided(shieldU);
 	}
 	
 	else if (shieldD.active) {
-		//console.log("defending down");
-		ctx.beginPath();
-		// ctx.moveTo(player.x - player.shieldSize / 2, player.y + player.size);
-		// ctx.lineTo(player.x + player.shieldSize / 2, player.y + player.size);
-		ctx.rect(shieldD.x - shieldD.width / 2, shieldD.y, shieldD.width, shieldD.height);
+		drawShield(shieldD.corners);
 		shieldCollided(shieldD);
-		ctx.stroke()
+		
 	}
 
 	else if (shieldR.active) {
-		//console.log("defending right");
-		ctx.beginPath();
-		// ctx.moveTo(player.x + player.size, player.y - player.shieldSize / 2);
-		// ctx.lineTo(player.x + player.size, player.y + player.shieldSize / 2);
-		ctx.rect(shieldR.x, shieldR.y - shieldR.height / 2, shieldR.width, shieldR.height);
+		drawShield(shieldR.corners);
 		shieldCollided(shieldR);
-		ctx.stroke()
 	}
 
 	else if (shieldL.active) {
-		//console.log("defending left");
-		ctx.beginPath();
-		// ctx.moveTo(player.x - player.size, player.y - player.shieldSize / 2);
-		// ctx.lineTo(player.x - player.size, player.y + player.shieldSize / 2);
-		ctx.rect(shieldL.x, shieldL.y - shieldL.height / 2, shieldL.width, shieldL.height);
+		drawShield(shieldL.corners);
 		shieldCollided(shieldL);
-		ctx.stroke()
 	}
 
 	ctx.restore();
@@ -710,14 +697,25 @@ function init(){
 	[shieldUL.x, shieldUL.y] = getDiagXY(player.x, player.y, (shieldUL.buffer + shieldUL.height / 2), -1, -1);
 	shieldUL.corners = getULShield(shieldUL);
 
-
-	//setup collisionMask for AI
-	ai.collisionMask = createCollisionMask(ai);
 	
-	//setup collision mask for shields
+	//initialize shield coords and corners
 	[shieldU.x, shieldU.y] = [player.x, (player.y - shieldU.buffer - shieldU.height / 2)];
 	shieldU.corners = getCardShield(shieldU);
 
+	[shieldR.x, shieldR.y] = [(player.x + shieldR.buffer + shieldR.width / 2), player.y];
+	shieldR.corners = getCardShield(shieldR);
+
+	[shieldD.x, shieldD.y] = [player.x, (player.y + shieldD.buffer + shieldD.height / 2)];
+	shieldD.corners = getCardShield(shieldD);
+
+	[shieldL.x, shieldL.y] = [(player.x - shieldU.buffer - shieldR.width / 2), player.y];
+	shieldL.corners = getCardShield(shieldL);
+
+
+	//setup collisionMask for AI
+	ai.collisionMask = createCollisionMask(ai);
+
+	//setup collision mask for shields
 	shieldU.collisionMask = createCollisionMask(shieldU);
 
 	
@@ -734,9 +732,7 @@ function init(){
 	
 
 
-	[shieldR.x, shieldR.y] = [(player.x + shieldU.buffer), player.y];
-	[shieldD.x, shieldD.y] = [player.x, (player.y + shieldU.buffer)];
-	[shieldL.x, shieldL.y] = [(player.x - shieldU.buffer - shieldR.width), player.y];
+	
 
 
 
