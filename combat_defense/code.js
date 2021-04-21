@@ -53,6 +53,10 @@ var gameVals = {
   //time
 }
 
+//shapes from SAT library to check for collision
+var V = SAT.Vector;
+var P = SAT.Polygon;
+
 //box character
 var player = {
 	x : canvas.width/2,
@@ -83,6 +87,7 @@ var shieldU = {
 	height: 4,
 	width: 25,
 	buffer: 16,
+	collisionMask: null,
 }
 
 var shieldR = {
@@ -92,6 +97,7 @@ var shieldR = {
 	height: 25,
 	width: 4,
 	buffer: 16,
+	collisionMask: null,
 }
 
 var shieldD = {
@@ -101,6 +107,7 @@ var shieldD = {
 	height: 4,
 	width: 25,
 	buffer: 16,
+	collisionMask: null,
 }
 
 var shieldL = {
@@ -110,12 +117,15 @@ var shieldL = {
 	height: 25,
 	width: 4,
 	buffer: 16,
+	collisionMask: null,
 }
 
 //attacking ai
 var ai = {
 	x : 75,
 	y : 75,
+	height: 16,
+	width: 16,
 	color : "#0D7612",
 	vel : {x : 0, y : 0},
 	charged : true,				//whether in the middle of an attack
@@ -123,8 +133,11 @@ var ai = {
 	target : {x : 0, y : 0},
 	delay : 500,					//attack delay
 	canMove : true,
-	trail : []						//use same trail activation as player
+	trail : [],						//use same trail activation as player
+	collisionMask: null,
 }
+
+var collisionResponse; //records collision information using collision masks
 
 var size = 16;			//size of player and ai objects
 
@@ -144,6 +157,16 @@ var paused = false;				//if players are currently paused
 
 //////////////////    GENERIC FUNCTIONS   ///////////////
 
+//creates and returns collision mask for cardinal shields
+function createCollisionMask(shield) {
+	var rect = new P(new V(shield.x, shield.y), [
+	  new V(shield.x - shield.width / 2, shield.y - shield.height / 2), 
+	  new V(shield.x + shield.width / 2, shield.y - shield.height / 2),
+	  new V(shield.x + shield.width / 2, shield.y + shield.height / 2),
+	  new V(shield.x - shield.width / 2, shield.y + shield.height / 2)
+	]);
+	return rect;
+}
 
 //checks if an element is in an array
 function inArr(arr, e){
@@ -178,6 +201,13 @@ function defendLeft() {
 	shieldR.active = false;
 	shieldD.active = false;
 	shieldL.active = true;
+}
+
+function defendOff() {
+	shieldU.active = false;
+	shieldR.active = false;
+	shieldD.active = false;
+	shieldL.active = false;
 }
 
 ////////////////   KEYBOARD FUNCTIONS  //////////////////
@@ -221,6 +251,18 @@ function doShake(intensity){
 }
 
 //////////////////  AI FUNCTIONS  ////////////////////
+
+//send AI to random location on screen after some period of time
+function randomizeAILocation() {
+	ai.x = Math.floor(Math.random() * (canvas.width + 1));
+	ai.y = Math.floor(Math.random() * (canvas.height + 1));
+	ai.canMove = false;
+	targetPlayer();
+
+	setTimeout(function(){
+		ai.canMove = true;
+	}, 500)
+}
 
 //euclidean distance function
 function dist(a,b){return Math.sqrt(Math.pow(b.x-a.x,2)+Math.pow(b.y-a.y,2));}
@@ -282,18 +324,29 @@ function collided(){
 	let ph = py+size;			
 
 	//ai dimensions (top left to bottom right corners)
-	let ax = ai.x-size/2;
-	let ay = ai.y-size/2;
-	let aw = ax+size;	
-	let ah = ay+size;
+	let ax = ai.x-ai.width/2;
+	let ay = ai.y-ai.height/2;
+	let aw = ax+ai.width;	
+	let ah = ay+ai.height;
 
 	//within box boundaries
 	return (px < aw && pw > ax && py < ah && ph > ay);
 
 }
 
-function shieldCollided() {
+//returns true if ai collision mask hit shield collision mask
+//returns false otherwise
+function shieldCollided(shield) {
+	//randomizeAILocation();
 
+	response = new SAT.Response();
+	var collided = SAT.testPolygonPolygon(shield.collisionMask, ai.collisionMask, response);
+
+	if (collided){
+		console.log("shield x:  " + shield.x + " shield y: " + shield.y);
+		ai.canMove = false;
+	}
+	
 }
 
 
@@ -341,7 +394,7 @@ function render(){
 
 	//draw a dark green square to represent the AI
 	ctx.fillStyle = ai.color;
-	ctx.fillRect(ai.x-size/2,ai.y-size/2,size,size);
+	ctx.fillRect(ai.x-ai.width/2,ai.y-ai.height/2,ai.width,ai.height);
 
 	//draw ai target
 	ctx.fillStyle = "#000";
@@ -373,6 +426,7 @@ function render(){
 		//ctx.lineTo(player.x + player.shieldSize / 2, player.y - player.size);
 		//ctx.rect(player.x - player.shieldSize / 2, player.y - player.size, player.shieldSize, 6);
 		ctx.rect(shieldU.x - shieldU.width / 2, shieldU.y, shieldU.width, shieldU.height);
+		shieldCollided(shieldU);
 		ctx.stroke()
 	}
 	
@@ -382,6 +436,7 @@ function render(){
 		// ctx.moveTo(player.x - player.shieldSize / 2, player.y + player.size);
 		// ctx.lineTo(player.x + player.shieldSize / 2, player.y + player.size);
 		ctx.rect(shieldD.x - shieldD.width / 2, shieldD.y, shieldD.width, shieldD.height);
+		shieldCollided(shieldD);
 		ctx.stroke()
 	}
 
@@ -391,6 +446,7 @@ function render(){
 		// ctx.moveTo(player.x + player.size, player.y - player.shieldSize / 2);
 		// ctx.lineTo(player.x + player.size, player.y + player.shieldSize / 2);
 		ctx.rect(shieldR.x, shieldR.y - shieldR.height / 2, shieldR.width, shieldR.height);
+		shieldCollided(shieldR);
 		ctx.stroke()
 	}
 
@@ -400,6 +456,7 @@ function render(){
 		// ctx.moveTo(player.x - player.size, player.y - player.shieldSize / 2);
 		// ctx.lineTo(player.x - player.size, player.y + player.shieldSize / 2);
 		ctx.rect(shieldL.x, shieldL.y - shieldL.height / 2, shieldL.width, shieldL.height);
+		shieldCollided(shieldL);
 		ctx.stroke()
 	}
 
@@ -412,25 +469,21 @@ function render(){
 
 //game initialization function
 function init(){
-	//set checkbox onchange functions
-	let checkboxes = document.getElementsByClassName("featTog");
-	for(let c=0;c<checkboxes.length;c++){
-		checkboxes[c].onchange = function(){changeFeature(checkboxes[c].id)};
-	}
-	changeChecks('select');		//select all to start
 
-	//player.x - player.shieldSize / 2, player.y - player.size, player.shieldSize, 6
-	shieldU.x = player.x;
-	shieldU.y = player.y - shieldU.buffer - shieldU.height;
+	//setup collisionMask for AI
+	ai.collisionMask = createCollisionMask(ai);
+	
+	//setup collision mask for shields
+	[shieldU.x, shieldU.y] = [player.x, (player.y - shieldU.buffer - shieldU.height)];
+	shieldU.collisionMask = createCollisionMask(shieldU);
 
-	shieldR.x = player.x + shieldU.buffer;
-	shieldR.y = player.y;
+	[shieldR.x, shieldR.y] = [(player.x + shieldU.buffer), player.y];
 
-	shieldD.x = player.x;
-	shieldD.y = player.y + shieldU.buffer;
+	[shieldD.x, shieldD.y] = [player.x, (player.y + shieldU.buffer)];
 
-	shieldL.x = player.x - shieldU.buffer - shieldR.width;
-	shieldL.y = player.y;
+	[shieldL.x, shieldL.y] = [(player.x - shieldU.buffer - shieldR.width), player.y];
+
+
 
 	targetPlayer();
 
@@ -522,6 +575,8 @@ function main(){
 
 	//movement + boundary
 	if(!paused){
+		defendOff();
+
 		if(keys[upKey] && (player.y-size/2) > 0) {
 			//player.y -= player.speed;
 			defendUp();
@@ -599,6 +654,11 @@ function main(){
 
 				ai.x += ai.vel.x;
 				ai.y += ai.vel.y;
+
+				ai.collisionMask.pos = [ai.x, ai.y];
+				// console.log("ai loc: " + [ai.x, ai.y]);
+				// console.log("collision mask: " + ai.collisionMask.pos);
+				// console.log("edges: " + ai.collisionMask.edges);
 			}
 			
 		}
