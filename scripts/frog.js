@@ -5,6 +5,7 @@ var FrogManager = function() {
 
 FrogManager.prototype.act = function () {
     for (i = 0; i < this.frogs.length; i++) {
+//      console.log('act frog ' + i);
         this.frogs[i].act();
     }
 }
@@ -26,6 +27,7 @@ Frog.prototype.getSpeed = function() { return 100; }
 
 
 Frog.prototype.act = function() {
+//  console.log('frog tick');
     var x = this._x_t;
     var y = this._y_t;
 
@@ -46,14 +48,16 @@ Frog.prototype.act = function() {
         Game.log_display.drawText(0, 4, "Idle frog wanders.");
         // random build
         pending_builds = Object.keys(build_orders);
-      //if (pending_builds.length > 0) {
-      //    key = pending_builds[Math.floor(pending_builds.length * Math.random())];
-      //    val = build_orders[key];
-      //    console.log('key'+ key[0] + key[1]);
-      //    console.log(this, val);
-      //    orderFrogBuild(this, val, key[0], key[1]);
-      //    console.log('been ordered');
-      //}
+        if (pending_builds.length > 0 && !frog_impassable.includes(getTile(this._x, this._y))) {
+//  //      debugger;
+            key = pending_builds[Math.floor(pending_builds.length * Math.random())].split(",");
+            console.log(key);
+            x = parseInt(key[0]);
+            y = parseInt(key[1]);
+            val = build_orders[key];
+            console.log('cusdf:', x, y, val);
+            orderFrogBuild(this, val, x, y);
+        }
     }
 
     // Head to some target
@@ -69,10 +73,7 @@ Frog.prototype.act = function() {
         path.shift();
         tile = getTile(x, y);
         if (path.length == 1) {
-            console.log('frog try build');
-            console.log(tile, this.isBuilding);
             if ((tile == ".." || tile == "gg") && this.isBuilding) {
-                console.log('frog build');
                 build(this, x, y);
             }
         }

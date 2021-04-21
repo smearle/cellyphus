@@ -75,7 +75,7 @@ function orderBuild(item, x, y) {
     }
     if (!assigned) {
         displayText('Build order is in the queue.');
-        console.log('Build order is in the queue.');
+//      console.log('Build order is in the queue.');
     }
    resetBuildItemsColor();
 }
@@ -84,7 +84,7 @@ function orderBuild(item, x, y) {
 function orderFrogBuild(frog, item, x, y) {
    frog._x_t = x;
    frog._y_t = y
-   console.log('order frog build');
+// console.log('order frog build');
    frog.isBuilding = true;
    frog.wandering = false;
 }

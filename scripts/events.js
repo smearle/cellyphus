@@ -2,6 +2,7 @@ var EventHandler = function() {
 }
 
 EventHandler.prototype.act = function() {
+//  console.log('event handler tick');
     Game.gameTicks += 1;
 
     if(Game.gameTicks % Game.ticksPerDay == 0) 
@@ -15,6 +16,7 @@ EventHandler.prototype.act = function() {
     }
 
     Game.engine.lock();
+  //setTimeout(() => {}, 2000);
     window.addEventListener("click", this);
     window.addEventListener("keydown", this);
 }
