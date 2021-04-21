@@ -132,6 +132,39 @@ var shieldUR = {
 	collisionMask: null,
 }
 
+var shieldDR = {
+	active : false,
+	x: null,
+	y: null,
+	height: 4,
+	width: 25,
+	buffer: 16,
+	corners: [],
+	collisionMask: null,
+}
+
+var shieldDL = {
+	active : false,
+	x: null,
+	y: null,
+	height: 4,
+	width: 25,
+	buffer: 16,
+	corners: [],
+	collisionMask: null,
+}
+
+var shieldUL = {
+	active : false,
+	x: null,
+	y: null,
+	height: 4,
+	width: 25,
+	buffer: 16,
+	corners: [],
+	collisionMask: null,
+}
+
 //attacking ai
 var ai = {
 	x : 75,
@@ -185,7 +218,7 @@ function getDiagXY(x, y, diagLen, xDir, yDir){
 	return([x + (len * xDir), y + (len * yDir)]);
 }
 
-//gets corners of UR Shield given center, buffer, width, and height
+//gets corners of UR Shield
 function getURShield(shield){
 	let x = shield.x;
 	let y = shield.y;
@@ -211,6 +244,38 @@ function getURShield(shield){
 	points.push(point);
 
 	point = getDiagXY(innerMidpoint[0], innerMidpoint[1], (width / 2), -1, -1);
+	points.push(point);
+
+	return points;
+}
+
+//gets corners of DR Shield
+function getDRShield(shield){
+	let x = shield.x;
+	let y = shield.y;
+	let buffer = shield.buffer;
+	let width = shield.width;
+	let height = shield.height;
+
+	let points = [];
+	let point = null;
+
+	//points on outer bound
+	let outerMidpoint = getDiagXY(x, y, (height/2), 1, 1);
+
+	point = getDiagXY(outerMidpoint[0], outerMidpoint[1], (width / 2), 1, -1);
+	points.push(point);
+
+	point = getDiagXY(outerMidpoint[0], outerMidpoint[1], (width / 2), -1, 1);
+	points.push(point);
+
+	//points on inner bound
+	let innerMidpoint = getDiagXY(x, y, (height/2), -1, -1);
+
+	point = getDiagXY(innerMidpoint[0], innerMidpoint[1], (width / 2), -1, 1);
+	points.push(point);
+
+	point = getDiagXY(innerMidpoint[0], innerMidpoint[1], (width / 2), 1, -1);
 	points.push(point);
 
 	return points;
@@ -550,6 +615,9 @@ function init(){
 
 	[shieldUR.x, shieldUR.y] = getDiagXY(player.x, player.y, (shieldUR.buffer + shieldUR.height / 2), 1, -1);
 	shieldUR.corners = getURShield(shieldUR);
+
+	[shieldDR.x, shieldDR.y] = getDiagXY(player.x, player.y, (shieldDR.buffer + shieldDR.height / 2), 1, 1);
+	shieldDR.corners = getDRShield(shieldDR);
 
 	//setup collisionMask for AI
 	ai.collisionMask = createCollisionMask(ai);
