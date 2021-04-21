@@ -232,6 +232,8 @@ var Game = {
         //this.mouse = this._createBeing(Cow, freeCells);
         //this.hawk = this._createBeing(Hawk, freeCells);
         this.frog_manager = new FrogManager();
+//      this.spawnFrog();
+//      this.spawnFrog();
         this.barbarians.push(this._createBarbarian());
 
         this.freeCells = freeCells;

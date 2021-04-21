@@ -20,7 +20,7 @@ EventHandler.prototype.act = function() {
     window.addEventListener("keydown", this);
     Game.simulateGrass();
     drawMap();
-    return new Promise(resolve => setTimeout(resolve, 300));
+    return new Promise(resolve => setTimeout(resolve, 200));
 }
 
 //main game loop
