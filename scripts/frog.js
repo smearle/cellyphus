@@ -45,11 +45,12 @@ Frog.prototype.act = function() {
         var newX;
         var newY;
         [newX, newY] = getWanderTile(this._x, this._y);
-        //drawTile(this._x, this._y);
+        console.log(newX, newY);
+      ////drawTile(this._x, this._y);
         this._x = newX;
         this._y = newY;
-        Game.log_display.drawText(0, 4, "Idle frog wanders.");
-        // random build
+      //Game.log_display.drawText(0, 4, "Idle frog wanders.");
+      //// random build
         pending_builds = Object.keys(build_orders);
         if (pending_builds.length > 0 && !frog_impassable.includes(getTile(this._x, this._y))) {
 //  //      debugger;
@@ -76,7 +77,7 @@ Frog.prototype.act = function() {
         path.shift();
         tile = getTile(x, y);
         if (path.length == 1) {
-            if ((tile == ".." || tile == "gg") && this.isBuilding) {
+            if ((tile == ".." || tile == "gg" || (tile == "ww" && build_orders[[x, y]] == 'bridge')) && this.isBuilding) {
                 build(this, x, y);
             }
             else {
@@ -105,6 +106,6 @@ Frog.prototype.act = function() {
 }
 
 Frog.prototype._draw = function() {
-    Game.display.draw(this._x, this._y, "..", "transparent");
+    Game.display.draw(this._x, this._y, "..");
     Game.display.draw(this._x, this._y, "GG", "green");
 }

@@ -42,6 +42,7 @@ door = im_coords(furniture, 2, 15)
 bed = im_coords(furniture, 2, 6)
 fire = im_coords(decorations, 15, 15)
 bridge = im_coords(items, 7, 8)
+redbrick = im_coords(decorations, 0, 11)
 
 img_names = {
     'player': player,
@@ -58,6 +59,7 @@ img_names = {
     'wall': wall,
     'small_cow': small_cow,
     'bridge': bridge,
+    'redbrick': redbrick,
     }
 
 def write_img(img, name):

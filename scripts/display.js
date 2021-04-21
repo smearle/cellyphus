@@ -31,6 +31,9 @@ for (let item in build_imgs) {
     alphaImgs[item] = alphaImg;
 }
 
+render_tiles = [];
+var Imgs = {};
+
 var iconSize = 12;
 
 
@@ -256,6 +259,16 @@ function drawMain(){
         mapCtx.drawImage(img, x*tw, y*th, tw, th);
 //      ctx.drawImage(img, x, y, 16, 16);
     }
+    for (let key in render_tiles) {
+        [x, y] = key.split(",");
+        img = Imgs[render_tiles[key]];
+        tw = Game.display.getOptions().tileWidth;
+        th = Game.display.getOptions().tileHeight;
+        mapCtx = gameMapCanvas.getContext("2d");
+        mapCtx.drawImage(img, x*tw, y*th, tw, th);
+//      ctx.drawImage(img, x, y, 16, 16);
+    }
+
 
 	//draw part of the map based on the current focal point
 	ctx.drawImage(gameMapCanvas,

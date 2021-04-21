@@ -18,6 +18,7 @@ EventHandler.prototype.act = function() {
   //Game.engine.lock();
     window.addEventListener("click", this);
     window.addEventListener("keydown", this);
+    Game.simulateGrass();
     drawMap();
     return new Promise(resolve => setTimeout(resolve, 300));
 }
@@ -198,7 +199,6 @@ EventHandler.prototype.handleEvent = function(e) {
         }
         else //runs if button press (and player is not fighting barbarian)
         {
-            Game.simulateGrass();
 
             var keyMap = {};
             // mapping keys to directions
