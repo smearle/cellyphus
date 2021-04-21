@@ -22,8 +22,16 @@ frogIcon.src = "imgs/sprites/frog_icon.png";
 var barbIcon = new Image();
 barbIcon.src = "imgs/sprites/barbarian_icon.png";
 
-var iconSize = 12;
+//get transparent blueprint tiles
+var alphaImgs = {};
 
+for (let item in build_imgs) {
+    alphaImg = new Image();
+    alphaImg.src = "imgs/processed/alpha_" + item + ".png";
+    alphaImgs[item] = alphaImg;
+}
+
+var iconSize = 12;
 
 
 //rot.js map to redraw on the canvas
@@ -244,7 +252,14 @@ function drawMain(){
 		camera.x,camera.y,canvas.width/camera.zoom,canvas.height/camera.zoom,
 		0,0,canvas.width,canvas.height);
 
+
 	//ctx.restore();
+}
+
+// draw a tile on the main map
+function drawAlphaTile(img, x, y){
+    img = alphaImgs[img];
+    ctx.drawImage(img, x, y, 16, 16);
 }
 
 //draw entire map as a minimap on the sidebar
