@@ -22,8 +22,16 @@ frogIcon.src = "imgs/sprites/frog_icon.png";
 var barbIcon = new Image();
 barbIcon.src = "imgs/sprites/barbarian_icon.png";
 
-var iconSize = 12;
+//get transparent blueprint tiles
+var alphaImgs = {};
 
+for (let item in build_imgs) {
+    alphaImg = new Image();
+    alphaImg.src = "imgs/processed/alpha_" + item + ".png";
+    alphaImgs[item] = alphaImg;
+}
+
+var iconSize = 12;
 
 
 //rot.js map to redraw on the canvas
@@ -238,13 +246,31 @@ function drawMain(){
 
 	//move camera if needed
 	panCamera();
+    
+    for (let key in build_orders) {
+        [x, y] = key.split(",");
+        img = alphaImgs[build_orders[key]];
+        tw = Game.display.getOptions().tileWidth;
+        th = Game.display.getOptions().tileHeight;
+        mapCtx = gameMapCanvas.getContext("2d");
+        mapCtx.drawImage(img, x*tw, y*th, tw, th);
+//      ctx.drawImage(img, x, y, 16, 16);
+    }
 
 	//draw part of the map based on the current focal point
 	ctx.drawImage(gameMapCanvas,
 		camera.x,camera.y,canvas.width/camera.zoom,canvas.height/camera.zoom,
 		0,0,canvas.width,canvas.height);
 
+
+
 	//ctx.restore();
+}
+
+// draw a tile on the main map
+function drawAlphaTile(img, x, y){
+    img = alphaImgs[img];
+    ctx.drawImage(img, x, y, 16, 16);
 }
 
 //draw entire map as a minimap on the sidebar
@@ -282,6 +308,8 @@ function drawMiniMap(){
 		let barb = barbs[b];
 		mtx.drawImage(barbIcon, 0,0,16,16, (barb._x*scw)-(iconSize/2), (barb._y*sch)-(iconSize/2), iconSize,iconSize);
 	}
+
+
 
 	//draw camera box on minimap
 	let cw = (tw*camera.zoom);

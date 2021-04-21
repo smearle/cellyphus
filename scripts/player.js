@@ -52,6 +52,7 @@ Player.prototype.slamChance = function() //integer percent chance to hit slam
 
 //calls main game loop
 Player.prototype.act = function() {
+//  console.log('player tick');
     if (this.getHealth() <= 0 || Game.player.getThirst() <= 0 || Game.player.getHunger() <= 0)
     {
         var message = "You survived " + Game.days + " days. ";

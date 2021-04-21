@@ -96,6 +96,7 @@ function frogPassableCallback(x, y) {
       return passable;
 }
 
+////////////////// Vegetation CA /////////////////////////
 
 /*
  * Logic functions
