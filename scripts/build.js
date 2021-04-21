@@ -56,7 +56,6 @@ function orderBuild(item, x, y) {
     displayText('Ordered build ' + item + ' at: ('+x+", "+y+")");
     build_orders[[x, y]] = item;
     drawAlphaTile(item, x, y);
-    console.log(build_orders.toString());
 //    await_build_location = false;
     // TODO: check all frogs, assign one closest to build?
     assigned = false;
@@ -64,7 +63,7 @@ function orderBuild(item, x, y) {
         frog = Game.frog_manager.frogs[i];
         // Look for idle frog
         if (!(frog.isBuilding) && (getTile(x, y) == "..")) {
-            console.log('assign frog');
+          //console.log('assign frog');
            // Set the frog's targets
            orderFrogBuild(frog, item, x, y);
            //reset menu colors

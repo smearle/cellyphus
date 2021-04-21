@@ -7,17 +7,17 @@ from varname import nameof
 if not os.path.isdir('imgs/processed'):
     os.mkdir('imgs/processed')
 
-dwarves = cv2.imread("imgs/Dwarf Fortress/raw/graphics/Vordak/dwarves.png", cv2.IMREAD_UNCHANGED)
-misc = cv2.imread("imgs/Dwarf Fortress/data/art/_Meph_32x32.png", cv2.IMREAD_UNCHANGED)
-dec = cv2.imread("imgs/Dwarf Fortress/data/art/_Meph_decorations.png", cv2.IMREAD_UNCHANGED)
-#dec_2 = cv2.imread("imgs/Dwarf Fortress/data/art/_Meph_decorations_2.png", cv2.IMREAD_UNCHANGED)
+dwarves = cv2.imread("all_imgs/Dwarf Fortress/raw/graphics/Vordak/dwarves.png", cv2.IMREAD_UNCHANGED)
+misc = cv2.imread("all_imgs/Dwarf Fortress/data/art/_Meph_32x32.png", cv2.IMREAD_UNCHANGED)
+dec = cv2.imread("all_imgs/Dwarf Fortress/data/art/_Meph_decorations.png", cv2.IMREAD_UNCHANGED)
+#dec_2 = cv2.imread("all_imgs/Dwarf Fortress/data/art/_Meph_decorations_2.png", cv2.IMREAD_UNCHANGED)
 water = cv2.imread("imgs/sprites/water.png", cv2.IMREAD_UNCHANGED)
-amphibians = cv2.imread("imgs/Dwarf Fortress/raw/graphics/amphibians.png", cv2.IMREAD_UNCHANGED)
-domestic = cv2.imread("imgs/Dwarf Fortress/raw/graphics/domestic.png", cv2.IMREAD_UNCHANGED)
-constructions = cv2.imread("imgs/Dwarf Fortress/data/art/_Meph_constructions.png", cv2.IMREAD_UNCHANGED)
-kobolds = cv2.imread("imgs/Dwarf Fortress/raw/graphics/Vordak/kobolds.png", cv2.IMREAD_UNCHANGED)
-furniture = cv2.imread("imgs/Dwarf Fortress/data/art/_Meph_furniture.png", cv2.IMREAD_UNCHANGED)
-decorations = cv2.imread("imgs/Dwarf Fortress/data/art/_Meph_decorations.png", cv2.IMREAD_UNCHANGED)
+amphibians = cv2.imread("all_imgs/Dwarf Fortress/raw/graphics/amphibians.png", cv2.IMREAD_UNCHANGED)
+domestic = cv2.imread("all_imgs/Dwarf Fortress/raw/graphics/domestic.png", cv2.IMREAD_UNCHANGED)
+constructions = cv2.imread("all_imgs/Dwarf Fortress/data/art/_Meph_constructions.png", cv2.IMREAD_UNCHANGED)
+kobolds = cv2.imread("all_imgs/Dwarf Fortress/raw/graphics/Vordak/kobolds.png", cv2.IMREAD_UNCHANGED)
+furniture = cv2.imread("all_imgs/Dwarf Fortress/data/art/_Meph_furniture.png", cv2.IMREAD_UNCHANGED)
+decorations = cv2.imread("all_imgs/Dwarf Fortress/data/art/_Meph_decorations.png", cv2.IMREAD_UNCHANGED)
 
 def im_coords(im, x0, y0):
     x1, y1 = x0 + 1, y0 + 1
