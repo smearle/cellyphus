@@ -15,10 +15,12 @@ EventHandler.prototype.act = function() {
         }
     }
 
-    Game.engine.lock();
+  //Game.engine.lock();
   //setTimeout(() => {}, 2000);
     window.addEventListener("click", this);
     window.addEventListener("keydown", this);
+    drawMap();
+    return new Promise(resolve => setTimeout(resolve, 500));
 }
 
 //main game loop
@@ -286,33 +288,14 @@ EventHandler.prototype.handleEvent = function(e) {
 
     }
 
-    //player._draw();
-
-
-    //DRAW EVERYTHING HERE ALL AT ONCE
-    Game._drawWholeMap();                                       //draw map
-
-    player._draw();                                             //draw player
-
-    let barbSet = Game.barbarians;                               //draw bararians
-    for(let b=0;b<barbSet.length;b++){barbSet[b]._draw();}
-                                        
-
-    let frogSet = Game.frog_manager.frogs;                      //draw frogs
-    for(let f=0;f<frogSet.length;f++){frogSet[f]._draw();}
-
-
-    /*
-    //draw ui
-    panCamera();
-    render();
-    */
+    // FIXME: this is ugly, why do we need to call it again here, when we're already calling it in EventHandler's "act function"? Without this, we get invisible player if we, e.g. move rapidly in some direction
+    drawMap();
 
 
 
 
 
-    Game.engine.unlock();
+  //Game.engine.unlock();
 
     
 }

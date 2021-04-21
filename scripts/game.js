@@ -103,11 +103,11 @@ var Game = {
         }
         //scheduler.add(this.hawk, true);
 
-        this.engine = new ROT.Engine(scheduler);
+      //this.engine = new ROT.Engine(scheduler);
         this.scheduler = scheduler;
         //this.tick = 0;
         this.combatTarget = null;
-        this.engine.start();
+      //this.engine.start();
 
 
         //reset camera UI
@@ -327,8 +327,44 @@ var Game = {
     }
 };
 
-window.onload = function() {
+function drawMap() {
+
+    //DRAW EVERYTHING HERE ALL AT ONCE
+    Game._drawWholeMap();                                       //draw map
+
+    Game.player._draw();                                             //draw player
+
+    let barbSet = Game.barbarians;                               //draw bararians
+    for(let b=0;b<barbSet.length;b++){barbSet[b]._draw();}
+
+
+    let frogSet = Game.frog_manager.frogs;                      //draw frogs
+    for(let f=0;f<frogSet.length;f++){frogSet[f]._draw();}
+
+
+    /*
+    //draw ui
+    panCamera();
+    render();
+    */
+}
+
+async function mainLoop() {
     Game.init();
+    while (1) {
+        let actor = Game.scheduler.next();
+        if (!actor) { break; }
+        await actor.act();
+        console.log(output.join(""));
+    }
+}
+
+let scheduler = new ROT.Scheduler.Simple();
+let output = [];
+
+window.onload = function() {
+  //Game.init();
+    mainLoop();
 }
 
 
