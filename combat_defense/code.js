@@ -45,12 +45,12 @@ var keys = [];
 
 //game values
 var gameVals = {
-  damageDealt : 0,
-  maxTime : 20,
-  timeRemaining : 20,
-  damaged : false,
-  damagePerHit : 3,
-  //time
+	damageDealt : 0,
+	maxTime : 20,
+	timeRemaining : 20,
+	damaged : false,
+	damagePerHit : 3,
+	//time
 }
 
 //shapes from SAT library to check for collision
@@ -79,7 +79,7 @@ var player = {
 	defendL : false,
 }
 
-//shields
+//cardinal shields
 var shieldU = {
 	active : false,
 	x: null,
@@ -87,6 +87,7 @@ var shieldU = {
 	height: 4,
 	width: 25,
 	buffer: 16,
+	corners: [],
 	collisionMask: null,
 }
 
@@ -97,6 +98,7 @@ var shieldR = {
 	height: 25,
 	width: 4,
 	buffer: 16,
+	corners: [],
 	collisionMask: null,
 }
 
@@ -107,6 +109,7 @@ var shieldD = {
 	height: 4,
 	width: 25,
 	buffer: 16,
+	corners: [],
 	collisionMask: null,
 }
 
@@ -117,6 +120,7 @@ var shieldL = {
 	height: 25,
 	width: 4,
 	buffer: 16,
+	corners: [],
 	collisionMask: null,
 }
 
@@ -222,7 +226,6 @@ function getDiagXY(x, y, diagLen, xDir, yDir){
 function getURShield(shield){
 	let x = shield.x;
 	let y = shield.y;
-	let buffer = shield.buffer;
 	let width = shield.width;
 	let height = shield.height;
 
@@ -253,7 +256,6 @@ function getURShield(shield){
 function getDRShield(shield){
 	let x = shield.x;
 	let y = shield.y;
-	let buffer = shield.buffer;
 	let width = shield.width;
 	let height = shield.height;
 
@@ -285,7 +287,6 @@ function getDRShield(shield){
 function getDLShield(shield){
 	let x = shield.x;
 	let y = shield.y;
-	let buffer = shield.buffer;
 	let width = shield.width;
 	let height = shield.height;
 
@@ -317,7 +318,6 @@ function getDLShield(shield){
 function getULShield(shield){
 	let x = shield.x;
 	let y = shield.y;
-	let buffer = shield.buffer;
 	let width = shield.width;
 	let height = shield.height;
 
@@ -345,13 +345,37 @@ function getULShield(shield){
 	return points;
 }
 
+function getCardShield(shield) {
+	let x = shield.x;
+	let y = shield.y;
+	let width = shield.width;
+	let height = shield.height;
+
+	let points = [];
+	let point = null;
+
+	point = [x - width/2, y - height/2];
+	points.push(point);
+
+	point = [x + width/2, y - height/2];
+	points.push(point);
+
+	point = [x + width/2, y + height/2];
+	points.push(point);
+
+	point = [x - width/2, y + height/2];
+	points.push(point);
+
+	return points;
+}
+
 //creates and returns collision mask for cardinal shields
 function createCollisionMask(shield) {
 	let rect = new P(new V(shield.x, shield.y), [
-	  new V(shield.x - shield.width / 2, shield.y - shield.height / 2), 
-	  new V(shield.x + shield.width / 2, shield.y - shield.height / 2),
-	  new V(shield.x + shield.width / 2, shield.y + shield.height / 2),
-	  new V(shield.x - shield.width / 2, shield.y + shield.height / 2)
+		new V(shield.x - shield.width / 2, shield.y - shield.height / 2), 
+		new V(shield.x + shield.width / 2, shield.y - shield.height / 2),
+		new V(shield.x + shield.width / 2, shield.y + shield.height / 2),
+		new V(shield.x - shield.width / 2, shield.y + shield.height / 2)
 	]);
 	return rect;
 }
@@ -458,14 +482,14 @@ function velControl(cur, value, max){
 	//increment or decrement based on how close the max (target) is
 	if(value > 0){
 		if((cur + value) > max)
-		  	return velControl(cur, Math.floor(value/2), max);
+				return velControl(cur, Math.floor(value/2), max);
 		else
-		  	return value;
+				return value;
 	}else if(value < 0){
 		if((cur + value) < max)
-		  	return velControl(cur, Math.floor(value/2), max);
+				return velControl(cur, Math.floor(value/2), max);
 		else
-		  	return value;
+				return value;
 	}else{
 		return 1;
 	}
@@ -536,12 +560,12 @@ function shieldCollided(shield) {
 //draws shield given corners
 function drawShield(corners) {
 	ctx.beginPath();
-  ctx.moveTo(corners[0][0], corners[0][1]);
-  ctx.lineTo(corners[1][0], corners[1][1]);
-  ctx.lineTo(corners[2][0], corners[2][1]);
-  ctx.lineTo(corners[3][0], corners[3][1]);
-  ctx.closePath();
-  ctx.stroke();
+	ctx.moveTo(corners[0][0], corners[0][1]);
+	ctx.lineTo(corners[1][0], corners[1][1]);
+	ctx.lineTo(corners[2][0], corners[2][1]);
+	ctx.lineTo(corners[3][0], corners[3][1]);
+	ctx.closePath();
+	ctx.stroke();
 }
 
 function render(){
@@ -627,14 +651,7 @@ function render(){
 	}
 
 	else if (shieldU.active) {
-		//console.log("defending up");
-		ctx.beginPath();
-		//ctx.moveTo(player.x - player.shieldSize / 2, player.y - player.size);
-		//ctx.lineTo(player.x + player.shieldSize / 2, player.y - player.size);
-		//ctx.rect(player.x - player.shieldSize / 2, player.y - player.size, player.shieldSize, 6);
-		ctx.rect(shieldU.x - shieldU.width / 2, shieldU.y - shieldU.height / 2, shieldU.width, shieldU.height);
-		shieldCollided(shieldU);
-		ctx.stroke()
+		drawShield(shieldU.corners);
 	}
 	
 	else if (shieldD.active) {
@@ -693,11 +710,14 @@ function init(){
 	[shieldUL.x, shieldUL.y] = getDiagXY(player.x, player.y, (shieldUL.buffer + shieldUL.height / 2), -1, -1);
 	shieldUL.corners = getULShield(shieldUL);
 
+
 	//setup collisionMask for AI
 	ai.collisionMask = createCollisionMask(ai);
 	
 	//setup collision mask for shields
 	[shieldU.x, shieldU.y] = [player.x, (player.y - shieldU.buffer - shieldU.height / 2)];
+	shieldU.corners = getCardShield(shieldU);
+
 	shieldU.collisionMask = createCollisionMask(shieldU);
 
 	
@@ -964,10 +984,10 @@ document.body.addEventListener("keyup", function (e) {
 
 //prevent scrolling with the game
 window.addEventListener("keydown", function(e) {
-    // space and arrow keys
-    if(([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1)){
-        e.preventDefault();
-    }
+		// space and arrow keys
+		if(([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1)){
+				e.preventDefault();
+		}
 }, false);
 
 
