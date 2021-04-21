@@ -360,7 +360,7 @@ function selectBuildDiv(code,r){
 
 	//set build item
 	buildSelect(code)
-	//displayText("Select location!");
+	displayText('Build ' + r.innerHTML.toUpperCase() + '. Select location.');
 }
 
 //reset colors of build item tabs
@@ -370,7 +370,9 @@ function resetBuildItemsColor(){
 	for(let t=0;t<allTabs.length;t++){
 		allTabs[t].style.backgroundColor = "#dedede";
 	}
+	console.log("no more fortnite")
 }
+
 
 
 //change menu section (minimap - build)
