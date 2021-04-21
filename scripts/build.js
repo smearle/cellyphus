@@ -18,6 +18,13 @@ const build_info = {
 	"bed" : "Replenish health and pass time"
 }
 
+const build_imgs = {
+	"wall": "imgs/wall.png",
+	"door": "imgs/door.png",
+	"fire": "imgs/fire.png",
+	"bed": "imgs/bed.png"
+}
+
 // For when the player is selecting an order to give, will be used to enter a build_order (x, y): build_type pair
 let next_build = build_items.NONE;
 
@@ -61,6 +68,7 @@ function build(x, y) {
             }
             this.building = false;
             this.wandering = true;
+            break;
 
         case build_items.DOOR:
             console.log('it is door');
@@ -69,14 +77,17 @@ function build(x, y) {
             displayText("Frog builds the door.");
             setTile(x, y, tile_chars.DOOR);
             drawTile(x, y);
+            break;
         case build_items.BED:
             setTile(x, y, tile_chars.BED);
             drawTile(x, y);
+            break;
         case build_items.FIRE:
             setTile(x, y, tile_chars.FIRE);
             drawTile(x, y);
-      //default:
-      //    console.log("invalid build item my guy");
+            break;
+        default:
+            console.log("invalid build item my guy");
     }
 }
 

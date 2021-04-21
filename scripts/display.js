@@ -117,6 +117,8 @@ function pix2Minimap(p){
 }
 
 
+//////////////     MAP FUNCTIONS     //////////////////
+
 
 //draw everything (copies from the ROT.display output to the canvas shown on the screen)
 function render(){
@@ -210,6 +212,10 @@ function drawMain(){
 	//ctx.save();
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+	//set background "ocean"
+	ctx.fillStyle = "#4B97AA";
+	ctx.fillRect(0,0,canvas.width,canvas.height);
+
 	//move camera if needed
 	panCamera();
 
@@ -254,19 +260,40 @@ function drawMiniMap(){
 	mtx.strokeRect((camera.x/tw)*scw,(camera.y/th)*sch,((canvas.width/camera.zoom)/tw)*scw,((canvas.height/camera.zoom)/tw)*sch)
 }
 
+//changes the zoom value on the minimap and the map screen
+function changeZoom(v){
+	camera.zoom = parseFloat(v);
+}
+
+
+/////////////////////       MENU ITEMS       ////////////////////////
+
+
+
 //shows icon and build description in build tab when hovered over
-function showBuildDesc(b,r){
+function showBuildDesc(b){
+	//set description and icon based on item
+	document.getElementById("buildDesc").innerHTML = build_info[b];
+	document.getElementById("buildIcon").src = build_imgs[b];
+}
+
+//select item to build from the menu selection
+function selectBuildDiv(code,r){
+	resetBuildItemsColor();
+	r.style.backgroundColor = "#ECCE0E";
+
+	//set build item
+	buildSelect(code)
+	//displayText("Select location!");
+}
+
+//reset colors of build item tabs
+function resetBuildItemsColor(){
 	//set background color
 	let allTabs = document.getElementsByClassName("buildItem");
 	for(let t=0;t<allTabs.length;t++){
 		allTabs[t].style.backgroundColor = "#dedede";
 	}
-	r.style.backgroundColor = "#ECCE0E";
-
-	//set description based on item TODO
-	document.getElementById("buildDesc").innerHTML = build_info[b];
-
-	//set icon TODO
 }
 
 
@@ -279,13 +306,18 @@ function changeSection(sec,tab){
 	}
 	tab.style.backgroundColor = "#ECCE0E";
 
+	document.getElementById("build_opt").style.display = "none";
+	document.getElementById("minimapCanvas").style.display = "none";
+	document.getElementById("user_settings").style.display = "none";
+
 	if(sec == "minimap"){
 		document.getElementById("minimapCanvas").style.display = "block";
-		document.getElementById("build_opt").style.display = "none";
 	}else if(sec == "build"){
-		document.getElementById("minimapCanvas").style.display = "none";
 		document.getElementById("build_opt").style.display = "block";
+	}else if(sec == "settings"){
+		document.getElementById("user_settings").style.display = "block";
 	}
+
 }
 
 render();

@@ -51,6 +51,14 @@ EventHandler.prototype.handleEvent = function(e) {
         return
     };
 
+    // detect "[m]ap" command
+    if (code == 77) {
+        //open build menu
+        changeSection("minimap",document.getElementById("minimapTab"));
+
+        // go ahead and wait for another event
+        return
+    };
 
 
     if (Game.combatTarget != "None") {
@@ -160,6 +168,10 @@ EventHandler.prototype.handleEvent = function(e) {
                             Game.frog_manager.frogs[0].building = true;
                         }
                     Game.frog_manager.frogs[0].wandering = false;
+
+
+                        //reset menu colors
+                        resetBuildItemsColor();
                     }
                 }
             }
