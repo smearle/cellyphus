@@ -1,4 +1,14 @@
 /*
+ * Generic functions
+ */
+
+function inArr(e,arr){
+  return arr.indexOf(e) != -1;
+}
+
+
+
+/*
  * Tile functions
  */
 

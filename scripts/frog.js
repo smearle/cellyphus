@@ -41,7 +41,7 @@ Frog.prototype.act = function() {
         var newX;
         var newY;
         [newX, newY] = getWanderTile(this._x, this._y);
-        drawTile(this._x, this._y);
+        //drawTile(this._x, this._y);
         this._x = newX;
         this._y = newY;
         Game.log_display.drawText(0, 4, "Idle frog wanders.");
@@ -76,12 +76,12 @@ Frog.prototype.act = function() {
         else {
             x = path[0][0];
             y = path[0][1];
-            Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
+            //Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
             this._x = x;
             this._y = y;
         }
     }
-    this._draw();
+    //this._draw();
     return "frogman acted";
 }
 

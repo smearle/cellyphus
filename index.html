@@ -78,9 +78,9 @@
                 height:100%;
                 padding-top: 8px;
                 font-size:16px;
+                cursor:pointer;
 
             }
-
 
             /* BUILD SCREEN */
             #buildList{
@@ -111,6 +111,20 @@
                 text-align: left;
             }
 
+            /* TEXT LOGGER */
+            #text_log{
+                background-color:#131313;
+                text-align: left;
+                padding-left: 10px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                color: #fff;
+                height:280px;
+                overflow: auto;
+                font-size:12px;
+                font-family:monospace;
+            }
+
 
             /* CHARACTER CAMERA FOCUS SELECTION */
             .charItem{
@@ -118,6 +132,7 @@
                 height:85px;
                 display:flex;
                 border:1px solid #bcbcbc;
+                cursor:pointer;
             }
             .charItem:hover{
                 border:2px solid #3F7138;
@@ -161,12 +176,13 @@
                     <div id='drops'>
                         <div class='tabs' onclick='changeSection("minimap",this)' style='background-color: #ECCE0E' id='minimapTab'>Minimap</div>
                         <div class='tabs' onclick='changeSection("build",this)' id='buildTab'>Build</div>
+                        <div class='tabs' onclick='changeSection("log",this)' id='logTab'>Log</div>
                         <div class='tabs' onclick='changeSection("settings",this)' id='settingsTab'>Settings</div>
                     </div>
 
                     <!-- minimap and build menu -->
                     <div class='sidebar' id='minimap'>
-                        <canvas id='minimapCanvas'>Minimap canvas</canvas>
+                        <canvas id='minimapCanvas' style='cursor:crosshair;'>Minimap canvas</canvas>
                         <div id='build_opt' style="display: none;">
                              <div style='display: flex'>
                                 <div id='buildList'>
@@ -181,8 +197,20 @@
                                 </div>
                             </div>
                         </div>
+                        <div id='text_log' style="display: none;">
+                            Some terrible things happened...
+                        </div>
                         <div id='user_settings' style="display: none;">
-                            Map Zoom: <input type='number' value='1' id='mapZoom' onchange='changeZoom(this.value)'>
+                            <div style='display: flex'>
+                                <div style="width:100px;">
+                                    Map Zoom: <br>
+                                    Icon Size: 
+                                </div>
+                                <div>
+                                    <input type='number' value='1' id='mapZoom' onchange='changeZoom(this.value)'><br>
+                                    <input type='number' value='12' id='iconSize' onchange='changeIconSize(this.value)'>
+                                </div>
+                            </div>
                         </div>
                     </div> 
                     
@@ -212,14 +240,6 @@
                                 Tertius the Frog
                             </div>
                         </div>
-
-                        <!--
-                        <br>
-                        <img src='img/player_stat.png' class='icon' id='playerIcon' onclick='gotoChar("player",this)'>
-                        <img src='img/frog_stat.png' class='icon' id='frog1Icon' onclick='gotoChar("frog1",this)'>
-                        <img src='img/frog_stat.png' class='icon' id='frog2Icon' onclick='gotoChar("frog2",this)'>
-                        <img src='img/frog_stat.png' class='icon' id='frog3Icon' onclick='gotoChar("frog3",this)'>
-                        -->
                     </div>
                 </div>
             </div>
