@@ -137,7 +137,15 @@ var ai = {
 	collisionMask: null,
 }
 
-var collisionResponse; //records collision information using collision masks
+var testMask = {
+	x: 129,
+	y: 129,
+	height: 16,
+	width: 16,
+	collisionMask: null,
+}
+
+var collisionResponse = new SAT.Response(); //records collision information using collision masks
 
 var size = 16;			//size of player and ai objects
 
@@ -339,13 +347,13 @@ function collided(){
 function shieldCollided(shield) {
 	//randomizeAILocation();
 
-	response = new SAT.Response();
-	var collided = SAT.testPolygonPolygon(shield.collisionMask, ai.collisionMask, response);
+	// collisionResponse.clear();
+	// var collided = SAT.testPolygonPolygon(shield.collisionMask, ai.collisionMask, collisionResponse);
 
-	if (collided){
-		console.log("shield x:  " + shield.x + " shield y: " + shield.y);
-		ai.canMove = false;
-	}
+	// if (collided){
+	// 	console.log("shield x:  " + shield.x + " shield y: " + shield.y);
+	// 	ai.canMove = false;
+	// }
 	
 }
 
@@ -425,7 +433,7 @@ function render(){
 		//ctx.moveTo(player.x - player.shieldSize / 2, player.y - player.size);
 		//ctx.lineTo(player.x + player.shieldSize / 2, player.y - player.size);
 		//ctx.rect(player.x - player.shieldSize / 2, player.y - player.size, player.shieldSize, 6);
-		ctx.rect(shieldU.x - shieldU.width / 2, shieldU.y, shieldU.width, shieldU.height);
+		ctx.rect(shieldU.x - shieldU.width / 2, shieldU.y - shieldU.height / 2, shieldU.width, shieldU.height);
 		shieldCollided(shieldU);
 		ctx.stroke()
 	}
@@ -474,13 +482,25 @@ function init(){
 	ai.collisionMask = createCollisionMask(ai);
 	
 	//setup collision mask for shields
-	[shieldU.x, shieldU.y] = [player.x, (player.y - shieldU.buffer - shieldU.height)];
+	[shieldU.x, shieldU.y] = [player.x, (player.y - shieldU.buffer - shieldU.height / 2)];
 	shieldU.collisionMask = createCollisionMask(shieldU);
 
+	
+
+	//test
+
+	
+	
+	testMask.collisionMask = createCollisionMask(testMask);
+	collisionResponse.clear();
+	var ch = SAT.testPolygonPolygon(ai.collisionMask, testMask.collisionMask, collisionResponse);
+	//console.log(ch);
+	//console.log(ai.collisionMask.pos);
+	
+
+
 	[shieldR.x, shieldR.y] = [(player.x + shieldU.buffer), player.y];
-
 	[shieldD.x, shieldD.y] = [player.x, (player.y + shieldU.buffer)];
-
 	[shieldL.x, shieldL.y] = [(player.x - shieldU.buffer - shieldR.width), player.y];
 
 
@@ -545,6 +565,14 @@ function main(){
 	canvas.focus();
 
 	//panCamera();
+
+	//test
+	collisionResponse.clear();
+	var ch = SAT.testPolygonPolygon(ai.collisionMask, testMask.collisionMask, collisionResponse);
+
+	//uncomment this
+	//console.log(ch);
+	//console.log(ai.collisionMask.pos);
 
 	render();
 
@@ -655,9 +683,19 @@ function main(){
 				ai.x += ai.vel.x;
 				ai.y += ai.vel.y;
 
-				ai.collisionMask.pos = [ai.x, ai.y];
+
+				ai.collisionMask.pos = new V(ai.x, ai.y);
+				console.log("ai pos: " + [ai.x, ai.y]);
+				console.log(ai.collisionMask.pos);
+
+				collisionResponse.clear();
+				var ch = SAT.testPolygonPolygon(ai.collisionMask, testMask.collisionMask, collisionResponse);
+
+			//uncomment this
+				console.log(ch);
+
 				// console.log("ai loc: " + [ai.x, ai.y]);
-				// console.log("collision mask: " + ai.collisionMask.pos);
+				//console.log("collision mask: " + ai.collisionMask.pos);
 				// console.log("edges: " + ai.collisionMask.edges);
 			}
 			
@@ -672,7 +710,6 @@ function main(){
 
 	//ai hit the player
 	if(!gracePeriod && collided()){
-		console.log("I'M HIT!");
 		gracePeriod = true;
 		doShake(shakeIntensity/2);
 
