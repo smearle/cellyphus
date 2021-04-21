@@ -10,6 +10,7 @@ if not os.path.isdir('imgs/processed'):
 dwarves = cv2.imread("all_imgs/Dwarf Fortress/raw/graphics/Vordak/dwarves.png", cv2.IMREAD_UNCHANGED)
 misc = cv2.imread("all_imgs/Dwarf Fortress/data/art/_Meph_32x32.png", cv2.IMREAD_UNCHANGED)
 dec = cv2.imread("all_imgs/Dwarf Fortress/data/art/_Meph_decorations.png", cv2.IMREAD_UNCHANGED)
+items = cv2.imread("all_imgs/Dwarf Fortress/data/art/_Meph_items.png", cv2.IMREAD_UNCHANGED)
 #dec_2 = cv2.imread("all_imgs/Dwarf Fortress/data/art/_Meph_decorations_2.png", cv2.IMREAD_UNCHANGED)
 water = cv2.imread("imgs/sprites/water.png", cv2.IMREAD_UNCHANGED)
 amphibians = cv2.imread("all_imgs/Dwarf Fortress/raw/graphics/amphibians.png", cv2.IMREAD_UNCHANGED)
@@ -40,6 +41,7 @@ goblin = im_coords(kobolds, 0, 0)
 door = im_coords(furniture, 2, 15)
 bed = im_coords(furniture, 2, 6)
 fire = im_coords(decorations, 15, 15)
+bridge = im_coords(items, 7, 8)
 
 img_names = {
     'player': player,
@@ -55,6 +57,7 @@ img_names = {
     'tree': tree,
     'wall': wall,
     'small_cow': small_cow,
+    'bridge': bridge,
     }
 
 def write_img(img, name):
@@ -69,7 +72,8 @@ def write_img(img, name):
 for name, img in img_names.items():
     write_img(img, name)
 
-tiles = (player, grass, shrub, tree, water, frog, dog, small_cow, wall, goblin, door, bed, fire)
+tiles = (player, grass, shrub, tree, water, frog, dog, small_cow, wall, goblin, door, bed, fire, bridge)
+
 v = np.concatenate(tiles, axis=1)
 
 

@@ -76,5 +76,6 @@ Player.prototype.act = function() {
 }
 
 Player.prototype._draw = function() {
+    Game.display.draw(this._x, this._y, "..", "transparent");
     Game.display.draw(this._x, this._y, "@", "transparent");
 }

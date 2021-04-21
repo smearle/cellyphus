@@ -22,6 +22,7 @@ const tile_chars = {
     DOOR: "dd",
     FIRE: "ff",
     BED: "bb",
+    BRIDGE: "br",
 }
 
 
@@ -29,11 +30,12 @@ frog_impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_c
 barb_impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.DOOR, tile_chars.BARBARIAN]
 player_impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.BARBARIAN]
 
+tileWidth = 32;
 var display_options = {
     layout: "tile",
     bg: "transparent",
-    tileWidth: 32,
-    tileHeight: 32,
+    tileWidth: tileWidth,
+    tileHeight: tileWidth,
     tileSet: tileSet,
     tileMap: {
         "@": [0, 0],
@@ -47,8 +49,9 @@ var display_options = {
         "ww": [128, 0],
         "|": [256, 0],
         "dd": [320, 0],
-        "ff": [12*32, 0],
-        "bb": [11*32, 0],
+        "ff": [12*tileWidth, 0],
+        "bb": [11*tileWidth, 0],
+        "br": [13*tileWidth, 0],
     },
     width: map_width,
     height: map_height,

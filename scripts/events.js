@@ -16,11 +16,10 @@ EventHandler.prototype.act = function() {
     }
 
   //Game.engine.lock();
-  //setTimeout(() => {}, 2000);
     window.addEventListener("click", this);
     window.addEventListener("keydown", this);
     drawMap();
-    return new Promise(resolve => setTimeout(resolve, 500));
+    return new Promise(resolve => setTimeout(resolve, 300));
 }
 
 //main game loop

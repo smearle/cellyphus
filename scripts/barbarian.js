@@ -180,5 +180,6 @@ Barbarian.prototype.flee = function(){
 }
 
 Barbarian.prototype._draw = function() {
+    Game.display.draw(this._x, this._y, "..", "transparent");
     Game.display.draw(this._x, this._y, "SS", "transparent");
 }

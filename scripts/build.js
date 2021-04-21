@@ -8,6 +8,7 @@ const build_items = {
     DOOR: "door",
     FIRE: "fire",
     BED: "bed",
+    BRIDGE: "bridge",
 }
 
 var next_build = build_items.NONE
@@ -17,14 +18,14 @@ const build_info = {
 	"wall": "Prevents movement from all characters",
 	"door" : "Only allows the player and frogs to enter",
 	"fire" : "For a bit of arson ;)",
-	"bed" : "Replenish health and pass time"
+	"bed" : "Replenish health and pass time",
+	"bridge": "Walk on water.",
 }
 
-const build_imgs = {
-	"wall": "imgs/wall.png",
-	"door": "imgs/door.png",
-	"fire": "imgs/fire.png",
-	"bed": "imgs/bed.png"
+const build_imgs = {}
+
+for (let key in build_info) {
+    build_imgs[key] = "imgs/" + key + ".png";
 }
 
 // For when the player is selecting an order to give, will be used to enter a build_order (x, y): build_type pair
@@ -45,6 +46,10 @@ function buildSelect(code) {
     else if (code == 66) {
         displayText('Build bed. Select location.');
         next_build = build_items.BED;
+    }
+    else if (code == 82) {
+        displayText('Build bridge. Select location.');
+        next_build = build_items.BRIDGE;
     }
     await_build_select = false;
     await_build_location = true;
@@ -113,7 +118,7 @@ function build(frog, x, y) {
             displayText("Frog builds the door.");
             setTile(x, y, tile_chars.DOOR);
             drawTile(x, y);
-            break;
+            break
         case build_items.BED:
             displayText("Frog builds the bed.");
             setTile(x, y, tile_chars.BED);
@@ -124,6 +129,12 @@ function build(frog, x, y) {
             setTile(x, y, tile_chars.FIRE);
             drawTile(x, y);
             break;
+        case build_items.BRIDGE:
+            displayText("Frog builds the " + curr_build + ".");
+            setTile(x, y, tile_chars.BRIDGE);
+            drawTile(x, y);
+            break;
+
         default:
             displayText("Frog fails to build " + curr_build)
             console.log("invalid build item");

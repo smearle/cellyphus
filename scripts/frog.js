@@ -1,6 +1,9 @@
 var FrogManager = function() {
+
     init_frog = Game._createBeing(Frog, freeCells);
-    this.frogs = [init_frog];
+    init_frog_2 = Game._createBeing(Frog, freeCells);
+    init_frog_3 = Game._createBeing(Frog, freeCells);
+    this.frogs = [init_frog, init_frog_2, init_frog_3];
 }
 
 FrogManager.prototype.act = function () {
@@ -76,6 +79,9 @@ Frog.prototype.act = function() {
             if ((tile == ".." || tile == "gg") && this.isBuilding) {
                 build(this, x, y);
             }
+            else {
+                delete build_orders[[x, y]];
+            }
         }
         if (/*path.length == 1 ||*/ path.length == 0) {
             Game.log_display.drawText(0, 4, "Frog arrives.");
@@ -99,5 +105,6 @@ Frog.prototype.act = function() {
 }
 
 Frog.prototype._draw = function() {
+    Game.display.draw(this._x, this._y, "..", "transparent");
     Game.display.draw(this._x, this._y, "GG", "green");
 }
