@@ -162,24 +162,8 @@ EventHandler.prototype.handleEvent = function(e) {
                 console.log("Main Screen: (" + rx + "," + ry + ")  -->  (" + x + "," + y + ")");
 
                 if (await_build_location) {
-                    displayText('Ordered build at: ('+x+", "+y+")");
-                    build_orders[[x, y]] = next_build;
-                    console.log(build_orders.toString());
-            //    await_build_location = false;
-                    if(x >= 0 && y >=0)
-                    {
-                        Game.frog_manager.frogs[0]._x_t = x;
-                        Game.frog_manager.frogs[0]._y_t = y;
-        //              console.log("this coords: " + this._x + ", " + this._y);
-                        if (getTile(x, y) == "..") {
-                            Game.frog_manager.frogs[0].building = true;
-                        }
-                    Game.frog_manager.frogs[0].wandering = false;
+                    orderBuild(next_build, x, y)
 
-
-                        //reset menu colors
-                        resetBuildItemsColor();
-                    }
                 }
             }
 

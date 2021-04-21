@@ -17,7 +17,7 @@ var Frog = function(x, y) {
     this._y = y;
     this._x_t = Game.player.getX();
     this._y_t = Game.player.getY();
-    this.building = false;  // if the frog is on its way to build something
+    this.isBuilding = false;  // if the frog is on its way to build something
     this._draw();
     this._move_ticker = 0
 }
@@ -34,7 +34,6 @@ Frog.prototype.act = function() {
         return
     }
     this._move_ticker = 0;
-
     // Wander about
     if (this.wandering) {
         // Randomly move to a valid tile
@@ -60,13 +59,16 @@ Frog.prototype.act = function() {
         path.shift();
         tile = getTile(x, y);
         if (path.length == 1) {
-            if ((tile == ".." || tile == "gg") && this.building) {
-                setTile(x, y, tile_chars.EMPTY);
-                build(x, y);
+            console.log('frog try build');
+            console.log(tile, this.isBuilding);
+            if ((tile == ".." || tile == "gg") && this.isBuilding) {
+                console.log('frog build');
+                build(this, x, y);
             }
         }
         if (/*path.length == 1 ||*/ path.length == 0) {
             Game.log_display.drawText(0, 4, "Frog arrives.");
+            // automatically harvest wood
             if (tile == "**"){
                 Game.player.wood += 5;
                 setTile(x, y, tile_chars.EMPTY);
