@@ -281,6 +281,38 @@ function getDRShield(shield){
 	return points;
 }
 
+//gets corners of DL Shield
+function getDLShield(shield){
+	let x = shield.x;
+	let y = shield.y;
+	let buffer = shield.buffer;
+	let width = shield.width;
+	let height = shield.height;
+
+	let points = [];
+	let point = null;
+
+	//points on outer bound
+	let outerMidpoint = getDiagXY(x, y, (height/2), -1, 1);
+
+	point = getDiagXY(outerMidpoint[0], outerMidpoint[1], (width / 2), 1, 1);
+	points.push(point);
+
+	point = getDiagXY(outerMidpoint[0], outerMidpoint[1], (width / 2), -1, -1);
+	points.push(point);
+
+	//points on inner bound
+	let innerMidpoint = getDiagXY(x, y, (height/2), 1, -1);
+
+	point = getDiagXY(innerMidpoint[0], innerMidpoint[1], (width / 2), -1, -1);
+	points.push(point);
+
+	point = getDiagXY(innerMidpoint[0], innerMidpoint[1], (width / 2), 1, 1);
+	points.push(point);
+
+	return points;
+}
+
 //creates and returns collision mask for cardinal shields
 function createCollisionMask(shield) {
 	let rect = new P(new V(shield.x, shield.y), [
@@ -613,11 +645,17 @@ function render(){
 //game initialization function
 function init(){
 
+	//initialize upper right shield corners
 	[shieldUR.x, shieldUR.y] = getDiagXY(player.x, player.y, (shieldUR.buffer + shieldUR.height / 2), 1, -1);
 	shieldUR.corners = getURShield(shieldUR);
 
+	//initialize down right shield corners
 	[shieldDR.x, shieldDR.y] = getDiagXY(player.x, player.y, (shieldDR.buffer + shieldDR.height / 2), 1, 1);
 	shieldDR.corners = getDRShield(shieldDR);
+
+	//initialize down left shield corners
+	[shieldDL.x, shieldDL.y] = getDiagXY(player.x, player.y, (shieldDL.buffer + shieldDL.height / 2), -1, 1);
+	shieldDL.corners = getDLShield(shieldDL);
 
 	//setup collisionMask for AI
 	ai.collisionMask = createCollisionMask(ai);
