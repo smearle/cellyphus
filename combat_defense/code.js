@@ -169,6 +169,11 @@ var shieldUL = {
 	collisionMask: null,
 }
 
+var shieldArr = [
+	shieldU, shieldR, shieldD, shieldL,
+	shieldUR, shieldDR, shieldDL, shieldUL
+];
+
 //attacking ai
 var ai = {
 	x : 75,
@@ -373,32 +378,8 @@ function getCardShield(shield) {
 	return points;
 }
 
-//creates and returns collision mask for cardinal shields
-function createCollisionMask(shield) {
-	console.log("corners: " + shield.corners);
-	console.log("xy: " + shield.x);
-	let rect = new P(new V(shield.x, shield.y), [
-		new V(shield.x - shield.width / 2, shield.y - shield.height / 2), 
-		new V(shield.x + shield.width / 2, shield.y - shield.height / 2),
-		new V(shield.x + shield.width / 2, shield.y + shield.height / 2),
-		new V(shield.x - shield.width / 2, shield.y + shield.height / 2)
-	]);
-	return rect;
-}
-
-//create collision mask using corners
-function createCollisionMask2(corners, x, y) {
-	let rect = new P(new V(x, y), [
-		new V(corners[0][0], corners[0][1]), 
-		new V(corners[1][0], corners[1][1]),
-		new V(corners[2][0], corners[2][1]),
-		new V(corners[3][0], corners[3][1])
-	]);
-	return rect;
-}
-
 //create collision mask using position, width, and height
-function createCollisionMask3(obj) {
+function createCollisionMask(obj) {
 	let x = obj.x;
 	let y = obj.y;
 	let width = obj.width;
@@ -411,15 +392,6 @@ function createCollisionMask3(obj) {
 		mcs.push([item[0] - x, item[1] - y]);
 	});
 
-
-
-	// let rect = new P(new V(x, y), [
-	// 	new V(-width/2, -height/2), 
-	// 	new V(width/2, -height/2),
-	// 	new V(width/2, height/2),
-	// 	new V(-width/2, height/2)
-	// ]);
-
 	let rect = new P(new V(x, y), [
 		new V(mcs[0][0], mcs[0][1]), 
 		new V(mcs[1][0], mcs[1][1]),
@@ -428,17 +400,6 @@ function createCollisionMask3(obj) {
 	]);
 
 	return rect;
-}
-
-//draws shield given corners
-function drawShield(corners) {
-	ctx.beginPath();
-	ctx.moveTo(corners[0][0], corners[0][1]);
-	ctx.lineTo(corners[1][0], corners[1][1]);
-	ctx.lineTo(corners[2][0], corners[2][1]);
-	ctx.lineTo(corners[3][0], corners[3][1]);
-	ctx.closePath();
-	ctx.stroke();
 }
 
 //checks if an element is in an array
@@ -519,14 +480,19 @@ function doShake(intensity){
 
 //send AI to random location on screen after some period of time
 function randomizeAILocation() {
+	//move ai position and collision mask
 	ai.x = Math.floor(Math.random() * (canvas.width + 1));
 	ai.y = Math.floor(Math.random() * (canvas.height + 1));
+
+	//ai.collisionMask.pos.x = ai.x;
+	//ai.collisionMask.pos.y = ai.y;
+
 	ai.canMove = false;
 	targetPlayer();
 
 	setTimeout(function(){
 		ai.canMove = true;
-	}, 500)
+	}, 1000)
 }
 
 //euclidean distance function
@@ -604,16 +570,14 @@ function collided(){
 
 //work on this
 function shieldCollided(shield) {
-	//randomizeAILocation();
-	console.log("check shield");
-
+	let collis = false;
 	collisionResponse.clear();
-	var collided = SAT.testPolygonPolygon(shield.collisionMask, ai.collisionMask, collisionResponse);
+	collis = SAT.testPolygonPolygon(shield.collisionMask, ai.collisionMask, collisionResponse);
 
-	if (collided){
-		console.log("shield x:  " + shield.x + " shield y: " + shield.y);
-		ai.canMove = false;
+	if (collis){
+		randomizeAILocation();
 	}
+	
 	
 }
 
@@ -622,16 +586,15 @@ function shieldCollided(shield) {
 //////////////////  RENDER FUNCTIONS  ////////////////////
 
 //draws shield given corners
-// function drawShield(corners) {
-// 	console.log("corners: " + corners);
-// 	ctx.beginPath();
-// 	ctx.moveTo(corners[0][0], corners[0][1]);
-// 	ctx.lineTo(corners[1][0], corners[1][1]);
-// 	ctx.lineTo(corners[2][0], corners[2][1]);
-// 	ctx.lineTo(corners[3][0], corners[3][1]);
-// 	ctx.closePath();
-// 	ctx.stroke();
-// }
+function drawShield(corners) {
+	ctx.beginPath();
+	ctx.moveTo(corners[0][0], corners[0][1]);
+	ctx.lineTo(corners[1][0], corners[1][1]);
+	ctx.lineTo(corners[2][0], corners[2][1]);
+	ctx.lineTo(corners[3][0], corners[3][1]);
+	ctx.closePath();
+	ctx.stroke();
+}
 
 function render(){
 	ctx.save();
@@ -701,18 +664,22 @@ function render(){
 	//draw defense
 	if (shieldU.active && shieldR.active) {
 		drawShield(shieldUR.corners);
+		shieldCollided(shieldUR);
 	}
 
 	else if (shieldD.active && shieldR.active) {
 		drawShield(shieldDR.corners);
+		shieldCollided(shieldDR);
 	}
 
 	else if (shieldD.active && shieldL.active) {
 		drawShield(shieldDL.corners);
+		shieldCollided(shieldDL);
 	}
 
 	else if (shieldU.active && shieldL.active) {
 		drawShield(shieldUL.corners);
+		shieldCollided(shieldUL);
 	}
 
 	else if (shieldU.active) {
@@ -763,7 +730,7 @@ function init(){
 	shieldUL.corners = getULShield(shieldUL);
 
 	
-	//initialize shield coords and corners
+	//initialize shield coords, corners, and collision masks
 	[shieldU.x, shieldU.y] = [player.x, (player.y - shieldU.buffer - shieldU.height / 2)];
 	[testMask.x, testMask.y] = [shieldU.x, shieldU.y];
 	shieldU.corners = getCardShield(shieldU);
@@ -777,84 +744,15 @@ function init(){
 	[shieldL.x, shieldL.y] = [(player.x - shieldU.buffer - shieldR.width / 2), player.y];
 	shieldL.corners = getCardShield(shieldL);
 
-	//
-	//works because created new collision mask - moving pos didnt help
-	//
+	//create collision masks and set buffer for all 8 shields
+	shieldArr.forEach(function(elem) {
+		elem.collisionMask = createCollisionMask(elem);
+		elem.buffer = 25;
+	});
 
-
-	console.log("start init logs");
 	//initialize ai corners and collision mask
 	ai.corners = getCardShield(ai);
-	ai.collisionMask = createCollisionMask3(ai);
-	console.log("ai info");
-	console.log(ai.collisionMask.pos);
-	console.log(ai.collisionMask.calcPoints);
-
-	//initialize test corners and collision mask
-	testMask.corners = getCardShield(testMask);
-	testMask.collisionMask = createCollisionMask3(testMask);
-
-	console.log("end init logs");
-	//setup collisionMask for AI
-	
-
-	//setup collision mask for shields
-	shieldU.collisionMask = createCollisionMask3(shieldU);
-	console.log("shield u info");
-	console.log(shieldU.collisionMask.pos);
-	console.log(shieldU.collisionMask.calcPoints);
-
-	
-
-	//test
-	
-	// // square 1
-	var polygon1 = new P(new V(), [
-	  new V(139,139), new V(155,139), new V(155,155), new V(139,155)
-	]);
-	// square 2
-	var polygon2 = new P(new V(), [
-	  new V(147.5,140), new V(172.5,140), new V(172.5,144), new V(147.5,144)
-	]);
-
-	//works
-	//A square
-	// var polygon1 = new P(new V(0,0), [
-	//   new V(0,0), new V(40,0), new V(40,40), new V(0,40)
-	// ]);
-	// // A triangle
-	// var polygon2 = new P(new V(30,0), [
-	//   new V(10,0), new V(80, 0), new V(80, 20), new V(10, 20)
-	// ]);
-
-	//test - changed default vert - works
-	// var polygon1 = new P(new V(), [
-	//   new V(0,0), new V(16,0), new V(16,16), new V(0,16)
-	// ]);
-	// // A triangle
-	// var polygon2 = new P(new V(), [
-	//   new V(8.5,1), new V(33.5, 1), new V(33.5, 5), new V(8.5, 5)
-	// ]);
-
-	//doesnt work
-	// var polygon1 = new P(new V(0,0), [
-	//   new V(0,0), new V(15,0), new V(15,15), new V(0,15)
-	// ]);
-	// // A triangle
-	// var polygon2 = new P(new V(30,0), [
-	//   new V(7.5,0), new V(32.5, 0), new V(32.5, 4), new V(7.5, 4)
-	// ]);
-	
-	var response = new SAT.Response();
-	var collided = SAT.testPolygonPolygon(polygon1, polygon2, response);
-	console.log("init check: " + collided);
-	console.log(response.overlapV);
-	
-
-
-	
-
-
+	ai.collisionMask = createCollisionMask(ai);
 
 	targetPlayer();
 
@@ -873,13 +771,11 @@ function main(){
 
 	//panCamera();
 
-	//test
-
-	//uncomment this
-	//console.log(ch);
-	//console.log(ai.collisionMask.pos);
-
 	render();
+
+	//collision mask should be at same location as ai
+	ai.collisionMask.pos.x = ai.x;
+	ai.collisionMask.pos.y = ai.y;
 
 	curr = (new Date).getTime();
 	if (curr < endTime) {
@@ -989,34 +885,25 @@ function main(){
 				ai.y += ai.vel.y;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				//method 1: move collision mask by changing position
-				ai.collisionMask.pos.x = ai.x;
-				ai.collisionMask.pos.y = ai.y;
+				
+				// console.log("---------------------------");
+				// console.log("ai pos: " + [ai.x, ai.y]);
+				// console.log(ai.collisionMask.pos);
+				// console.log(ai.collisionMask.calcPoints);
 
-				//method 2: move collisioin mask by generating new mask
-				//ai.corners = getCardShield(ai);
-				//ai.collisionMask = createCollisionMask2(ai.corners, ai.x, ai.y);
+				// console.log("test pos: " + [testMask.x, testMask.y]);
+				// // console.log(testMask.collisionMask.pos);
+				// // console.log(testMask.collisionMask.calcPoints);
+				// console.log(shieldU.collisionMask.pos);
+				// console.log(shieldU.collisionMask.calcPoints);
 
-				console.log("---------------------------");
-				console.log("ai pos: " + [ai.x, ai.y]);
-				console.log(ai.collisionMask.pos);
-				console.log(ai.collisionMask.calcPoints);
+				// collisionResponse.clear();
+				// var ch = SAT.testPolygonPolygon(ai.collisionMask, shieldU.collisionMask, collisionResponse);
 
-				console.log("test pos: " + [testMask.x, testMask.y]);
-				// console.log(testMask.collisionMask.pos);
-				// console.log(testMask.collisionMask.calcPoints);
-				console.log(shieldU.collisionMask.pos);
-				console.log(shieldU.collisionMask.calcPoints);
+				// console.log(ch);
+				// console.log("---------------------------");
 
-				collisionResponse.clear();
-				var ch = SAT.testPolygonPolygon(ai.collisionMask, shieldU.collisionMask, collisionResponse);
-
-				console.log(ch);
-				console.log("---------------------------");
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				// console.log("ai loc: " + [ai.x, ai.y]);
-				//console.log("collision mask: " + ai.collisionMask.pos);
-				// console.log("edges: " + ai.collisionMask.edges);
 			}
 			
 		}
@@ -1078,7 +965,6 @@ window.addEventListener("keydown", function(e) {
 		}
 }, false);
 
-console.log("main");
 //may need to remove init
 init();
 main();
