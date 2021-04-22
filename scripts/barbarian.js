@@ -17,6 +17,7 @@ Barbarian.prototype.getSpeed = function() { return this.speed; }
 Barbarian.prototype.getHealth = function() { return this.health; }
 
 Barbarian.prototype.act = function() {
+//  console.log('barbarian tick');
 
     //strong enough to fight
     if(this.health > 30){
@@ -179,5 +180,6 @@ Barbarian.prototype.flee = function(){
 }
 
 Barbarian.prototype._draw = function() {
+    Game.display.draw(this._x, this._y, "..", "transparent");
     Game.display.draw(this._x, this._y, "SS", "transparent");
 }

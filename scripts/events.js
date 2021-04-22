@@ -2,6 +2,7 @@ var EventHandler = function() {
 }
 
 EventHandler.prototype.act = function() {
+//  console.log('event handler tick');
     Game.gameTicks += 1;
 
     if(Game.gameTicks % Game.ticksPerDay == 0) 
@@ -14,9 +15,12 @@ EventHandler.prototype.act = function() {
         }
     }
 
-    Game.engine.lock();
+  //Game.engine.lock();
     window.addEventListener("click", this);
     window.addEventListener("keydown", this);
+    Game.simulateGrass();
+    drawMap();
+    return new Promise(resolve => setTimeout(resolve, Game.tickPerSec));
 }
 
 //main game loop
@@ -162,24 +166,8 @@ EventHandler.prototype.handleEvent = function(e) {
                 console.log("Main Screen: (" + rx + "," + ry + ")  -->  (" + x + "," + y + ")");
 
                 if (await_build_location) {
-                    displayText('Ordered build at: ('+x+", "+y+")");
-                    build_orders[[x, y]] = next_build;
-                    console.log(build_orders.toString());
-            //    await_build_location = false;
-                    if(x >= 0 && y >=0)
-                    {
-                        Game.frog_manager.frogs[0]._x_t = x;
-                        Game.frog_manager.frogs[0]._y_t = y;
-        //              console.log("this coords: " + this._x + ", " + this._y);
-                        if (getTile(x, y) == "..") {
-                            Game.frog_manager.frogs[0].building = true;
-                        }
-                    Game.frog_manager.frogs[0].wandering = false;
+                    orderBuild(next_build, x, y)
 
-
-                        //reset menu colors
-                        resetBuildItemsColor();
-                    }
                 }
             }
 
@@ -211,7 +199,6 @@ EventHandler.prototype.handleEvent = function(e) {
         }
         else //runs if button press (and player is not fighting barbarian)
         {
-            Game.simulateGrass();
 
             var keyMap = {};
             // mapping keys to directions
@@ -300,33 +287,14 @@ EventHandler.prototype.handleEvent = function(e) {
 
     }
 
-    //player._draw();
-
-
-    //DRAW EVERYTHING HERE ALL AT ONCE
-    Game._drawWholeMap();                                       //draw map
-
-    player._draw();                                             //draw player
-
-    let barbSet = Game.barbarians;                               //draw bararians
-    for(let b=0;b<barbSet.length;b++){barbSet[b]._draw();}
-                                        
-
-    let frogSet = Game.frog_manager.frogs;                      //draw frogs
-    for(let f=0;f<frogSet.length;f++){frogSet[f]._draw();}
-
-
-    /*
-    //draw ui
-    panCamera();
-    render();
-    */
+    // FIXME: this is ugly, why do we need to call it again here, when we're already calling it in EventHandler's "act function"? Without this, we get invisible player if we, e.g. move rapidly in some direction
+    drawMap();
 
 
 
 
 
-    Game.engine.unlock();
+  //Game.engine.unlock();
 
     
 }

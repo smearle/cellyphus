@@ -1,10 +1,12 @@
 var FrogManager = function() {
+
     init_frog = Game._createBeing(Frog, freeCells);
     this.frogs = [init_frog];
 }
 
 FrogManager.prototype.act = function () {
     for (i = 0; i < this.frogs.length; i++) {
+//      console.log('act frog ' + i);
         this.frogs[i].act();
     }
 }
@@ -17,7 +19,7 @@ var Frog = function(x, y) {
     this._y = y;
     this._x_t = Game.player.getX();
     this._y_t = Game.player.getY();
-    this.building = false;  // if the frog is on its way to build something
+    this.isBuilding = false;  // if the frog is on its way to build something
     this._draw();
     this._move_ticker = 0
 }
@@ -26,30 +28,40 @@ Frog.prototype.getSpeed = function() { return 100; }
 
 
 Frog.prototype.act = function() {
-    var x = this._x_t;
-    var y = this._y_t;
+//  console.log('frog tick');
 
     if (!(this._move_ticker == 0)) {
         this._move_ticker += 1;
         return
     }
     this._move_ticker = 0;
-
     // Wander about
     if (this.wandering) {
         // Randomly move to a valid tile
         var newX;
         var newY;
         [newX, newY] = getWanderTile(this._x, this._y);
-        //drawTile(this._x, this._y);
         this._x = newX;
         this._y = newY;
-        Game.log_display.drawText(0, 4, "Idle frog wanders.");
+//      console.log('start', this._x, this._y);
+        drawTile(this._x, this._y);
+//      console.log('end', this._x, this._y);
+
+      //Game.log_display.drawText(0, 4, "Idle frog wanders.");
+      //// random build
+        pending_builds = Object.keys(build_orders);
+        if (pending_builds.length > 0 && !frog_impassable.includes(getTile(this._x, this._y))) {
+            key = pending_builds[Math.floor(pending_builds.length * Math.random())].split(",");
+            build_x = parseInt(key[0]);
+            build_y = parseInt(key[1]);
+            val = build_orders[key];
+            orderFrogBuild(this, val, build_x, build_y);
+        }
     }
 
     // Head to some target
     else {
-        var astar = new ROT.Path.AStar(x, y, frogPassableCallback, {topology:4});
+        var astar = new ROT.Path.AStar(this._x_t, this._y_t, frogPassableCallback, {topology:4});
 
         var path = [];
         var pathCallback = function(x, y) {
@@ -60,15 +72,19 @@ Frog.prototype.act = function() {
         path.shift();
         tile = getTile(x, y);
         if (path.length == 1) {
-            if ((tile == ".." || tile == "gg") && this.building) {
-                build(x, y);
+            if ((tile == ".." || tile == "gg" || (tile == "ww" && (build_orders[[this._x_t, this._y_t]] == 'bridge'))) && this.isBuilding) {
+                build(this, this._x_t, this._y_t);
+            }
+            else {
+                delete build_orders[[this._x_t, this._y_t]];
             }
         }
         if (/*path.length == 1 ||*/ path.length == 0) {
             Game.log_display.drawText(0, 4, "Frog arrives.");
+            // automatically harvest wood
             if (tile == "**"){
                 Game.player.wood += 5;
-                setTile(x, y, tile_chars.EMPTY);
+                setTile(this._x_t, this._y_t, tile_chars.EMPTY);
             }
             this.wandering = true;
         }
@@ -81,9 +97,10 @@ Frog.prototype.act = function() {
         }
     }
     //this._draw();
-    return "frogman acted";
+//  console.log("frogman acted");
 }
 
 Frog.prototype._draw = function() {
+    Game.display.draw(this._x, this._y, "..");
     Game.display.draw(this._x, this._y, "GG", "green");
 }

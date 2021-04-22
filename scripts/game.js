@@ -19,9 +19,10 @@ const tile_chars = {
     BARBARIAN: "SS",
     WATER: "ww",
     TREE: "**",
-    DOOR: "d",
-    FIRE: "f",
-    BED: "b"
+    DOOR: "dd",
+    FIRE: "ff",
+    BED: "bb",
+    BRIDGE: "br",
 }
 
 
@@ -29,11 +30,12 @@ frog_impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_c
 barb_impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.DOOR, tile_chars.BARBARIAN]
 player_impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.BARBARIAN]
 
+tileWidth = 32;
 var display_options = {
     layout: "tile",
     bg: "transparent",
-    tileWidth: 32,
-    tileHeight: 32,
+    tileWidth: tileWidth,
+    tileHeight: tileWidth,
     tileSet: tileSet,
     tileMap: {
         "@": [0, 0],
@@ -46,9 +48,10 @@ var display_options = {
         "mm": [64, 0],
         "ww": [128, 0],
         "|": [256, 0],
-        "d": [320, 0],
-        "f": [12*32, 0],
-        "b": [11*32, 0],
+        "dd": [320, 0],
+        "ff": [12*tileWidth, 0],
+        "bb": [11*tileWidth, 0],
+        "br": [13*tileWidth, 0],
     },
     width: map_width,
     height: map_height,
@@ -69,8 +72,9 @@ var Game = {
     blackLodge: null,
 
     gameTicks: 0,
-    ticksPerDay: 3,
+    ticksPerDay: 300,
     days: 0,
+    tickPerSec: 800,
     //combatSubjects: {"None": 1, "Barbarian": 2},
     combatTarget: null,
 
@@ -103,11 +107,11 @@ var Game = {
         }
         //scheduler.add(this.hawk, true);
 
-        this.engine = new ROT.Engine(scheduler);
+      //this.engine = new ROT.Engine(scheduler);
         this.scheduler = scheduler;
         //this.tick = 0;
         this.combatTarget = null;
-        this.engine.start();
+      //this.engine.start();
 
 
         //reset camera UI
@@ -229,6 +233,8 @@ var Game = {
         //this.mouse = this._createBeing(Cow, freeCells);
         //this.hawk = this._createBeing(Hawk, freeCells);
         this.frog_manager = new FrogManager();
+//      this.spawnFrog();
+//      this.spawnFrog();
         this.barbarians.push(this._createBarbarian());
 
         this.freeCells = freeCells;
@@ -327,8 +333,44 @@ var Game = {
     }
 };
 
-window.onload = function() {
+function drawMap() {
+
+    //DRAW EVERYTHING HERE ALL AT ONCE
+    Game._drawWholeMap();                                       //draw map
+
+    Game.player._draw();                                             //draw player
+
+    let barbSet = Game.barbarians;                               //draw bararians
+    for(let b=0;b<barbSet.length;b++){barbSet[b]._draw();}
+
+
+    let frogSet = Game.frog_manager.frogs;                      //draw frogs
+    for(let f=0;f<frogSet.length;f++){frogSet[f]._draw();}
+
+
+    /*
+    //draw ui
+    panCamera();
+    render();
+    */
+}
+
+async function mainLoop() {
     Game.init();
+    while (1) {
+        let actor = Game.scheduler.next();
+        if (!actor) { break; }
+        await actor.act();
+        console.log(output.join(""));
+    }
+}
+
+let scheduler = new ROT.Scheduler.Simple();
+let output = [];
+
+window.onload = function() {
+  //Game.init();
+    mainLoop();
 }
 
 
