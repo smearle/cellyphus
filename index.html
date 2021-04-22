@@ -190,6 +190,8 @@
                                     <div class='buildItem' onmouseenter="showBuildDesc('fire')" onclick="selectBuildDiv(70,this)">Fire</div>
                                     <div class='buildItem' onmouseenter="showBuildDesc('bed')" onclick="selectBuildDiv(66,this)">Bed</div>
                                     <div class='buildItem' onmouseenter="showBuildDesc('door')" onclick="selectBuildDiv(68,this)">Door</div>
+                                    <div class='buildItem' onmouseenter="showBuildDesc('bridge')" onclick="selectBuildDiv(82,this)">Bridge</div>
+                                    <div class='buildItem' id='cancelBuild' style='background-color:#9a9a9a' onclick="cancelBuild()">Cancel</div>
                                 </div>
                                 <div style='display:grid;width:50%;height:300px'>
                                     <div style='height:130px;width:100%'><img src='imgs/sprites/Froggy_Chair.png' id='buildIcon' width='120' height='120'></div>
@@ -201,14 +203,18 @@
                             Some terrible things happened...
                         </div>
                         <div id='user_settings' style="display: none;">
-                            <div style='display: flex'>
-                                <div style="width:100px;">
-                                    Map Zoom: <br>
-                                    Icon Size: 
+                            <div style='display: table'>
+                                <div style='display: table-row'>
+                                    <div style='display: table-cell;width:100px'>Map Zoom:</div>
+                                    <div style='display: table-cell'><input type='number' value='1' id='mapZoom' onchange='changeZoom(this.value)'></div>
                                 </div>
-                                <div>
-                                    <input type='number' value='1' id='mapZoom' onchange='changeZoom(this.value)'><br>
-                                    <input type='number' value='12' id='iconSize' onchange='changeIconSize(this.value)'>
+                                <div style='display: table-row'>
+                                    <div style='display: table-cell;'>Icon Size: </div>
+                                    <div style='display: table-cell'><input type='number' value='12' id='iconSize' onchange='changeIconSize(this.value)'></div>
+                                </div>
+                                <div style='display: table-row'>
+                                    <div style='display: table-cell'>Game Speed: </div>
+                                    <div style='display: table-cell'>Slow<input type="range" min="0" max="1000" step="200" value='600' onchange="changeGameSpeed(this.value)">Fast</div>
                                 </div>
                             </div>
                         </div>

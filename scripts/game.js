@@ -72,8 +72,9 @@ var Game = {
     blackLodge: null,
 
     gameTicks: 0,
-    ticksPerDay: 3,
+    ticksPerDay: 300,
     days: 0,
+    tickPerSec: 800,
     //combatSubjects: {"None": 1, "Barbarian": 2},
     combatTarget: null,
 

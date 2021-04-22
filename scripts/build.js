@@ -81,7 +81,14 @@ function orderBuild(item, x, y) {
         displayText('Build order is in the queue.');
 //      console.log('Build order is in the queue.');
     }
-   resetBuildItemsColor();
+   //resetBuildItemsColor();
+}
+
+//cancel current build
+function cancelBuild(){
+	next_build = "none";
+	await_build_select = false;
+    await_build_location = false;
 }
 
 // TODO use this item name?

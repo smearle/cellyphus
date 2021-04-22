@@ -332,45 +332,11 @@ function drawMiniMap(){
 	mtx.strokeRect((camera.x/tw)*scw,(camera.y/th)*sch,((canvas.width/camera.zoom)/tw)*scw,((canvas.height/camera.zoom)/tw)*sch)
 }
 
-//changes the zoom value on the minimap and the map screen
-function changeZoom(v){
-	camera.zoom = parseFloat(v);
-}
-
-//change minimap icon size
-function changeIconSize(v){
-	iconSize = parseInt(v);
-}
 
 /////////////////////       MENU ITEMS       ////////////////////////
 
 
-
-//shows icon and build description in build tab when hovered over
-function showBuildDesc(b){
-	//set description and icon based on item
-	document.getElementById("buildDesc").innerHTML = build_info[b];
-	document.getElementById("buildIcon").src = build_imgs[b];
-}
-
-//select item to build from the menu selection
-function selectBuildDiv(code,r){
-	resetBuildItemsColor();
-	r.style.backgroundColor = "#ECCE0E";
-
-	//set build item
-	buildSelect(code)
-	//displayText("Select location!");
-}
-
-//reset colors of build item tabs
-function resetBuildItemsColor(){
-	//set background color
-	let allTabs = document.getElementsByClassName("buildItem");
-	for(let t=0;t<allTabs.length;t++){
-		allTabs[t].style.backgroundColor = "#dedede";
-	}
-}
+//TAB MENU
 
 
 //change menu section (minimap - build)
@@ -400,6 +366,38 @@ function changeSection(sec,tab){
 }
 
 
+// BUILD MENU
+
+//shows icon and build description in build tab when hovered over
+function showBuildDesc(b){
+	//set description and icon based on item
+	document.getElementById("buildDesc").innerHTML = build_info[b];
+	document.getElementById("buildIcon").src = build_imgs[b];
+}
+
+//select item to build from the menu selection
+function selectBuildDiv(code,r){
+	resetBuildItemsColor();
+	r.style.backgroundColor = "#ECCE0E";
+
+	//set build item
+	buildSelect(code)
+	displayText('Build ' + r.innerHTML.toUpperCase() + '. Select location.');
+}
+
+//reset colors of build item tabs
+function resetBuildItemsColor(){
+	//set background color
+	let allTabs = document.getElementsByClassName("buildItem");
+	for(let t=0;t<allTabs.length;t++){
+		allTabs[t].style.backgroundColor = "#dedede";
+	}
+	console.log("no more fortnite")
+}
+
+
+//TEXT LOGGER
+
 //adds console txt to the log and updates the screen accordingly
 function addToLog(txt){
 	//add to the log
@@ -413,6 +411,24 @@ function addToLog(txt){
 	document.getElementById("text_log").innerHTML = " - " + txtLog.join("<br> - ");
 	document.getElementById("text_log").scrollTop = logger.scrollHeight;
 
+}
+
+
+//SETTINGS
+
+
+//changes the zoom value on the minimap and the map screen
+function changeZoom(v){
+	camera.zoom = parseFloat(v);
+}
+
+//change minimap icon size
+function changeIconSize(v){
+	iconSize = parseInt(v);
+}
+
+function changeGameSpeed(v){
+	Game.tickPerSec = 1200 - v;
 }
 
 render();
