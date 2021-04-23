@@ -93,6 +93,8 @@ var Game = {
 
         this._generateMap();
         this.event_handler = new EventHandler();
+        window.addEventListener("click", this.event_handler.step);
+        window.addEventListener("keydown", this.event_handler.step);
 
         var scheduler = new ROT.Scheduler.Simple();
         //make instance of game loop to run game loop stuff
@@ -354,7 +356,7 @@ function drawMap() {
     render();
     */
 }
-
+/*
 async function mainLoop() {
     Game.init();
     while (1) {
@@ -372,7 +374,10 @@ window.onload = function() {
   //Game.init();
     mainLoop();
 }
-
+*/
+window.onload = function(){
+    Game.init();
+}
 
 //prevent scrolling with the game
 window.addEventListener("keydown", function(e) {
