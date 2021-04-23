@@ -18,6 +18,7 @@ EventHandler.prototype.act = function() {
   //Game.engine.lock();
     window.addEventListener("click", this);
     window.addEventListener("keydown", this);
+    displayHUD();
     Game.simulateGrass();
     drawMap();
     return new Promise(resolve => setTimeout(resolve, Game.tickPerSec));
@@ -266,9 +267,13 @@ EventHandler.prototype.handleEvent = function(e) {
     // Move the player
     player._x = newX;
     player._y = newY;
+
+    // What team fortress is this?
     window.removeEventListener("keydown", player);
+
+    window.removeEventListener("keydown", this);
+    window.removeEventListener("click", this);
     
-    displayHUD();
     //Game.tick ++;
     if (player.hunger == 0 && player.thirst == 0) {
         player.health--;

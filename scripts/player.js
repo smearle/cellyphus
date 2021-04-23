@@ -10,7 +10,7 @@ var Player = function(x, y) {
     this.health = 100;
     this.thirst = 100;
     this.hunger = 100;
-    this.seeds = 0;
+    this.seeds = 30;
     this.wood = 30;
     this.meat = 0;
 
