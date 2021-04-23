@@ -291,15 +291,4 @@ EventHandler.prototype.handleEvent = function(e) {
         player.seeds += 1;
 
     }
-
-    // FIXME: this is ugly, why do we need to call it again here, when we're already calling it in EventHandler's "act function"? Without this, we get invisible player if we, e.g. move rapidly in some direction
-    drawMap();
-
-
-
-
-
-  //Game.engine.unlock();
-
-    
 }
