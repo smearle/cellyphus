@@ -9,6 +9,13 @@ var pCtx = canvas.getContext("2d");
 //document.body.appendChild(pCanvas);
 //document.body.appendChild(canvas);
 
+//audio feedback
+var aud_block = new Audio('audio/Shield_block.ogg');
+aud_block.volume = 0.03;
+
+var aud_EnemyHurt = new Audio('audio/Enemy_hurt.oga');
+aud_EnemyHurt.volume = 0.03;
+
 //camera
 var camera = {
 	x : 0,
@@ -116,7 +123,7 @@ var dt = 0;						//incrase radius of dark screen
 var dash = true;			//feature for dashing when pressing "a" button
 var camShake = true;		//feature for shaking camera when pressing "b" button
 var pauseOnHit = true;			//feature for pausing characters on hit
-var paused = false;				//if players are currently paused
+var paused = true;				//if players are currently paused
 
 
 
@@ -627,6 +634,9 @@ function main(){
 
 	//ai hit the player
 	if(!gracePeriod && collided()){
+
+		//play audio feedback of player hit
+		aud_EnemyHurt.play();
 
 		//delay before generating crit spot
 		setTimeout(function(){
