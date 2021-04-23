@@ -1,3 +1,8 @@
+//randomize damage?
+//make thirst an input
+//create zone that ai cant spawn in
+//setup circle to display time remaining
+
 //set up the canvas
 var canvas = document.getElementById("game");
 var ctx = canvas.getContext("2d");
@@ -8,6 +13,13 @@ var pCanvas = canvas.cloneNode(); //presentation canvas
 var pCtx = canvas.getContext("2d");
 //document.body.appendChild(pCanvas);
 //document.body.appendChild(canvas);
+
+//audio feedback
+var aud_block = new Audio('audio/Shield_block.ogg');
+aud_block.volume = 0.03;
+
+var aud_playerHurt = new Audio('audio/Player_hurt.mp4');
+aud_playerHurt.volume = 0.03;
 
 //camera
 var camera = {
@@ -45,12 +57,24 @@ var keys = [];
 
 //game values
 var gameVals = {
-	damageDealt : 0,
-	maxTime : 20,
-	timeRemaining : 20,
+	damageTaken : 0,
+	damageBlocked: 0,
 	damaged : false,
 	damagePerHit : 3,
 	//time
+}
+
+//timer
+var interval = 1000; // ms
+var expected = Date.now() + interval;
+
+//
+var timer = {
+	x: 100,
+	y: 20,
+	r: 12,
+	maxTime : 20,
+	timeRemaining : 20,
 }
 
 //shapes from SAT library to check for collision
@@ -217,7 +241,7 @@ var dt = 0;						//incrase radius of dark screen
 var dash = true;			//feature for dashing when pressing "a" button
 var camShake = true;		//feature for shaking camera when pressing "b" button
 var pauseOnHit = true;			//feature for pausing characters on hit
-var paused = false;				//if players are currently paused
+var paused = true;				//if players are currently paused
 
 
 
@@ -436,6 +460,16 @@ function defendOff() {
 	shieldL.active = false;
 }
 
+function startGame() {
+	gameVals.damageTaken = 0;
+	gameVals.damageBlocked = 0;
+	timer.timeRemaining = timer.maxTime;
+	paused = false;
+
+	expected = Date.now() + interval;
+	setTimeout(step, interval);
+}
+
 ////////////////   KEYBOARD FUNCTIONS  //////////////////
 
 
@@ -575,6 +609,8 @@ function shieldCollided(shield) {
 	collis = SAT.testPolygonPolygon(shield.collisionMask, ai.collisionMask, collisionResponse);
 
 	if (collis){
+		gameVals.damageBlocked += gameVals.damagePerHit;
+		aud_block.play();
 		randomizeAILocation();
 	}
 	
@@ -584,6 +620,23 @@ function shieldCollided(shield) {
 
 
 //////////////////  RENDER FUNCTIONS  ////////////////////
+
+//draw circular timer and sector to denote time
+function drawTimer() {
+	let pctFilled = timer.timeRemaining / timer.maxTime;
+	let amtFilled = 2 * Math.PI * pctFilled;
+
+	//draw timer
+	ctx.beginPath();
+	ctx.arc(timer.x, timer.y, timer.r, 0, 2 * Math.PI);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.moveTo(timer.x, timer.y);
+	ctx.arc(timer.x, timer.y, timer.r, amtFilled, 0);
+	ctx.lineTo(timer.x, timer.y);
+	ctx.stroke();
+}
 
 //draws shield given corners
 function drawShield(corners) {
@@ -608,6 +661,8 @@ function render(){
 	ctx.fillRect(0,0,canvas.width, canvas.height);
 	
 	/*   add draw functions here  */
+
+	
 
 	//draw a red box to represent the player
 		//draw trail behind player and ai if active
@@ -661,6 +716,8 @@ function render(){
 		ctx.fillRect(0,0,canvas.width,canvas.height);
 	}
 
+	drawTimer();
+
 	//draw defense
 	if (shieldU.active && shieldR.active) {
 		drawShield(shieldUR.corners);
@@ -703,10 +760,31 @@ function render(){
 		shieldCollided(shieldL);
 	}
 
+	//draw html text
+	document.getElementById("taken").innerHTML = gameVals.damageTaken;
+	document.getElementById("blocked").innerHTML = gameVals.damageBlocked;
+	document.getElementById("time").innerHTML = timer.timeRemaining;
 	ctx.restore();
 }
 
+function step() {
+    var dt = Date.now() - expected; // the drift (positive for overshooting)
+    if (dt > interval) {
+        // something really bad happened. Maybe the browser (tab) was inactive?
+        // possibly special handling to avoid futile "catch up" run
+    }
+    timer.timeRemaining -= 1;
+    
 
+    expected += interval;
+    if (timer.timeRemaining <= 0) {
+    	paused = true;
+    }  
+
+    if (timer.timeRemaining != 0) {
+    	setTimeout(step, Math.max(0, interval - dt)); // take into account drift
+    }
+}
 
 //////////////   GAME LOOP FUNCTIONS   //////////////////
 
@@ -772,6 +850,14 @@ function main(){
 	//panCamera();
 
 	render();
+
+	//pause when timer is 0
+	if (timer.timeRemaining <= 0) {
+		//move ai out of collision
+		ai.x = 30;
+		ai.y = 30;
+  	paused = true;
+  } 
 
 	//collision mask should be at same location as ai
 	ai.collisionMask.pos.x = ai.x;
@@ -919,6 +1005,10 @@ function main(){
 	if(!gracePeriod && collided()){
 		gracePeriod = true;
 		doShake(shakeIntensity/2);
+
+		//calculate damage stuff
+		gameVals.damageTaken += gameVals.damagePerHit;
+		aud_playerHurt.play();
 
 		if(pauseOnHit)
 			paused = true;

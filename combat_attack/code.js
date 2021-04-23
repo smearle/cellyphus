@@ -1,3 +1,7 @@
+//change weak spot more often?
+//draw graphic
+//setup circle to display time remaining
+
 //set up the canvas
 var canvas = document.getElementById("game");
 var ctx = canvas.getContext("2d");
@@ -8,6 +12,13 @@ var pCanvas = canvas.cloneNode(); //presentation canvas
 var pCtx = canvas.getContext("2d");
 //document.body.appendChild(pCanvas);
 //document.body.appendChild(canvas);
+
+//audio feedback
+var aud_block = new Audio('audio/Shield_block.ogg');
+aud_block.volume = 0.03;
+
+var aud_EnemyHurt = new Audio('audio/Enemy_hurt.oga');
+aud_EnemyHurt.volume = 0.03;
 
 //camera
 var camera = {
@@ -116,7 +127,7 @@ var dt = 0;						//incrase radius of dark screen
 var dash = true;			//feature for dashing when pressing "a" button
 var camShake = true;		//feature for shaking camera when pressing "b" button
 var pauseOnHit = true;			//feature for pausing characters on hit
-var paused = false;				//if players are currently paused
+var paused = true;				//if players are currently paused
 
 
 
@@ -412,7 +423,9 @@ function step() {
     
 
     expected += interval;
-    if (gameVals.timeRemaining == 0) {
+    if (gameVals.timeRemaining <= 0) {
+    	player.x = 30;
+    	player.y = 30;
     	paused = true;
     }  
 
@@ -507,6 +520,13 @@ function main(){
 	//panCamera();
 
 	render();
+
+	//stop movement when timer is done
+  if (gameVals.timeRemaining <= 0) {
+  	player.x = 30;
+  	player.y = 30;
+  	paused = true;
+  }  
 
 	currShakeTime = (new Date).getTime();
 	if (currShakeTime < endShakeTime) {
@@ -627,6 +647,9 @@ function main(){
 
 	//ai hit the player
 	if(!gracePeriod && collided()){
+
+		//play audio feedback of player hit
+		aud_EnemyHurt.play();
 
 		//delay before generating crit spot
 		setTimeout(function(){
