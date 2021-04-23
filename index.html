@@ -214,7 +214,11 @@
                                 </div>
                                 <div style='display: table-row'>
                                     <div style='display: table-cell'>Game Speed: </div>
-                                    <div style='display: table-cell'>Slow<input type="range" min="0" max="1000" step="200" value='600' onchange="changeGameSpeed(this.value)">Fast</div>
+                                    <div style='display: table-cell'>Slow<input id='game_speed' type="range" min="0" max="1000" step="200" value='600' onchange="changeGameSpeed(this.value)">Fast</div>
+                                </div>
+                                <div style='display: table-row'>
+                                    <div style='display: table-cell;width:100px'>Game Mode: </div>
+                                    <div style='display: table-cell'><select onchange='toggleGameMode(this.value)'><option value='real'>RealTime</option><option value='turn'>Turn Only</option></select></div>
                                 </div>
                             </div>
                         </div>

@@ -75,6 +75,7 @@ var Game = {
     ticksPerDay: 300,
     days: 0,
     tickPerSec: 800,
+    game_mode: 'real',
     //combatSubjects: {"None": 1, "Barbarian": 2},
     combatTarget: null,
 
@@ -357,6 +358,9 @@ function drawMap() {
     */
 }
 
+
+/// set game speed and mode
+
 var st = 0;
 
 //repeat the step (allow for change in tick-per-sec)
@@ -367,8 +371,29 @@ function repeatStep(){
 
 window.onload = function(){
     Game.init();
-    st = setTimeout(repeatStep, Game.tickPerSec);
+    if(Game.game_mode == "real"){
+        st = setTimeout(repeatStep, Game.tickPerSec);
+    }else{
+        clearTimeout(st);
+        st = 0;
+    }
 }
+
+//change game mode
+function toggleGameMode(v){
+    Game.game_mode = v;
+    if(v == "turn"){
+        clearTimeout(st);
+        st = 0;
+        document.getElementById("game_speed").disabled = true;
+    }else{
+        st = setTimeout(repeatStep, Game.tickPerSec);
+        document.getElementById("game_speed").disabled = false;
+    }
+}
+
+
+
 
 //prevent scrolling with the game
 window.addEventListener("keydown", function(e) {

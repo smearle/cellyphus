@@ -99,7 +99,7 @@ Barbarian.prototype.chase = function(){
             //Game.scheduler.remove(Game.mouse)
             //Game.mouse = null;
 
-            console.log("he attac")
+            //console.log("he attac")
         }
     }
     //move towards player
@@ -112,7 +112,7 @@ Barbarian.prototype.chase = function(){
         this._x = x;
         this._y = y;
         //this._draw();
-        console.log("why are you running?! WHY ARE YOU RUNNING!?!?")
+        //console.log("why are you running?! WHY ARE YOU RUNNING!?!?")
     }
 }
 
@@ -131,9 +131,9 @@ Barbarian.prototype.idle = function(){
         this._x = x;
         this._y = y;
         //this._draw();
-        console.log("head empty... ")
+        //console.log("head empty... ")
     }else{
-        console.log('oof')
+        //console.log('oof')
     }
 }
 
@@ -165,7 +165,7 @@ Barbarian.prototype.leaveHome = function(){
         this._x = x;
         this._y = y;
         //this._draw();
-        console.log("omw. leaving in 5 min")
+        //console.log("omw. leaving in 5 min")
     }
 }
 
@@ -202,16 +202,16 @@ Barbarian.prototype.flee = function(){
             //this._draw();
         }
 
-        console.log("screw you guys! i'm going home")
+        //console.log("screw you guys! i'm going home")
     }
     //hopeless, just run around
     else if(this.base == null){
         this.idle();
-        console.log("welp, guess i'll die")
+        //console.log("welp, guess i'll die")
     }
     //"what do we do now?" "nothing"
     else{
-        console.log("magic conch shell!")
+        //console.log("magic conch shell!")
         return;
     }
 }
