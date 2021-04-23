@@ -356,25 +356,7 @@ function drawMap() {
     render();
     */
 }
-/*
-async function mainLoop() {
-    Game.init();
-    while (1) {
-        let actor = Game.scheduler.next();
-        if (!actor) { break; }
-        await actor.act();
-        console.log(output.join(""));
-    }
-}
 
-let scheduler = new ROT.Scheduler.Simple();
-let output = [];
-
-window.onload = function() {
-  //Game.init();
-    mainLoop();
-}
-*/
 window.onload = function(){
     Game.init();
 }

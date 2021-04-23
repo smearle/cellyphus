@@ -1,30 +1,6 @@
 var EventHandler = function() {
 }
 
-/*
-EventHandler.prototype.act = function() {
-//  console.log('event handler tick');
-    Game.gameTicks += 1;
-
-    if(Game.gameTicks % Game.ticksPerDay == 0) 
-    {
-        Game.days += 1;
-        if (Game.barbarians.length == 0 && Game.days % 5 == 0) {
-            let newBarbie = Game._createBeing(Barbarian, freeCells);
-            Game.barbarians.push(newBarbie); 
-            Game.scheduler.add(newBarbie, true);
-        }
-    }
-
-  //Game.engine.lock();
-    //window.addEventListener("click", this);
-    //window.addEventListener("keydown", this);
-    displayHUD();
-    Game.simulateGrass();
-    //drawMap();
-}
-*/
-
 //main game loop
 EventHandler.prototype.step = function(e) {
 
