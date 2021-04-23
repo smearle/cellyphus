@@ -1,8 +1,7 @@
-//calculate damage taken
-//add damage blocked
+//randomize damage?
+//make thirst an input
 //create zone that ai cant spawn in
-//set timer for minigame
-//	setup circle to display time remaining
+//setup circle to display time remaining
 
 //set up the canvas
 var canvas = document.getElementById("game");
@@ -51,20 +50,24 @@ var keys = [];
 
 //game values
 var gameVals = {
-	damageDealt : 0,
-	maxTime : 20,
-	timeRemaining : 20,
+	damageTaken : 0,
+	damageBlocked: 0,
 	damaged : false,
 	damagePerHit : 3,
 	//time
 }
+
+//timer
+var interval = 1000; // ms
+var expected = Date.now() + interval;
 
 //
 var timer = {
 	x: 100,
 	y: 20,
 	r: 12,
-	time: null,
+	maxTime : 20,
+	timeRemaining : 20,
 }
 
 //shapes from SAT library to check for collision
@@ -231,7 +234,7 @@ var dt = 0;						//incrase radius of dark screen
 var dash = true;			//feature for dashing when pressing "a" button
 var camShake = true;		//feature for shaking camera when pressing "b" button
 var pauseOnHit = true;			//feature for pausing characters on hit
-var paused = false;				//if players are currently paused
+var paused = true;				//if players are currently paused
 
 
 
@@ -450,6 +453,16 @@ function defendOff() {
 	shieldL.active = false;
 }
 
+function startGame() {
+	gameVals.damageTaken = 0;
+	gameVals.damageBlocked = 0;
+	timer.timeRemaining = timer.maxTime;
+	paused = false;
+
+	expected = Date.now() + interval;
+	setTimeout(step, interval);
+}
+
 ////////////////   KEYBOARD FUNCTIONS  //////////////////
 
 
@@ -589,6 +602,7 @@ function shieldCollided(shield) {
 	collis = SAT.testPolygonPolygon(shield.collisionMask, ai.collisionMask, collisionResponse);
 
 	if (collis){
+		gameVals.damageBlocked += gameVals.damagePerHit;
 		randomizeAILocation();
 	}
 	
@@ -730,10 +744,31 @@ function render(){
 		shieldCollided(shieldL);
 	}
 
+	//draw html text
+	document.getElementById("taken").innerHTML = gameVals.damageTaken;
+	document.getElementById("blocked").innerHTML = gameVals.damageBlocked;
+	document.getElementById("time").innerHTML = timer.timeRemaining;
 	ctx.restore();
 }
 
+function step() {
+    var dt = Date.now() - expected; // the drift (positive for overshooting)
+    if (dt > interval) {
+        // something really bad happened. Maybe the browser (tab) was inactive?
+        // possibly special handling to avoid futile "catch up" run
+    }
+    timer.timeRemaining -= 1;
+    
 
+    expected += interval;
+    if (timer.timeRemaining == 0) {
+    	paused = true;
+    }  
+
+    if (timer.timeRemaining != 0) {
+    	setTimeout(step, Math.max(0, interval - dt)); // take into account drift
+    }
+}
 
 //////////////   GAME LOOP FUNCTIONS   //////////////////
 
@@ -946,6 +981,9 @@ function main(){
 	if(!gracePeriod && collided()){
 		gracePeriod = true;
 		doShake(shakeIntensity/2);
+
+		//calculate damage stuff
+		gameVals.damageTaken += gameVals.damagePerHit;
 
 		if(pauseOnHit)
 			paused = true;
