@@ -14,6 +14,13 @@ var pCtx = canvas.getContext("2d");
 //document.body.appendChild(pCanvas);
 //document.body.appendChild(canvas);
 
+//audio feedback
+var aud_block = new Audio('audio/Shield_block.ogg');
+aud_block.volume = 0.03;
+
+var aud_playerHurt = new Audio('audio/Player_hurt.mp4');
+aud_playerHurt.volume = 0.03;
+
 //camera
 var camera = {
 	x : 0,
@@ -603,6 +610,7 @@ function shieldCollided(shield) {
 
 	if (collis){
 		gameVals.damageBlocked += gameVals.damagePerHit;
+		aud_block.play();
 		randomizeAILocation();
 	}
 	
@@ -984,6 +992,7 @@ function main(){
 
 		//calculate damage stuff
 		gameVals.damageTaken += gameVals.damagePerHit;
+		aud_playerHurt.play();
 
 		if(pauseOnHit)
 			paused = true;
