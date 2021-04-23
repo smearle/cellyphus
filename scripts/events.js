@@ -121,6 +121,10 @@ EventHandler.prototype.step = function(e) {
         did_combat = false;
     }
 
+
+    /////////////  NON-COMBAT UPDATE  /////////////
+
+
     //outside combat
     if (!did_combat) 
     {
@@ -299,7 +303,7 @@ EventHandler.prototype.step = function(e) {
 
         //generate new barbarians on a new day
         if (Game.barbarians.length == 0 && Game.days % 5 == 0) {
-            let newBarbie = Game._createBeing(Barbarian, freeCells);
+            let newBarbie = Game._createBarbarian();
             Game.barbarians.push(newBarbie); 
             Game.scheduler.add(newBarbie, true);
         }
