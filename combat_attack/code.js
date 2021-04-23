@@ -1,4 +1,6 @@
 //change weak spot more often?
+//calculate how far the player is away
+
 //draw graphic
 //setup circle to display time remaining
 
