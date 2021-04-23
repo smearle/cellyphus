@@ -621,6 +621,23 @@ function shieldCollided(shield) {
 
 //////////////////  RENDER FUNCTIONS  ////////////////////
 
+//draw circular timer and sector to denote time
+function drawTimer() {
+	let pctFilled = timer.timeRemaining / timer.maxTime;
+	let amtFilled = 2 * Math.PI * pctFilled;
+
+	//draw timer
+	ctx.beginPath();
+	ctx.arc(timer.x, timer.y, timer.r, 0, 2 * Math.PI);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.moveTo(timer.x, timer.y);
+	ctx.arc(timer.x, timer.y, timer.r, amtFilled, 0);
+	ctx.lineTo(timer.x, timer.y);
+	ctx.stroke();
+}
+
 //draws shield given corners
 function drawShield(corners) {
 	ctx.beginPath();
@@ -699,16 +716,7 @@ function render(){
 		ctx.fillRect(0,0,canvas.width,canvas.height);
 	}
 
-	//draw timer
-	ctx.beginPath();
-	ctx.arc(timer.x, timer.y, timer.r, 0, 1.5 * Math.PI);
-	ctx.stroke();
-
-	ctx.beginPath();
-	ctx.moveTo(timer.x, timer.y);
-	ctx.arc(timer.x, timer.y, timer.r, 1.5 * Math.PI, 0);
-	ctx.lineTo(timer.x, timer.y);
-	ctx.stroke();
+	drawTimer();
 
 	//draw defense
 	if (shieldU.active && shieldR.active) {
@@ -769,7 +777,7 @@ function step() {
     
 
     expected += interval;
-    if (timer.timeRemaining == 0) {
+    if (timer.timeRemaining <= 0) {
     	paused = true;
     }  
 
@@ -842,6 +850,14 @@ function main(){
 	//panCamera();
 
 	render();
+
+	//pause when timer is 0
+	if (timer.timeRemaining <= 0) {
+		//move ai out of collision
+		ai.x = 30;
+		ai.y = 30;
+  	paused = true;
+  } 
 
 	//collision mask should be at same location as ai
 	ai.collisionMask.pos.x = ai.x;

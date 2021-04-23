@@ -423,7 +423,9 @@ function step() {
     
 
     expected += interval;
-    if (gameVals.timeRemaining == 0) {
+    if (gameVals.timeRemaining <= 0) {
+    	player.x = 30;
+    	player.y = 30;
     	paused = true;
     }  
 
@@ -518,6 +520,13 @@ function main(){
 	//panCamera();
 
 	render();
+
+	//stop movement when timer is done
+  if (gameVals.timeRemaining <= 0) {
+  	player.x = 30;
+  	player.y = 30;
+  	paused = true;
+  }  
 
 	currShakeTime = (new Date).getTime();
 	if (currShakeTime < endShakeTime) {
