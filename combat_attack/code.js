@@ -1,3 +1,7 @@
+//change weak spot more often?
+//draw graphic
+//setup circle to display time remaining
+
 //set up the canvas
 var canvas = document.getElementById("game");
 var ctx = canvas.getContext("2d");
