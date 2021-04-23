@@ -357,8 +357,17 @@ function drawMap() {
     */
 }
 
+var st = 0;
+
+//repeat the step (allow for change in tick-per-sec)
+function repeatStep(){
+    Game.event_handler.step(null);
+    st = setTimeout(repeatStep, Game.tickPerSec);
+}
+
 window.onload = function(){
     Game.init();
+    st = setTimeout(repeatStep, Game.tickPerSec);
 }
 
 //prevent scrolling with the game

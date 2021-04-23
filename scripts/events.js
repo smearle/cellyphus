@@ -7,7 +7,14 @@ EventHandler.prototype.step = function(e) {
     var validUpdate = false;
 
     player = Game.player;
-    var code = e.keyCode;
+
+    var code = null;
+
+    if(e == null){
+        code = 32;          //simulate a space press
+    }else{
+        code = e.keyCode;
+    }
 
     //clear console outputs
     Game.log_display.clear();
