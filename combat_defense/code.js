@@ -1,3 +1,9 @@
+//calculate damage taken
+//add damage blocked
+//create zone that ai cant spawn in
+//set timer for minigame
+//	setup circle to display time remaining
+
 //set up the canvas
 var canvas = document.getElementById("game");
 var ctx = canvas.getContext("2d");
@@ -51,6 +57,14 @@ var gameVals = {
 	damaged : false,
 	damagePerHit : 3,
 	//time
+}
+
+//
+var timer = {
+	x: 100,
+	y: 20,
+	r: 12,
+	time: null,
 }
 
 //shapes from SAT library to check for collision
@@ -609,6 +623,8 @@ function render(){
 	
 	/*   add draw functions here  */
 
+	
+
 	//draw a red box to represent the player
 		//draw trail behind player and ai if active
 		if(draw_trail){
@@ -660,6 +676,17 @@ function render(){
 		ctx.fillStyle = grd;
 		ctx.fillRect(0,0,canvas.width,canvas.height);
 	}
+
+	//draw timer
+	ctx.beginPath();
+	ctx.arc(timer.x, timer.y, timer.r, 0, 1.5 * Math.PI);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.moveTo(timer.x, timer.y);
+	ctx.arc(timer.x, timer.y, timer.r, 1.5 * Math.PI, 0);
+	ctx.lineTo(timer.x, timer.y);
+	ctx.stroke();
 
 	//draw defense
 	if (shieldU.active && shieldR.active) {
