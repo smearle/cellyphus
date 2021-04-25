@@ -4,6 +4,7 @@ function Barbarian(x, y,lodge) {
     this._x = x;
     this._y = y;
     this.health = 100;
+    this.fullHealth = 100;
     this.power = 5;
     this.radar = 25;
     this.speed = 100;
@@ -25,24 +26,27 @@ Barbarian.prototype.act = function() {
         if(this.getDistance(Game.player) < this.radar){
             this.chase();
         }
+        //quarantined? go outside
+        else if(this.getDistance(this.base) < 10){
+            this.leaveHome();
+        }
         //wander around
         else{
             this.idle();
         }
     }
     //run away back to the base
-    else{
+    else if(!this.at_base){
         this.flee();
     }
 
     //regain health
-    if(this.at_base){
+    if(this.at_base && this.health < this.fullHealth){
         this.recharge++;
         if(this.recharge >= 10){
             this.health += 5;
             this.recharge = 0;
-        }
-        
+        }   
     }
 
     //Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
@@ -123,19 +127,52 @@ Barbarian.prototype.idle = function(){
 
     //valid spot to move to
     if(barbPassableCallback(x,y)){
-        
         //Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
         this._x = x;
         this._y = y;
         //this._draw();
-        //console.log("head empty... " + (x+","+y) +"?")
+        //console.log("head empty... ")
+    }else{
+        //console.log('oof')
+    }
+}
+
+//go to a random place
+Barbarian.prototype.leaveHome = function(){
+    var index = Math.floor(ROT.RNG.getUniform() * Game.freeCells.length);
+    var key = Game.freeCells.splice(index, 1)[0].split(",");
+    let x = parseInt(key[0]);
+    let y = parseInt(key[1]);
+
+    var astar = new ROT.Path.AStar(x, y, barbPassableCallback, {topology:4});
+
+    var path = [];
+    var pathCallback = function(x, y) {
+        path.push([x, y]);
+    }
+    astar.compute(this._x, this._y, pathCallback);
+
+    path.shift();
+
+    //engage in combat
+    if (path.length == 0) {
+        return
+    }
+    //move towards location
+    else {
+        x = path[0][0];
+        y = path[0][1];
+        this._x = x;
+        this._y = y;
+        //this._draw();
+        //console.log("omw. leaving in 5 min")
     }
 }
 
 //have barbarian run back to its base
 Barbarian.prototype.flee = function(){
     //ET go home
-    if(this.lodge != null && !this.at_base){
+    if(this.base != null && !this.at_base){
         var x = this.lodge._x;
         var y = this.lodge._y;
 

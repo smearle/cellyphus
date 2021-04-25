@@ -17,8 +17,10 @@ FrogManager.prototype.act = function () {
 var Frog = function(x, y) {
     this._x = x;
     this._y = y;
-    this._x_t = Game.player.getX();
-    this._y_t = Game.player.getY();
+    this._x_t = this._x;
+    this._y_t = this._y;
+//  this._x_t = Game.player.getX();
+//  this._y_t = Game.player.getY();
     this.isBuilding = false;  // if the frog is on its way to build something
     this._draw();
     this._move_ticker = 0

@@ -1,44 +1,32 @@
 var EventHandler = function() {
 }
 
-EventHandler.prototype.act = function() {
-//  console.log('event handler tick');
-    Game.gameTicks += 1;
-
-    if(Game.gameTicks % Game.ticksPerDay == 0) 
-    {
-        Game.days += 1;
-        if (Game.barbarians.length == 0 && Game.days % 5 == 0) {
-            let newBarbie = Game._createBeing(Barbarian, freeCells);
-            Game.barbarians.push(newBarbie); 
-            Game.scheduler.add(newBarbie, true);
-        }
-    }
-
-  //Game.engine.lock();
-    window.addEventListener("click", this);
-    window.addEventListener("keydown", this);
-    displayHUD();
-    Game.simulateGrass();
-    drawMap();
-    return new Promise(resolve => setTimeout(resolve, Game.tickPerSec));
-}
-
 //main game loop
-EventHandler.prototype.handleEvent = function(e) {
+EventHandler.prototype.step = function(e) {
 
-    //console.log("me too")
+    var validUpdate = false;
 
     player = Game.player;
-    var code = e.keyCode;
 
+    var code = null;
+
+    if(e == null){
+        code = 32;          //simulate a space press
+    }else{
+        code = e.keyCode;
+    }
+
+    //clear console outputs
     Game.log_display.clear();
     Game.log_combat.clear();
+
+    ///////////////        SHORTCUT KEYS        //////////////
 
     // debug command for spawning a new frog
     if (code == 78) {
         console.log("spwan a frwag (debug)");
         Game.spawnFrog();
+        validUpdate = true;
     }
 
     // we need to detect [b]ed before [b]uild
@@ -70,60 +58,54 @@ EventHandler.prototype.handleEvent = function(e) {
     };
 
 
+    ///////////   COMBAT UPDATE    ///////////////
+
+
     if (Game.combatTarget != null) {
         //freeze movement
         rand = Math.floor(Math.random() * 101);
-//      console.log("random: " + rand);
         did_combat = true;
 
         //add attack for number press
         switch(code) {
             case 49: //pressed 1: slam
-                if (rand <= Game.player.slamChance())
-                {
+                if (rand <= Game.player.slamChance()){
                     Game.combatTarget.health -= Game.player.slamDmg;
                     Game.player.health -= 1;
                     combatTextPlayer("You body slammed doing " + Game.player.slamDmg +" damage");
+                }else{
+                    combatTextPlayer("You slammed the air!");
                 }
-                else
-                {
-                    combatTextPlayer("You slamed the air!");
-                }
+                validUpdate = true;
                 
                 break;
             case 50: //pressed 2: kick
-                if (rand <= Game.player.kickChance())
-                {
+                if (rand <= Game.player.kickChance()){
                     Game.combatTarget.health -= Game.player.kickDmg;
                     Game.player.thirst -= 2;
                     combatTextPlayer("You kicked hard doing " + Game.player.kickDmg +" damage");
-                }
-                else
-                {
+                }else{
                     combatTextPlayer("You kicked the dust!");
                 }
+                validUpdate = true;
+
                 break;
             case 51: //pressed 3: punch
-                if (rand <= Game.player.punchChance())
-                {
+                if (rand <= Game.player.punchChance()){
                     Game.combatTarget.health -= Game.player.punchDmg;
                     Game.player.hunger -= 2;
                     combatTextPlayer("You landed your punch for " + Game.player.punchDmg +" damage");
-                }
-                else
-                {
+                }else{
                     combatTextPlayer("You swung and missed!");
                 }
+                validUpdate = true;
+
                 break;
             default: //default to ignoring the barb
                 combatTextPlayer("You ignore the barbarian and it slaps you in the head, in disbelief.");
                 did_combat = false;  // this will allow player to take a non-combat action
         }
 
-
-        //deal damage to 
-
-        //add attack for enemy
 
         //enemy has died
         if (Game.combatTarget.getHealth() <= 0)
@@ -138,14 +120,19 @@ EventHandler.prototype.handleEvent = function(e) {
             Game.combatTarget = null;
         }
 
-        var newX = player._x;
-        var newY = player._y;
+        newX = player._x;
+        newY = player._y;
 
     }
     else {
         did_combat = false;
     }
 
+
+    /////////////  NON-COMBAT UPDATE  /////////////
+
+
+    //outside combat
     if (!did_combat) 
     {
         //runs if mouse click
@@ -164,11 +151,11 @@ EventHandler.prototype.handleEvent = function(e) {
                 //convert to map coordinates based on windowed main screen
                 [x,y] = pix2Map([rx,ry]);
 
-                console.log("Main Screen: (" + rx + "," + ry + ")  -->  (" + x + "," + y + ")");
+//              console.log("Main Screen: (" + rx + "," + ry + ")  -->  (" + x + "," + y + ")");
 
+                //direct build location on the map
                 if (await_build_location) {
                     orderBuild(next_build, x, y)
-
                 }
             }
 
@@ -182,7 +169,7 @@ EventHandler.prototype.handleEvent = function(e) {
                 //convert to map coordinates based on minimap
                 [x,y] = pix2Minimap([rx,ry]);
 
-                console.log("Minimap: (" + rx + "," + ry + ")  -->  ("+  x + "," + y + ")");
+//              console.log("Minimap: (" + rx + "," + ry + ")  -->  ("+  x + "," + y + ")");
 
                 //move camera to location clicked on map
                 camFocusPt([x,y]);
@@ -194,11 +181,12 @@ EventHandler.prototype.handleEvent = function(e) {
                 console.log("Out of bounds!");
 
             document.getElementById("clickedCoords").innerHTML = [x,y];
-            var newX = player._x;
-            var newY = player._y;
+            newX = player._x;
+            newY = player._y;
 
         }
-        else //runs if button press (and player is not fighting barbarian)
+        //runs if button press (and player is not fighting barbarian)
+        else
         {
 
             var keyMap = {};
@@ -213,7 +201,7 @@ EventHandler.prototype.handleEvent = function(e) {
             keyMap[37] = 6;
             keyMap[36] = 7;
 
-            // WASE
+            // WASD
             keyMap[65] = 6;
             keyMap[68] = 2;
             keyMap[87] = 0;
@@ -225,32 +213,36 @@ EventHandler.prototype.handleEvent = function(e) {
                 //dont move if invalid keypress
                 newX = player._x;
                 newY = player._y;
-                // spacebar to plant seeds
-                if (code == 32) {
+
+                // Q to plant seeds
+                if (code == 81) {
                     if (Game.player.seeds > 0) {
                         Game.log_display.drawText(0, 0, "You plant seeds.");
                         var[seed_x, seed_y] = getPlantTile(player._x, player._y);
-    //                  var[seed_x, seed_y] = [player._x, player._y];
                         setTile(seed_x, seed_y, tile_chars.GRASS);
-                        //drawTile(seed_x, seed_y);
                     }
                     else {
                         Game.log_display.drawText(0, 0, "You have no seeds to plant.");
                     }
-
+                    validUpdate = true;
                 }
-
-
+                // SPACE = wait key
+                else if(code == 32){
+                    validUpdate = true;
+                }
             }
 
+
+            //arrow key = movement
             else
             {
-                /* is there a free space? */
+                //move player if available
                 var dir = ROT.DIRS[8][keyMap[code]];
-    //          console.log("dir: " + dir);
-                var newX = player._x + dir[0];
-                var newY = player._y + dir[1];
+                newX = player._x + dir[0];
+                newY = player._y + dir[1];
                 trg_tile = getTile(newX, newY);
+
+                //if next to water, drink it
                 if (player_impassable.indexOf(trg_tile) >= 0) {
                     newX = player._x;
                     newY = player._y;
@@ -258,32 +250,31 @@ EventHandler.prototype.handleEvent = function(e) {
                         player.thirst = Math.min(100, player.thirst + 25);
                     }
                 }
+
+                validUpdate = true;
             }
 
         }
     }    
 
-    //Game.display.draw(player._x, player._y, Game.map[player._x+","+player._y]);
+    // Tick grass and tree cellular automata
+    Game.simulateGrass()
+
+    /////////////////      PLAYER UPDATES       /////////////////
+
+    //no need to update game. (player?)
+    if(!validUpdate)
+        return;
+
+    //// PLAYER UPDATES
+
     // Move the player
     player._x = newX;
     player._y = newY;
 
-    // What team fortress is this?
-    window.removeEventListener("keydown", player);
-
-    window.removeEventListener("keydown", this);
-    window.removeEventListener("click", this);
-    
-    //Game.tick ++;
-    if (player.hunger == 0 && player.thirst == 0) {
-        player.health--;
-    }
-    player.hunger = Math.max(player.hunger-1, 0);
-    player.thirst = Math.max(player.thirst-1, 0);
+    //eat grass if on the tile
     curr_tile = Game.map[player._x+","+player._y];
-    if (curr_tile == "ww") {
-        }
-    else if (curr_tile == "gg") {
+    if (curr_tile == "gg") {
         Game.log_display.drawText(0, 0, "You eat grass.")
         player.hunger = Math.min(100, player.hunger + 25);
         setTile(player._x, player._y, "..");
@@ -291,4 +282,49 @@ EventHandler.prototype.handleEvent = function(e) {
         player.seeds += 1;
 
     }
+
+    //decrease player hunger, thirst, and health
+    if (player.hunger == 0 && player.thirst == 0) {
+        player.health--;
+    }
+    player.hunger = Math.max(player.hunger-1, 0);
+    player.thirst = Math.max(player.thirst-1, 0);
+
+
+    ///// AI UPDATES
+    let fgs = Game.frog_manager.frogs;
+    for(let f=0;f<fgs.length;f++){
+        fgs[f].act();
+    }
+
+    let bbs = Game.barbarians;
+    for(let b=0;b<bbs.length;b++){
+        bbs[b].act();
+    }
+
+    //former EVENTHANDLER.ACT() function - update the game state and ticks
+    Game.gameTicks += 1;
+
+    if(Game.gameTicks % Game.ticksPerDay == 0) 
+    {
+        //new day
+        Game.days += 1;
+
+        //generate new barbarians on a new day
+        if (Game.barbarians.length == 0 && Game.days % 5 == 0) {
+            let newBarbie = Game._createBarbarian();
+            Game.barbarians.push(newBarbie); 
+            Game.scheduler.add(newBarbie, true);
+        }
+    }
+
+
+    //redraw everything and update map for ROT.Js and status messages
+    displayHUD();
+    drawMap();
+
+    //render();
+    //panCamera();
+
+    
 }

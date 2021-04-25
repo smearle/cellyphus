@@ -12,9 +12,10 @@ tileSet.src = "tileset.png";
 
 const tile_chars = {
     WALL: "|",
+    REDWALL: "||",
     GRASS: "gg",
     PLAYER: "@",
-    EMPTY: "..",
+    DIRT: "..",
     FROGMAN: "GG",
     BARBARIAN: "SS",
     WATER: "ww",
@@ -23,12 +24,14 @@ const tile_chars = {
     FIRE: "ff",
     BED: "bb",
     BRIDGE: "br",
+    FLAME: "fl",
+    ANT: "an",
 }
 
 
-frog_impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.BARBARIAN]
-barb_impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.DOOR, tile_chars.BARBARIAN]
-player_impassable = [tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.BARBARIAN]
+frog_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.BARBARIAN]
+barb_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.DOOR, tile_chars.BARBARIAN]
+player_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.BARBARIAN]
 
 tileWidth = 32;
 var display_options = {
@@ -41,17 +44,20 @@ var display_options = {
         "@": [0, 0],
         "..": [32, 0],
         "gg": [64, 0],
-        "**": [96, 0],
-        "GG": [160, 0],
-        "HH": [64, 0],
-        "SS": [288, 0],
         "mm": [64, 0],
+        "HH": [64, 0],
+        "**": [96, 0],
         "ww": [128, 0],
-        "|": [256, 0],
-        "dd": [320, 0],
-        "ff": [12*tileWidth, 0],
+        "GG": [160, 0],
+        "|": [8*tileWidth, 0],
+        "SS": [9*tileWidth, 0],
+        "dd": [10*tileWidth, 0],
         "bb": [11*tileWidth, 0],
+        "ff": [12*tileWidth, 0],
         "br": [13*tileWidth, 0],
+        "fl": [14*tileWidth, 0],
+        "||": [15*tileWidth, 0],
+        "an": [16*tileWidth, 0],
     },
     width: map_width,
     height: map_height,
@@ -75,6 +81,7 @@ var Game = {
     ticksPerDay: 300,
     days: 0,
     tickPerSec: 800,
+    game_mode: 'real',
     //combatSubjects: {"None": 1, "Barbarian": 2},
     combatTarget: null,
 
@@ -93,6 +100,8 @@ var Game = {
 
         this._generateMap();
         this.event_handler = new EventHandler();
+        window.addEventListener("click", this.event_handler.step);
+        window.addEventListener("keydown", this.event_handler.step);
 
         var scheduler = new ROT.Scheduler.Simple();
         //make instance of game loop to run game loop stuff
@@ -128,16 +137,20 @@ var Game = {
       live = [];
       trees = [];
       dead = [];
+      flames = [];
+      // Iterate through all tiles on the map and determine its next state based on CA-like rules
+      // For grass it is dumb GoL. For trees it is ...
+      // For fire it is...
       for (var iy = map_width - 1; iy >= 0; iy--) {
         for (var ix = map_height - 1; ix >= 0; ix--) {
             var key = ix+","+iy;
             // check for grass on valid tiles
             cur_tile = getTile(ix, iy);
-            if (this.map[key] == "gg" || this.map[key] == "..") {
+            if ([tile_chars.GRASS, tile_chars.FLAME, tile_chars.TREE, tile_chars.DIRT].indexOf(this.map[key]) >= 0) {
 
                 next_state = census(ix, iy);
     //          console.log(next_state);
-                if (next_state == 1) {
+                if (next_state == CAstates.GRASS) {
     //          live.push(key);
                     live.push([ix, iy]);
     //            live.push({
@@ -145,16 +158,14 @@ var Game = {
     //              y: iy,
     //            });
                 }
-                else if (next_state == 2) {
+                else if (next_state == CAstates.TREE) {
                     trees.push([ix, iy]);
                 }
-                else {
-                    if (cur_tile == tile_chars.TREE && Math.Random() < 0.2) {
-                        dead.push([ix, iy]);
-                    }
-                    else {
-                         dead.push([ix, iy]);
-                    }
+                else if (next_state == CAstates.FIRE) {
+                    flames.push([ix, iy]);
+                }
+                else if (next_state == CAstates.DIRT) {
+                    dead.push([ix, iy]);
                 }
             }
           }
@@ -163,18 +174,20 @@ var Game = {
               [x, y] = live[i];
               var key = x+","+y;
               this.map[key] = "gg";
-              this.display.draw(x, y, this.map[key]);
         }
         for (var i = 0; i < trees.length; i++) {
               [x, y] = trees[i];
               setTile(x, y, tile_chars.TREE);
-              drawTile(x, y);
         }
         for (var i = 0; i < dead.length; i++) {
             [x, y] = dead[i];
             var key = x+","+y;
             this.map[key] = "..";
-            this.display.draw(x, y, this.map[key]);
+        }
+        for (var i = 0; i < flames.length; i++) {
+            [x, y] = flames[i];
+            var key = x+","+y;
+            this.map[key] = tile_chars.FLAME;
         }
       },
     //  toggle(cell.x, cell.y, 'next');
@@ -355,23 +368,41 @@ function drawMap() {
     */
 }
 
-async function mainLoop() {
+
+/// set game speed and mode
+
+var st = 0;
+
+//repeat the step (allow for change in tick-per-sec)
+function repeatStep(){
+    Game.event_handler.step(null);
+    st = setTimeout(repeatStep, Game.tickPerSec);
+}
+
+window.onload = function(){
     Game.init();
-    while (1) {
-        let actor = Game.scheduler.next();
-        if (!actor) { break; }
-        await actor.act();
-        console.log(output.join(""));
+    if(Game.game_mode == "real"){
+        st = setTimeout(repeatStep, Game.tickPerSec);
+    }else{
+        clearTimeout(st);
+        st = 0;
     }
 }
 
-let scheduler = new ROT.Scheduler.Simple();
-let output = [];
-
-window.onload = function() {
-  //Game.init();
-    mainLoop();
+//change game mode
+function toggleGameMode(v){
+    Game.game_mode = v;
+    if(v == "turn"){
+        clearTimeout(st);
+        st = 0;
+        document.getElementById("game_speed").disabled = true;
+    }else{
+        st = setTimeout(repeatStep, Game.tickPerSec);
+        document.getElementById("game_speed").disabled = false;
+    }
 }
+
+
 
 
 //prevent scrolling with the game

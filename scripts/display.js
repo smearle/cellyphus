@@ -250,6 +250,7 @@ function drawMain(){
 	//move camera if needed
 	panCamera();
     
+    // Draw all the blueprints as transparent versions of the items that are planned for building
     for (let key in build_orders) {
         [x, y] = key.split(",");
         img = alphaImgs[build_orders[key]];
@@ -257,8 +258,9 @@ function drawMain(){
         th = Game.display.getOptions().tileHeight;
         mapCtx = gameMapCanvas.getContext("2d");
         mapCtx.drawImage(img, x*tw, y*th, tw, th);
-//      ctx.drawImage(img, x, y, 16, 16);
     }
+
+    // Not using rn. In case there's additional layers of tiles we want to render separately from rot.js
     for (let key in render_tiles) {
         [x, y] = key.split(",");
         img = Imgs[render_tiles[key]];
@@ -266,7 +268,6 @@ function drawMain(){
         th = Game.display.getOptions().tileHeight;
         mapCtx = gameMapCanvas.getContext("2d");
         mapCtx.drawImage(img, x*tw, y*th, tw, th);
-//      ctx.drawImage(img, x, y, 16, 16);
     }
 
 

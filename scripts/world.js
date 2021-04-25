@@ -1,3 +1,14 @@
+const CAstates = {
+    DIRT: 0,
+    GRASS: 1,
+    TREE: 2,
+    FIRE: 3,
+    INSECT: 4,
+}
+
+fire_lifetimes = {};
+
+
 /*
  * Generic functions
  */
@@ -46,14 +57,13 @@ function getWanderTile(x, y) {
 
 }
 
+// Find a tile, adjacent to the player, where they can plant a seed
 function getPlantTile(x, y) {
     var dirs = [[0, 1], [1, 0], [-1,0], [0,-1]]
     for (i=0; i<dirs.length; i++) {
-//      console.log(x, y);
         var dx;
         var dy;
         [dx, dy] = dirs[i];
-//      console.log(dx, dy);
         var x1 = x + dx
         var y1 = y + dy;
         var tile_type = getTile(x1, y1);
@@ -92,7 +102,7 @@ function frogPassableCallback(x, y) {
 //    return (x+","+y in Game.map);
       key = x+","+y;
       tile_type = Game.map[key];
-      var passable = (!(frog_impassable.indexOf(tile_type)) >= 0);
+      var passable = (!(frog_impassable.indexOf(tile_type) >= 0));
       return passable;
 }
 
@@ -106,13 +116,31 @@ function coinFlip() {
   return (Math.floor(Math.random() * 2) == 0);
 }
 
-function isLive(x, y) {
+function isLiveGrass(x, y) {
+  // For grass and trees, are adjacent tiles "alive", i.e., contributing to grass/tree growth?
   var key = x+","+y;
   var cell = Game.map[key];
   return (cell == "gg" || cell == tile_chars.TREE) ? true : false;
 }
 
-function getNeighbors(x, y) {
+function isTree(x, y) {
+    // Simply, is it a tree?
+    var cell = getTile(x, y);
+    return (cell == tile_chars.TREE) ? true : false;
+}
+
+function isTile(x, y, tile_char) {
+    var cell = getTile(x, y);
+    return (cell == tile_char) ? true : false;
+}
+
+
+function isFire(x, y) {
+    return (isTile(x, y, tile_chars.FIRE) || isTile(x, y, tile_chars.FLAME)) ? true : false;
+}
+
+// Count neighbors for a CA
+function getNeighbors(x, y, isLive) {
   n = (y != map_height - 1); // has northern neighbors
   e = (x != 0); // has eastern neighbors
   s = (y != 0); // has southern neighbors
@@ -163,23 +191,47 @@ function isSpawnTree(c) {
 }
 
 function census(x, y) {
-  c = getNeighbors(x, y);
-  underPopulated = healthy = overPopulated = born = spawn_tree = false;
-  if (isLive(x, y)) {
-    underPopulated = isUnderPopulated(c);
-    healthy = isHealthy(c);
-    overPopulated = isOverPopulated(c);
-    spawn_tree = isSpawnTree(c);
-  } else {
-    born = isBorn(c);
-  }
-  if (underPopulated || overPopulated) {
-    return 0;
-  }
-  if (spawn_tree) {
-    return 2;
-  }
-  if (healthy || born) {
-    return 1;
-  }
+    /* 
+     * Core cellular automaton logic
+     */
+
+    tile = getTile(x, y);
+    if (tile == tile_chars.FLAME) {
+        // Check if forest fire
+        if (Math.random() < Math.log( fire_lifetimes[[x, y]] + 1 )) {
+            return CAstates.DIRT;
+        }
+        fire_lifetimes[[x, y]] += 1;
+        return CAstates.FLAME;
+    }
+    c_tree = getNeighbors(x, y, isTree);
+    c_fire = getNeighbors(x, y, isFire);
+    c_grass = getNeighbors(x, y, isLiveGrass);
+    if (c_tree == 3 && Math.random() < 1 || c_tree > 0 && c_fire > 0 || tile == tile_chars.GRASS && c_fire > 0) {
+//      console.log("Fire is lit");
+        fire_lifetimes[[x, y]] = 0;
+        return CAstates.FIRE;
+    }
+    
+    underPopulated = healthy = overPopulated = born = spawn_tree = false;
+    if (tile == tile_chars.TREE) {
+        return CAstates.TREE;
+    }
+    if (isLiveGrass(x, y)) {
+        underPopulated = isUnderPopulated(c_grass);
+        healthy = isHealthy(c_grass);
+        overPopulated = isOverPopulated(c_grass);
+        spawn_tree = isSpawnTree(c_grass);
+    } else {
+        born = isBorn(c_grass);
+    }
+    if (underPopulated || overPopulated) {
+        return CAstates.DIRT;
+    }
+    if (spawn_tree) {
+        return CAstates.TREE;
+    }
+    if (healthy || born) {
+        return CAstates.GRASS;
+    }
 }
