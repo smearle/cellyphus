@@ -116,11 +116,10 @@ function coinFlip() {
   return (Math.floor(Math.random() * 2) == 0);
 }
 
-function isLiveGrass(x, y) {
+function isGrass(x, y) {
   // For grass and trees, are adjacent tiles "alive", i.e., contributing to grass/tree growth?
-  var key = x+","+y;
-  var cell = Game.map[key];
-  return (cell == "gg" || cell == tile_chars.TREE) ? true : false;
+  var cell = getTile(x, y);
+  return (cell == tile_chars.GRASS) ? true : false;
 }
 
 function isTree(x, y) {
@@ -132,6 +131,10 @@ function isTree(x, y) {
 function isTile(x, y, tile_char) {
     var cell = getTile(x, y);
     return (cell == tile_char) ? true : false;
+}
+
+function isWater(x, y) {
+    return isTile(x, y, tile_chars.WATER) ? true: false
 }
 
 
@@ -204,10 +207,12 @@ function census(x, y) {
         fire_lifetimes[[x, y]] += 1;
         return CAstates.FLAME;
     }
+    c_water = getNeighbors(x, y, isWater);
     c_tree = getNeighbors(x, y, isTree);
     c_fire = getNeighbors(x, y, isFire);
-    c_grass = getNeighbors(x, y, isLiveGrass);
-    if (c_tree == 3 && Math.random() < 1 || c_tree > 0 && c_fire > 0 || tile == tile_chars.GRASS && c_fire > 0) {
+    c_grass = getNeighbors(x, y, isGrass);
+    c_grass_tree = c_grass + c_tree;
+    if (c_tree == 5 && Math.random() < 1 || c_tree > 0 && c_fire > 0 || tile == tile_chars.GRASS && c_fire > 0) {
 //      console.log("Fire is lit");
         fire_lifetimes[[x, y]] = 0;
         return CAstates.FIRE;
@@ -215,15 +220,19 @@ function census(x, y) {
     
     underPopulated = healthy = overPopulated = born = spawn_tree = false;
     if (tile == tile_chars.TREE) {
+        if (c_fire > 3) {
+            fire_lifetimes[[x, y]] = 0;
+            return CAstates.FIRE;
+        }
         return CAstates.TREE;
     }
-    if (isLiveGrass(x, y)) {
-        underPopulated = isUnderPopulated(c_grass);
-        healthy = isHealthy(c_grass);
-        overPopulated = isOverPopulated(c_grass);
-        spawn_tree = isSpawnTree(c_grass);
+    if (tile == tile_chars.GRASS) {
+        underPopulated = isUnderPopulated(c_grass_tree);
+        healthy = isHealthy(c_grass_tree);
+        overPopulated = isOverPopulated(c_grass_tree);
+        spawn_tree = isSpawnTree(c_grass_tree);
     } else {
-        born = isBorn(c_grass);
+        born = isBorn(c_grass_tree);
     }
     if (underPopulated || overPopulated) {
         return CAstates.DIRT;

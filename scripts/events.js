@@ -260,6 +260,11 @@ EventHandler.prototype.step = function(e) {
     // Tick grass and tree cellular automata
     Game.simulateGrass()
 
+
+    //redraw everything and update map for ROT.Js and status messages
+    displayHUD();
+    drawMap();
+
     /////////////////      PLAYER UPDATES       /////////////////
 
     //no need to update game. (player?)
@@ -319,9 +324,6 @@ EventHandler.prototype.step = function(e) {
     }
 
 
-    //redraw everything and update map for ROT.Js and status messages
-    displayHUD();
-    drawMap();
 
     //render();
     //panCamera();
