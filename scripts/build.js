@@ -124,22 +124,21 @@ function build(frog, x, y) {
         case build_items.DOOR:
             displayText("Frog builds the door.");
             setTile(x, y, tile_chars.DOOR);
-            drawTile(x, y);
             break
         case build_items.BED:
             displayText("Frog builds the bed.");
             setTile(x, y, tile_chars.BED);
-            drawTile(x, y);
+            if (isSheltered(x, y)) {
+                Game.spawnFrogAt(x, y);
+            }
             break;
         case build_items.FIRE:
             displayText("Frog builds the fire.");
             setTile(x, y, tile_chars.FIRE);
-            drawTile(x, y);
             break;
         case build_items.BRIDGE:
             displayText("Frog builds the " + curr_build + ".");
             setTile(x, y, tile_chars.BRIDGE);
-            drawTile(x, y);
             break;
 
         default:
@@ -147,4 +146,14 @@ function build(frog, x, y) {
             console.log("invalid build item");
     }
 }
+
+function isSheltered(x, y) {
+    /* 
+     * Is it sheltered?
+     */ 
+
+    // Dummy function for now: is there a wall next to us?
+    return isTile(x+1, y, tile_chars.WALL);
+}
+
 

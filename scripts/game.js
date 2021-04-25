@@ -26,6 +26,7 @@ const tile_chars = {
     BRIDGE: "br",
     FLAME: "fl",
     ANT: "an",
+    REDBRICK: "||",
 }
 
 
@@ -299,7 +300,7 @@ var Game = {
             for(let c=0;c<lodge[0].length;c++){
                 let nkey = ((x+c)+","+(y+r));
                 if(lodge[r][c] == 1){
-                    this.map[nkey] = "|";
+                    this.map[nkey] = tile_chars.REDBRICK;
                 }
             }
         }
@@ -342,6 +343,11 @@ var Game = {
     spawnFrog: function() {
         freeCells = this._getFreeFrogSpawnCells();
         new_frog = this._createBeing(Frog, freeCells);
+        this.frog_manager.frogs.push(new_frog);
+    },
+
+    spawnFrogAt: function(x, y) {
+        new_frog = new Frog(x, y);
         this.frog_manager.frogs.push(new_frog);
     }
 };
