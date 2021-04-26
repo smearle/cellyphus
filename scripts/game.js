@@ -283,10 +283,8 @@ var Game = {
 
     //create the base for the barbarians
     _generateBlackLodge: function(){
-        var index = Math.floor(ROT.RNG.getUniform() * freeCells.length);
-        var key = freeCells.splice(index, 1)[0].split(",");
-        let x = parseInt(key[0]);
-        let y = parseInt(key[1]);
+        let x = Math.floor(Math.random()*(map_width-25))+10;
+        let y = Math.floor(Math.random()*(map_height-25))+10;
 
         //set base of the black lodge
         this.blackLodge = {_x:x+4, _y:y+4};
@@ -305,6 +303,8 @@ var Game = {
                 let nkey = ((x+c)+","+(y+r));
                 if(lodge[r][c] == 1){
                     this.map[nkey] = tile_chars.REDBRICK;
+                }else{
+                    this.map[nkey] = tile_chars.DIRT;
                 }
             }
         }

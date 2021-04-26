@@ -19,6 +19,7 @@ Barbarian.prototype.getHealth = function() { return this.health; }
 
 Barbarian.prototype.act = function() {
 //  console.log('barbarian tick');
+    this.at_base = (this._x == this.base._x && this._y == this.base._y);
 
     //strong enough to fight
     if(this.health > 30){
@@ -173,8 +174,8 @@ Barbarian.prototype.leaveHome = function(){
 Barbarian.prototype.flee = function(){
     //ET go home
     if(this.base != null && !this.at_base){
-        var x = this.lodge._x;
-        var y = this.lodge._y;
+        var x = this.base._x;
+        var y = this.base._y;
 
         var astar = new ROT.Path.AStar(x, y, barbPassableCallback, {topology:4});
 
@@ -188,7 +189,7 @@ Barbarian.prototype.flee = function(){
 
         //home safe - recharge health
         if (path.length == 0) {
-            this.at_base = true;
+            return
         }
         //run forrest run!
         else{
