@@ -18,6 +18,8 @@ var Player = function(x, y) {
     this.kickDmg = 10;
     this.slamDmg = 20;
 
+    this.moved = false;
+
     this._draw();
 }
 

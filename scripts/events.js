@@ -1,6 +1,8 @@
 var EventHandler = function() {
 }
 
+var deadBarbie = false;
+
 //main game loop
 EventHandler.prototype.step = function(e) {
 
@@ -118,6 +120,7 @@ EventHandler.prototype.step = function(e) {
                 Game.barbarians.splice(i,1);
             }
             Game.combatTarget = null;
+            deadBarbie = true;
         }
 
         newX = player._x;
@@ -252,18 +255,11 @@ EventHandler.prototype.step = function(e) {
                 }
 
                 validUpdate = true;
+                player.moved = true;
             }
 
         }
     }    
-
-    // Tick grass and tree cellular automata
-    Game.simulateGrass()
-
-
-    //redraw everything and update map for ROT.Js and status messages
-    displayHUD();
-    drawMap();
 
     /////////////////      PLAYER UPDATES       /////////////////
 
@@ -324,6 +320,19 @@ EventHandler.prototype.step = function(e) {
     }
 
 
+    // Tick grass and tree cellular automata
+    Game.simulateGrass()
+
+
+    //redraw everything and update map for ROT.Js and status messages
+    displayHUD();
+    drawMap();
+
+
+    //update objectives once completed
+    if(objDivShown){
+        setObjsDiv()
+    }
 
     //render();
     //panCamera();

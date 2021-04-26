@@ -59,6 +59,8 @@ var camera = {
 var maxTxtLog = 100;
 var txtLog = []
 
+var objDivShown = false;
+
 
 
 /////////     TEXT CONSOLE CODE       /////////////
@@ -353,6 +355,8 @@ function changeSection(sec,tab){
 	document.getElementById("minimapCanvas").style.display = "none";
 	document.getElementById("user_settings").style.display = "none";
 	document.getElementById("text_log").style.display = "none";
+	document.getElementById("obj_list").style.display = "none";
+	objDivShown = false;
 
 	if(sec == "minimap"){
 		document.getElementById("minimapCanvas").style.display = "block";
@@ -362,6 +366,10 @@ function changeSection(sec,tab){
 		document.getElementById("user_settings").style.display = "block";
 	}else if(sec == "log"){
 		document.getElementById("text_log").style.display = "block";
+	}else if(sec == "obj"){
+		setObjsDiv();
+		document.getElementById("obj_list").style.display = "block";
+		objDivShown = true;
 	}
 
 }
@@ -393,7 +401,6 @@ function resetBuildItemsColor(){
 	for(let t=0;t<allTabs.length;t++){
 		allTabs[t].style.backgroundColor = "#dedede";
 	}
-	console.log("no more fortnite")
 }
 
 
@@ -415,8 +422,26 @@ function addToLog(txt){
 }
 
 
-//SETTINGS
+//OBJECTIVES
 
+//set whether the objectives are active or not for the div
+function setObjsDiv(){
+	//check if any new ones are active
+	let act_objs = objectiveList.activation;
+	for(let a=0;a<act_objs.length;a++){
+		if(!objectiveList.completed[a])
+			objectiveList.completed[a] = act_objs[a]();
+	}
+	
+	//update inner html of divs
+	let objs = objectiveList.completed;
+	for(let o=0;o<objs.length;o++){
+		document.getElementById("obj_"+o+"_check").innerHTML = (objs[o] ? '&#x2611;' : '&#x2610;');
+	}
+}
+
+
+//SETTINGS
 
 //changes the zoom value on the minimap and the map screen
 function changeZoom(v){

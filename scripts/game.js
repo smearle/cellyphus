@@ -1,6 +1,7 @@
 
 // Will the barbarian come for you?
 var BARBARIAN = true;
+
 // Will you die of any cause?
 var PLAYER_DEATH = false;
 
@@ -30,9 +31,9 @@ const tile_chars = {
 }
 
 
-frog_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.BARBARIAN]
-barb_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.DOOR, tile_chars.BARBARIAN]
-player_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.BARBARIAN]
+frog_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.BARBARIAN, tile_chars.REDBRICK]
+barb_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.DOOR, tile_chars.BARBARIAN, tile_chars.REDBRICK]
+player_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.BARBARIAN, tile_chars.REDBRICK]
 
 tileWidth = 32;
 var display_options = {
@@ -128,6 +129,9 @@ var Game = {
         camera.focus = this.player;
         panCamera();
         render();
+
+        //set objectives
+        initializeObjectives();
     },
 
     //TODO: factor this out, into vegetation code
@@ -357,7 +361,7 @@ function drawMap() {
     //DRAW EVERYTHING HERE ALL AT ONCE
     Game._drawWholeMap();                                       //draw map
 
-    Game.player._draw();                                             //draw player
+    Game.player._draw();                                          //draw player
 
     let barbSet = Game.barbarians;                               //draw bararians
     for(let b=0;b<barbSet.length;b++){barbSet[b]._draw();}

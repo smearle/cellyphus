@@ -77,7 +77,7 @@
                 width:20%;
                 height:100%;
                 padding-top: 8px;
-                font-size:16px;
+                font-size:12px;
                 cursor:pointer;
 
             }
@@ -123,6 +123,27 @@
                 overflow: auto;
                 font-size:12px;
                 font-family:monospace;
+            }
+
+            /* OBJECTIVE LIST */
+            #obj_list{
+                text-align: left;
+                padding-left: 10px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                height:280px;
+                overflow: auto;
+                font-size:18px;
+            }
+            .obj_row{
+                display:table-row;
+            }
+            .obj_check{
+                display: table-cell;
+                width:30px;
+            }
+            .obj_descr{
+                display: table-cell;
             }
 
 
@@ -177,6 +198,7 @@
                         <div class='tabs' onclick='changeSection("minimap",this)' style='background-color: #ECCE0E' id='minimapTab'>Minimap</div>
                         <div class='tabs' onclick='changeSection("build",this)' id='buildTab'>Build</div>
                         <div class='tabs' onclick='changeSection("log",this)' id='logTab'>Log</div>
+                        <div class='tabs' onclick='changeSection("obj",this)' id='objTab'>Objectives</div>
                         <div class='tabs' onclick='changeSection("settings",this)' id='settingsTab'>Settings</div>
                     </div>
 
@@ -202,6 +224,17 @@
                         <div id='text_log' style="display: none;">
                             Some terrible things happened...
                         </div>
+                        <div id='obj_list' style="display: none;">
+                            <div style='display: table' id='obj_table'>
+                                <!--
+                                <div style='display: table-row'>
+                                    <div style='display: table-cell;width:100px'>Map Zoom:</div>
+                                    <div style='display: table-cell'><input type='number' value='1' id='mapZoom' onchange='changeZoom(this.value)'></div>
+                                </div>
+                                -->
+                            </div>
+                        </div>
+
                         <div id='user_settings' style="display: none;">
                             <div style='display: table'>
                                 <div style='display: table-row'>
@@ -262,6 +295,7 @@
             <script src="scripts/player.js"></script>
             <script src="scripts/world.js"></script>      
             <script src="scripts/game.js"></script>
+            <script src="scripts/objectives.js"></script>
             <script src="scripts/display.js"></script>  
             <script src="scripts/events.js"></script>
         </div>

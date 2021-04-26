@@ -2,6 +2,8 @@ var await_build_select = false;
 var await_build_location = false;
 var build_orders = {}
 
+var built_something = false;
+
 const build_items = {
     NONE: "none",
     WALL: "wall",
@@ -114,6 +116,7 @@ function build(frog, x, y) {
                 setTile(x, y, tile_chars.WALL);
                 drawTile(x, y);
                 Game.player.wood -= 1;
+                build_something = true;
             }
             else {
                 displayText("No wood, no wall.");
@@ -124,10 +127,12 @@ function build(frog, x, y) {
         case build_items.DOOR:
             displayText("Frog builds the door.");
             setTile(x, y, tile_chars.DOOR);
+            build_something = true;
             break
         case build_items.BED:
             displayText("Frog builds the bed.");
             setTile(x, y, tile_chars.BED);
+            build_something = true;
             if (isSheltered(x, y)) {
                 Game.spawnFrogAt(x, y);
             }
@@ -135,10 +140,12 @@ function build(frog, x, y) {
         case build_items.FIRE:
             displayText("Frog builds the fire.");
             setTile(x, y, tile_chars.FIRE);
+            build_something = true;
             break;
         case build_items.BRIDGE:
             displayText("Frog builds the " + curr_build + ".");
             setTile(x, y, tile_chars.BRIDGE);
+            build_something = true;
             break;
 
         default:
