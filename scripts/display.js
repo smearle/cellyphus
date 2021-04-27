@@ -91,6 +91,7 @@ function combatTextEnemy(str) {
 //var displayHUD = function() {
 function displayHUD() {
   //general player info
+  /*
   day_str = "Day: " + Game.days.toString().padStart(6, " ");
   health_str = "Health: " + Game.player.getHealth().toString().padStart(3, " ");
   hunger_str = "Hunger: " + Game.player.getHunger().toString().padStart(3, " ");
@@ -105,6 +106,47 @@ function displayHUD() {
   Game.resource_display.drawText(15, 2, seed_str);
   Game.resource_display.drawText(15, 3, wood_str);
   Game.resource_display.drawText(15, 4, meat_str);
+  */
+  //new resource ui (with status bars)
+  let rtx = Game.resource_display.getContext("2d");
+  rtx.clearRect(0,0,Game.resource_display.width,Game.resource_display.height)
+
+
+  //ui bars
+  rtx.strokeStyle = "#ffffff";
+
+  rtx.strokeRect(15,20,100,20);
+  rtx.strokeRect(15,50,100,20);
+  rtx.strokeRect(15,80,100,20);
+
+
+
+  rtx.fillStyle = "#C01616";
+  rtx.fillRect(16,21,98*(Math.max(Game.player.getHealth(),0)/100),18);
+  rtx.fillStyle = "#1F77ED";
+  rtx.fillRect(16,51,98*(Game.player.getThirst()/100),18);
+  rtx.fillStyle = "#29B519";
+  rtx.fillRect(16,81,98*(Game.player.getHunger()/100),18);
+
+  rtx.font = "14px monospace";
+  rtx.fillStyle = "#ffffff";
+  rtx.textAlign = "center";
+  rtx.fillText("HEALTH", 65,35);
+  rtx.fillText("THIRST", 65,65);
+  rtx.fillText("HUNGER", 65,95);
+
+  //clock for time of day
+  rtx.font = "12px monospace";
+  rtx.fillText("Day " + Game.days.toString(), 170,20)
+
+
+  //resources
+  rtx.textAlign = "left";
+  rtx.fillText("Seeds: " + Game.player.seeds.toString(), 220, 35);
+  rtx.fillText("Wood : " + Game.player.wood.toString(), 220, 50);
+  rtx.fillText("Meat : " + Game.player.meat.toString(), 220, 65);
+  rtx.fillText("Frogs: " + Game.frog_manager.frogs.length, 220, 80);
+
   //combat info
   if (Game.combatTarget == null) {
   		let name = "None";

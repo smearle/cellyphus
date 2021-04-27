@@ -17,7 +17,7 @@ function Barbarian(x, y,lodge) {
 
 Barbarian.prototype.getSpeed = function() { return this.speed; }
 Barbarian.prototype.getHealth = function() { return this.health; }
-Barbarian.prototype.getLimpAmt = function(){return Math.floor(this.fullHealth/this.health);}
+Barbarian.prototype.getLimpAmt = function(){return (Math.min(Math.floor(this.fullHealth/this.health),5));}
 
 Barbarian.prototype.act = function() {
 //  console.log('barbarian tick');

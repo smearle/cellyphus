@@ -91,10 +91,17 @@ var Game = {
     init: function() {
         ///  top console  ///
         this.display = new ROT.Display(display_options);
-        this.resource_display = new ROT.Display({width:28, height:8, fontSize:14})
-        document.getElementById("consoleArea").appendChild(this.resource_display.getContainer());
+
+        //this.resource_display = new ROT.Display({width:28, height:8, fontSize:14})
+        //document.getElementById("consoleArea").appendChild(this.resource_display.getContainer());
+        this.resource_display = document.createElement("canvas");
+        this.resource_display.width = 310;
+        this.resource_display.height = 112;
+        document.getElementById("consoleArea").appendChild(this.resource_display);
+
         this.log_display = new ROT.Display({width:32, height:8, fontSize:14})
         document.getElementById("consoleArea").appendChild(this.log_display.getContainer());
+
         this.log_combat = new ROT.Display({width:42, height:8, fontSize:14})
         document.getElementById("consoleArea").appendChild(this.log_combat.getContainer());
 
