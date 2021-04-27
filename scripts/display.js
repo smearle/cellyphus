@@ -129,8 +129,6 @@ function displayHUD() {
   rtx.strokeRect(15,50,100,20);
   rtx.strokeRect(15,80,100,20);
 
-
-
   rtx.fillStyle = "#C01616";
   rtx.fillRect(16,21,98*(Math.max(Game.player.getHealth(),0)/100),18);
   rtx.fillStyle = "#1F77ED";
@@ -507,8 +505,14 @@ function changeGameSpeed(v){
 
 function getFrogName(index){
 	let names = ["Primus", "Secondus", "Tertius", "Quartus", "Quintus", "Sextus", "Septimus", "Octonus", "Novemus", "Decemus"]
-	return (index < names.length-1 ? names[index] : names[index%names.length] + " II");
+	return (index < names.length ? names[index] : names[index%names.length] + " " + roman(Math.floor(index/names.length)));
 } 
+
+//roman numeral
+function roman(n){
+	let num = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];	//i doubt someone will have more than 100 frogs at once
+	return num[n]
+}
 
 function addNewFrogUI(index){
 	let charDiv = document.getElementById("stats");
