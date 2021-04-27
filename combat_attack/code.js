@@ -70,6 +70,14 @@ var gameVals = {
   //time
 }
 
+var timer = {
+	x: 100,
+	y: 20,
+	r: 12,
+	maxTime : 20,
+	timeRemaining : 20,
+}
+
 //box character
 var player = {
 	x : canvas.width/2,
@@ -158,6 +166,7 @@ function updateSize() {
 function startGame() {
 	gameVals.damageDealt = 0;
 	gameVals.timeRemaining = gameVals.maxTime;
+	timer.timeRemaining = timer.maxTime;
 	paused = false;
 
 	expected = Date.now() + interval;
@@ -299,6 +308,25 @@ function collided(){
 
 //////////////////  RENDER FUNCTIONS  ////////////////////
 
+//draw circular timer and sector to denote time
+function drawTimer() {
+	let pctFilled = timer.timeRemaining / timer.maxTime;
+	let amtFilled = 2 * Math.PI * pctFilled;
+
+	//draw timer
+	ctx.beginPath();
+	ctx.arc(timer.x, timer.y, timer.r, 0, 2 * Math.PI);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.moveTo(timer.x, timer.y);
+	ctx.arc(timer.x, timer.y, timer.r, amtFilled, 0);
+	ctx.lineTo(timer.x, timer.y);
+	ctx.fillStyle = "#131911";
+	ctx.fill();
+	ctx.stroke();
+}
+
 function render(){
 	ctx.save();
 	//ctx.setTransform(1,0,0,1,0,0);
@@ -390,6 +418,8 @@ function render(){
 		ctx.fillRect(0,0,canvas.width,canvas.height);
 	}
 
+	drawTimer();
+
 //--------------------------------------------------------------------------------------------------------------
 	
 	//draw damage counters
@@ -423,15 +453,16 @@ function step() {
     }
     gameVals.timeRemaining -= 1;
     
+    timer.timeRemaining -= 1;
 
     expected += interval;
-    if (gameVals.timeRemaining <= 0) {
+    if (timer.timeRemaining <= 0) {
     	player.x = 30;
     	player.y = 30;
     	paused = true;
     }  
 
-    if (gameVals.timeRemaining != 0) {
+    if (timer.timeRemaining != 0) {
     	setTimeout(step, Math.max(0, interval - dt)); // take into account drift
     }
 
@@ -524,7 +555,7 @@ function main(){
 	render();
 
 	//stop movement when timer is done
-  if (gameVals.timeRemaining <= 0) {
+  if (timer.timeRemaining <= 0) {
   	player.x = 30;
   	player.y = 30;
   	paused = true;

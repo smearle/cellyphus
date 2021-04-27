@@ -3,6 +3,8 @@
 //create zone that ai cant spawn in
 //setup circle to display time remaining
 
+//ctx.control global alpha or ctx.fill style
+
 //set up the canvas
 var canvas = document.getElementById("game");
 var ctx = canvas.getContext("2d");
@@ -635,6 +637,8 @@ function drawTimer() {
 	ctx.moveTo(timer.x, timer.y);
 	ctx.arc(timer.x, timer.y, timer.r, amtFilled, 0);
 	ctx.lineTo(timer.x, timer.y);
+	ctx.fillStyle = "#131911";
+	ctx.fill();
 	ctx.stroke();
 }
 
@@ -856,6 +860,7 @@ function main(){
 		//move ai out of collision
 		ai.x = 30;
 		ai.y = 30;
+		targetPlayer();
   	paused = true;
   } 
 
