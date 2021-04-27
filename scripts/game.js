@@ -267,7 +267,7 @@ var Game = {
         return new what(x, y);
     },
 
-    //generate a barbarian from the black lodge
+    //generate a barbarian from the black (red) lodge
     _createBarbarian: function(){
         return new Barbarian(this.blackLodge._x, this.blackLodge._y,this.blackLodge);
     },
@@ -348,11 +348,13 @@ var Game = {
         freeCells = this._getFreeFrogSpawnCells();
         new_frog = this._createBeing(Frog, freeCells);
         this.frog_manager.frogs.push(new_frog);
+        addNewFrogUI(this.frog_manager.frogs.length-1);
     },
 
     spawnFrogAt: function(x, y) {
         new_frog = new Frog(x, y);
         this.frog_manager.frogs.push(new_frog);
+        addNewFrogUI(this.frog_manager.frogs.length-1);
     }
 };
 

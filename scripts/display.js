@@ -457,4 +457,77 @@ function changeGameSpeed(v){
 	Game.tickPerSec = 1200 - v;
 }
 
+// CHARACTER CONTROLS
+
+function getFrogName(index){
+	let names = ["Primus", "Secondus", "Tertius", "Quartus", "Quintus", "Sextus", "Septimus", "Octonus", "Novemus", "Decemus"]
+	return (index < names.length-1 ? names[index] : names[index%names.length] + " II");
+} 
+
+function addNewFrogUI(index){
+	let charDiv = document.getElementById("stats");
+
+	//main div
+	let d1 = document.createElement("div");
+	d1.id = "frog"+index;
+	d1.classList.add("charItem");
+	d1.onclick = function(){camFocusChar(d1);}
+
+	//icon
+	let icon = document.createElement("img");
+	icon.src = "imgs/sprites/frog.png";
+	icon.classList.add("charItemIMG");
+	d1.appendChild(icon);
+
+	//text div
+	let txtdiv = document.createElement("div");
+	txtdiv.classList.add("charItemStats");
+	txtdiv.id = "frog"+index+"SideStats";
+
+	//text
+	let txt = document.createElement("div");
+	txt.classList.add("charName");
+	txt.ondblclick = function(){editCharName(txtdiv);}
+	txt.innerHTML = getFrogName(index) + " the Frog";
+	txtdiv.appendChild(txt);
+
+	//input
+	let edittxt = document.createElement("input");
+	edittxt.type = "text";
+	edittxt.classList.add("nameEdit");
+	edittxt.onblur = function(){saveCharName(txtdiv);}
+	txtdiv.appendChild(edittxt);
+
+	//add it all together
+	d1.appendChild(txtdiv);
+	charDiv.appendChild(d1)
+
+}
+
+
+function editCharName(e){
+	//hide og text
+	let txt = e.getElementsByClassName("charName")[0];
+	txt.style.display = "none";
+
+	//show input field
+	let intxt = e.getElementsByTagName("input")[0];
+	intxt.value = txt.innerHTML;
+	intxt.style.display = "block";
+	intxt.focus();
+}
+
+//save the name for the character
+function saveCharName(e){
+	//show input field
+	let intxt = e.getElementsByTagName("input")[0];
+	intxt.style.display = "none";
+
+	//hide og text
+	let txt = e.getElementsByClassName("charName")[0];
+	txt.innerHTML = intxt.value;
+	txt.style.display = "block";
+
+}
+
 render();

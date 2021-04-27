@@ -170,8 +170,15 @@
                 padding: 20px 0px;
                 font-size:18px;
             }
+            .nameEdit{
+                width:175px;
+                display: none;
+                margin: auto;
+                height:25px;
+            }
 
         </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
     <body onload="Game.init()">
         <!-- title+coordinate display (hidden) -->
@@ -225,14 +232,7 @@
                             Some terrible things happened...
                         </div>
                         <div id='obj_list' style="display: none;">
-                            <div style='display: table' id='obj_table'>
-                                <!--
-                                <div style='display: table-row'>
-                                    <div style='display: table-cell;width:100px'>Map Zoom:</div>
-                                    <div style='display: table-cell'><input type='number' value='1' id='mapZoom' onchange='changeZoom(this.value)'></div>
-                                </div>
-                                -->
-                            </div>
+                            <div style='display: table' id='obj_table'></div>
                         </div>
 
                         <div id='user_settings' style="display: none;">
@@ -262,27 +262,18 @@
                         <div class='charItem' id='player' onclick='camFocusChar(this)' style='background-color: #ECCE0E'>
                             <img class='charItemIMG' src='imgs/sprites/player.png'>
                             <div class='charItemStats' id='playerSideStats'>
-                                Player
+                                <div ondblclick="editCharName(this.parentNode)" class='charName'>Player</div>
+                                <input type='text' class='nameEdit' onblur="saveCharName(this.parentNode)">
                             </div>
                         </div>
                         <div class='charItem' id='frog0' onclick='camFocusChar(this)'>
                             <img class='charItemIMG' src='imgs/sprites/frog.png'>
-                            <div class='charItemStats' id='frog1SideStats'>
-                                Primus the Frog
+                            <div class='charItemStats' id='frog0SideStats'>
+                                <div ondblclick="editCharName(this.parentNode)" class='charName'>Primus the Frog</div>
+                                <input type='text' class='nameEdit' onblur="saveCharName(this.parentNode)">
                             </div>
                         </div>
-                        <div class='charItem' id='frog1' onclick='camFocusChar(this)' >
-                            <img class='charItemIMG' src='imgs/sprites/frog.png'>
-                            <div class='charItemStats' id='frog2SideStats'>
-                                Secondus the Frog
-                            </div>
-                        </div>
-                        <div class='charItem' id='frog2' onclick='camFocusChar(this)'>
-                            <img class='charItemIMG' src='imgs/sprites/frog.png'>
-                            <div class='charItemStats' id='frog3SideStats'>
-                                Tertius the Frog
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
