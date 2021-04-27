@@ -84,6 +84,7 @@ var Game = {
     days: 0,
     tickPerSec: 800,
     game_mode: 'real',
+    st : 0,
     //combatSubjects: {"None": 1, "Barbarian": 2},
     combatTarget: null,
 
@@ -383,21 +384,25 @@ function drawMap() {
 
 /// set game speed and mode
 
-var st = 0;
-
 //repeat the step (allow for change in tick-per-sec)
 function repeatStep(){
     Game.event_handler.step(null);
-    st = setTimeout(repeatStep, Game.tickPerSec);
+    Game.st = setTimeout(repeatStep, Game.tickPerSec);
+}
+//reset the timeout (prevent double actions)
+function resetStep(){
+    clearTimeout(Game.st);
+    Game.st = 0;
+    Game.st = setTimeout(repeatStep, Game.tickPerSec);
 }
 
 window.onload = function(){
     Game.init();
     if(Game.game_mode == "real"){
-        st = setTimeout(repeatStep, Game.tickPerSec);
+        Game.st = setTimeout(repeatStep, Game.tickPerSec);
     }else{
-        clearTimeout(st);
-        st = 0;
+        clearTimeout(Game.st);
+        Game.st = 0;
     }
 }
 
@@ -405,11 +410,11 @@ window.onload = function(){
 function toggleGameMode(v){
     Game.game_mode = v;
     if(v == "turn"){
-        clearTimeout(st);
-        st = 0;
+        clearTimeout(Game.st);
+        Game.st = 0;
         document.getElementById("game_speed").disabled = true;
     }else{
-        st = setTimeout(repeatStep, Game.tickPerSec);
+        Game.st = setTimeout(repeatStep, Game.tickPerSec);
         document.getElementById("game_speed").disabled = false;
     }
 }

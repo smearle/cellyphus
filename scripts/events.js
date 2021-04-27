@@ -16,6 +16,7 @@ EventHandler.prototype.step = function(e) {
         code = 32;          //simulate a space press
     }else{
         code = e.keyCode;
+        resetStep();
     }
 
     //clear console outputs
