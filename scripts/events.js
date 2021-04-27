@@ -20,7 +20,8 @@ EventHandler.prototype.step = function(e) {
         code = 32;          //simulate a space press
     }else{
         code = e.keyCode;
-        resetStep();
+        if(Game.game_mode == "real")
+            resetStep();
     }
 
     //clear console outputs

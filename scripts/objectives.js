@@ -37,6 +37,25 @@ function addObjective(descr,act){
 //create new objectives for the game on start
 function initializeObjectives(){
 	addObjective("Walk around", function(){return player.moved;});
+	addObjective("Change your name", function(){return changedName;});
 	addObjective("Order a frog to build something", function(){return built_something;});
 	addObjective("Kill a barbarian", function(){return deadBarbie;})
+}
+
+
+
+//set whether the objectives are active or not for the div
+function setObjsDiv(){
+	//check if any new ones are active
+	let act_objs = objectiveList.activation;
+	for(let a=0;a<act_objs.length;a++){
+		if(!objectiveList.completed[a])
+			objectiveList.completed[a] = act_objs[a]();
+	}
+	
+	//update inner html of divs
+	let objs = objectiveList.completed;
+	for(let o=0;o<objs.length;o++){
+		document.getElementById("obj_"+o+"_check").innerHTML = (objs[o] ? '&#x2611;' : '&#x2610;');
+	}
 }

@@ -21,6 +21,9 @@ Barbarian.prototype.act = function() {
 //  console.log('barbarian tick');
     this.at_base = (this._x == this.base._x && this._y == this.base._y);
 
+    //right next to player? in combat
+    if((this.getDistance(Game.player) == 1) && (Game.combatTarget == null)){Game.combatTarget = this;}
+
     //strong enough to fight
     if(this.health > 30){
         //within range? chase the player or flee

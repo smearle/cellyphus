@@ -399,7 +399,8 @@ function resetBuildItemsColor(){
 	//set background color
 	let allTabs = document.getElementsByClassName("buildItem");
 	for(let t=0;t<allTabs.length;t++){
-		allTabs[t].style.backgroundColor = "#dedede";
+		if(allTabs[t].id != "cancelBuild")
+			allTabs[t].style.backgroundColor = "#dedede";
 	}
 }
 
@@ -423,22 +424,6 @@ function addToLog(txt){
 
 
 //OBJECTIVES
-
-//set whether the objectives are active or not for the div
-function setObjsDiv(){
-	//check if any new ones are active
-	let act_objs = objectiveList.activation;
-	for(let a=0;a<act_objs.length;a++){
-		if(!objectiveList.completed[a])
-			objectiveList.completed[a] = act_objs[a]();
-	}
-	
-	//update inner html of divs
-	let objs = objectiveList.completed;
-	for(let o=0;o<objs.length;o++){
-		document.getElementById("obj_"+o+"_check").innerHTML = (objs[o] ? '&#x2611;' : '&#x2610;');
-	}
-}
 
 
 //SETTINGS
@@ -506,6 +491,8 @@ function addNewFrogUI(index){
 
 //change a character's name
 var editingName = false;
+var changedName = false;
+
 function editCharName(e){
 	//hide og text
 	let txt = e.getElementsByClassName("charName")[0];
@@ -532,6 +519,9 @@ function saveCharName(e){
 	txt.style.display = "block";
 
 	editingName = false;
+
+	if(e.id == "playerSideStats")
+		changedName = true;
 }
 
 render();
