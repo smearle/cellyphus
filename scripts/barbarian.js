@@ -11,11 +11,13 @@ function Barbarian(x, y,lodge) {
     this.base = lodge;
     this.at_base = true;
     this.recharge = 0;
+    this.delay = 0;
     this._draw();
 }
 
 Barbarian.prototype.getSpeed = function() { return this.speed; }
 Barbarian.prototype.getHealth = function() { return this.health; }
+Barbarian.prototype.getLimpAmt = function(){return Math.floor(this.fullHealth/this.health);}
 
 Barbarian.prototype.act = function() {
 //  console.log('barbarian tick');
@@ -23,6 +25,14 @@ Barbarian.prototype.act = function() {
 
     //right next to player? in combat
     if((this.getDistance(Game.player) == 1) && (Game.combatTarget == null)){Game.combatTarget = this;}
+
+    //skip turns if low health
+    this.delay++;
+    if(this.delay >= this.getLimpAmt()){
+        this.delay = 0;
+    }else{
+        return;
+    }
 
     //strong enough to fight
     if(this.health > 30){
