@@ -6,6 +6,10 @@ var deadBarbie = false;
 //main game loop
 EventHandler.prototype.step = function(e) {
 
+    //ignore input while editing name
+    if(editingName)
+        return
+
     var validUpdate = false;
 
     player = Game.player;

@@ -504,7 +504,8 @@ function addNewFrogUI(index){
 
 }
 
-
+//change a character's name
+var editingName = false;
 function editCharName(e){
 	//hide og text
 	let txt = e.getElementsByClassName("charName")[0];
@@ -515,6 +516,8 @@ function editCharName(e){
 	intxt.value = txt.innerHTML;
 	intxt.style.display = "block";
 	intxt.focus();
+
+	editingName = true;
 }
 
 //save the name for the character
@@ -528,6 +531,7 @@ function saveCharName(e){
 	txt.innerHTML = intxt.value;
 	txt.style.display = "block";
 
+	editingName = false;
 }
 
 render();
