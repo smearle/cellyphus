@@ -186,8 +186,8 @@ EventHandler.prototype.step = function(e) {
 
 
             //all other clicks are outside the map bounds
-            if(x == -1 && y == -1)
-                console.log("Out of bounds!");
+            //if(x == -1 && y == -1)
+                //console.log("Out of bounds!");
 
             document.getElementById("clickedCoords").innerHTML = [x,y];
             newX = player._x;
@@ -318,7 +318,7 @@ EventHandler.prototype.step = function(e) {
         Game.days += 1;
 
         //generate new barbarians on a new day
-        if (Game.barbarians.length == 0 && Game.days % 5 == 0) {
+        if (Game.gameTicks % Game.ticksPerDay == 0) {
             let newBarbie = Game._createBarbarian();
             Game.barbarians.push(newBarbie); 
             Game.scheduler.add(newBarbie, true);
