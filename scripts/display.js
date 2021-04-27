@@ -88,6 +88,15 @@ function combatTextEnemy(str) {
     addToLog(str)
 }
 
+//convert time to next day to coordinates for a clock
+function dayTickCoords(){
+	let curTick = Game.gameTicks % Game.ticksPerDay;
+	let angle = Math.round((curTick * 360) / (Game.ticksPerDay))-90;
+	angle *= Math.PI / 180;
+	let d = 20;
+	return [Math.floor(d*Math.cos(angle)),Math.floor(d*Math.sin(angle))];
+}
+
 //var displayHUD = function() {
 function displayHUD() {
   //general player info
@@ -114,6 +123,7 @@ function displayHUD() {
 
   //ui bars
   rtx.strokeStyle = "#ffffff";
+  rtx.lineWidth = 1
 
   rtx.strokeRect(15,20,100,20);
   rtx.strokeRect(15,50,100,20);
@@ -137,8 +147,17 @@ function displayHUD() {
 
   //clock for time of day
   rtx.font = "12px monospace";
-  rtx.fillText("Day " + Game.days.toString(), 170,20)
-
+  rtx.fillText("Day " + Game.days.toString(), 170,20);
+  rtx.beginPath();
+  rtx.lineWidth = 2
+  rtx.arc(170, 65, 25, 0, 2 * Math.PI);
+  rtx.stroke();
+  rtx.beginPath();
+  rtx.moveTo(170,65);
+  let c = dayTickCoords();
+  rtx.lineTo(170+c[0],65+c[1]);
+  rtx.stroke();
+  rtx.fillRect(169,45,2,6);
 
   //resources
   rtx.textAlign = "left";

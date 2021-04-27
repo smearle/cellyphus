@@ -80,7 +80,7 @@ var Game = {
     blackLodge: null,
 
     gameTicks: 0,
-    ticksPerDay: 300,
+    ticksPerDay: 150,
     days: 0,
     tickPerSec: 800,
     game_mode: 'real',
