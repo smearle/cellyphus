@@ -5,6 +5,7 @@ var canvas = document.getElementById("game");
 var ctx = canvas.getContext("2d");
 canvas.width = 640;
 canvas.height = 640;
+canvas.onmousemove = function(e){drawGhostBuild(e)}
 
 //minimap canvas
 var miniCanvas = document.getElementById("minimapCanvas");
@@ -226,32 +227,6 @@ function render(){
 
 }
 
-//switch focus from one character to another on the main game screen
-function camFocusChar(b){
-	let ent = Game.player;
-
-	//player
-	if(b.id == "player")
-		ent = Game.player;
-
-	//get frog in the array of frogs
-	else if(b.id.includes("frog")){
-		let fi = parseInt(b.id.replace("frog",""));
-		if(fi < Game.frog_manager.frogs.length)
-			ent = Game.frog_manager.frogs[fi];
-	}
-
-	camera.focus = ent;
-	panCamera();
-
-	//set highlight
-	let icons = document.getElementsByClassName("charItem");
-	for(let i =0;i<icons.length;i++){
-		icons[i].style.backgroundColor = "#ffffff00";
-	}
-	b.style.backgroundColor = "#ECCE0E";
-}
-
 //switches focus to a point clicked on the minimap
 function camFocusPt(p){
 	camera.focus = {_x:p[0], _y:p[1]};
@@ -288,6 +263,28 @@ function panCamera(){
 		camera.y = 0;
 	else if (camera.y > (mh - canvas.height/camera.zoom))
 		camera.y = (mh - canvas.height/camera.zoom)
+}
+
+//draw ghost of build item on the map when hovered over
+let ghostBuild = {active:false, x:0,y:0,img:null}
+ghostBuild.img = new Image();
+function drawGhostBuild(e){
+	//not in build mode? ignore
+	if(!await_build_location){
+		ghostBuild.active = false;
+		return;
+	}
+
+	//get raw pixel location relative to the canvas
+    let rect = e.target.getBoundingClientRect();
+    let mx = Math.floor(Math.round(e.clientX - rect.left)/tw);
+    let my = Math.floor(Math.round(e.clientY - rect.top)/th);
+
+    ghostBuild.active = true;
+    ghostBuild.x = mx;
+    ghostBuild.y = my;
+    ghostBuild.img.src = build_imgs[next_build];
+
 }
 
 //draw the main game screen (camera focuses on a certain point)
@@ -338,6 +335,12 @@ function drawMain(){
 		0,0,canvas.width,canvas.height);
 
 
+	//draw ghost build for hover mouse if active
+	if(ghostBuild.active){
+		ctx.globalAlpha = 0.5;
+		ctx.drawImage(ghostBuild.img, ghostBuild.x*tw, ghostBuild.y*th, tw,th);
+		ctx.globalAlpha = 1.0;
+	}
 
 	//ctx.restore();
 }
@@ -502,6 +505,33 @@ function changeGameSpeed(v){
 }
 
 // CHARACTER CONTROLS
+
+
+//switch focus from one character to another on the main game screen
+function camFocusChar(b){
+	let ent = Game.player;
+
+	//player
+	if(b.id == "player")
+		ent = Game.player;
+
+	//get frog in the array of frogs
+	else if(b.id.includes("frog")){
+		let fi = parseInt(b.id.replace("frog",""));
+		if(fi < Game.frog_manager.frogs.length)
+			ent = Game.frog_manager.frogs[fi];
+	}
+
+	camera.focus = ent;
+	panCamera();
+
+	//set highlight
+	let icons = document.getElementsByClassName("charItem");
+	for(let i =0;i<icons.length;i++){
+		icons[i].style.backgroundColor = "#ffffff00";
+	}
+	b.style.backgroundColor = "#ECCE0E";
+}
 
 function getFrogName(index){
 	let names = ["Primus", "Secondus", "Tertius", "Quartus", "Quintus", "Sextus", "Septimus", "Octonus", "Novemus", "Decemus"]
