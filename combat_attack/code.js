@@ -310,21 +310,23 @@ function collided(){
 
 //draw circular timer and sector to denote time
 function drawTimer() {
-	let pctFilled = timer.timeRemaining / timer.maxTime;
-	let amtFilled = 2 * Math.PI * pctFilled;
+	let arcStart = 1.5 * Math.PI;
+	let pctFilled = 1 - timer.timeRemaining / timer.maxTime;
+	let amtFilled = 2 * Math.PI * pctFilled + arcStart;
 
-	//draw timer
+	//draw timer outline
 	ctx.beginPath();
 	ctx.arc(timer.x, timer.y, timer.r, 0, 2 * Math.PI);
 	ctx.stroke();
 
+	//draw timer filling
 	ctx.beginPath();
 	ctx.moveTo(timer.x, timer.y);
-	ctx.arc(timer.x, timer.y, timer.r, amtFilled, 0);
+	ctx.arc(timer.x, timer.y, timer.r, amtFilled, arcStart);
 	ctx.lineTo(timer.x, timer.y);
 	ctx.fillStyle = "#131911";
 	ctx.fill();
-	ctx.stroke();
+	//ctx.stroke();
 }
 
 function render(){
@@ -341,28 +343,33 @@ function render(){
 	//draw head
 	ctx.beginPath();
 	ctx.arc(ai.head[0], ai.head[1], 50, 0, 2 * Math.PI);
-	ctx.stroke();
+	ctx.fillStyle = "#f8f8ff";
+	ctx.fill();
 
 	//draw arms
 	var distance = ai.rhand[0] - ai.lhand[0];
 	ctx.beginPath();
 	ctx.rect(ai.lhand[0] - 20, ai.lhand[1] - 20, distance + 40, 50);
-	ctx.stroke();
+	ctx.fillStyle = "#f8f8ff";
+	ctx.fill();
 
 	//draw torso
 	ctx.beginPath();
 	ctx.rect(ai.head[0] - 25, ai.lhand[1] + 30, 50, 80);
-	ctx.stroke();
+	ctx.fillStyle = "#f8f8ff";
+	ctx.fill();
 
 	//draw left leg
 	ctx.beginPath();
-	ctx.rect(ai.lfoot[0] - 25, ai.lhand[1] + 90, 50, 80);
-	ctx.stroke();
+	ctx.rect(ai.lfoot[0] - 20, ai.lhand[1] + 90, 50, 80);
+	ctx.fillStyle = "#f8f8ff";
+	ctx.fill();
 
 	//draw right leg
 	ctx.beginPath();
-	ctx.rect(ai.rfoot[0] - 25, ai.lhand[1] + 90, 50, 80);
-	ctx.stroke();
+	ctx.rect(ai.rfoot[0] - 30, ai.lhand[1] + 90, 50, 80);
+	ctx.fillStyle = "#f8f8ff";
+	ctx.fill();
 
 	/*   add draw functions here  */
 
@@ -425,15 +432,17 @@ function render(){
 	//draw damage counters
 	document.getElementById("score").innerHTML = gameVals.damageDealt;
 
-	if(gameVals.damaged) {
-		setTimeout(function(){
-		  // Code to be executed after timeout goes here
-		  gameVals.damaged = false;
-		}, 1500);
-	// Code to be executed immediately goes here
-	ctx.font = "15px Arial";
-	ctx.fillText(gameVals.damagePerHit, ai.x + 7, ai.y - 10);
-	}
+	// if(gameVals.damaged) {
+	// 	setTimeout(function(){
+	// 	  // Code to be executed after timeout goes here
+	// 	  gameVals.damaged = false;
+	// 	}, 1500);
+	// // Code to be executed immediately goes here
+	// ctx.font = "15px Arial";
+	// ctx.fillText(gameVals.damagePerHit, ai.x + 7, ai.y - 10);
+	// }
+
+
 	//console.log(gameVals.damaged);
 	
 	//ctx.fillText("Hello World", 10, 50);

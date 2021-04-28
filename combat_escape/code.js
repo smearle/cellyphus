@@ -216,8 +216,6 @@ var ai = {
 	trail : [],						//use same trail activation as player
 	corners: [],
 	collisionMask: null,
-	critTimer: null,		//current amount of time for crit reset
-	maxCritTimer: 2000, //max amount of time for crit reset
 }
 
 var testMask = {
@@ -515,15 +513,9 @@ function doShake(intensity){
 }
 
 //////////////////  AI FUNCTIONS  ////////////////////
-function updateHitReset() {
-
-}
 
 //send AI to random location on screen after some period of time
 function randomizeAILocation() {
-	let thirst = document.getElementById("thirst").value;
-	console.log(thirst);
-
 	//move ai position and collision mask
 	ai.x = Math.floor(Math.random() * (canvas.width + 1));
 	ai.y = Math.floor(Math.random() * (canvas.height + 1));
@@ -536,7 +528,7 @@ function randomizeAILocation() {
 
 	setTimeout(function(){
 		ai.canMove = true;
-	}, ai.maxCritTimer * (thirst / 100))
+	}, 1000)
 }
 
 //euclidean distance function
@@ -633,23 +625,21 @@ function shieldCollided(shield) {
 
 //draw circular timer and sector to denote time
 function drawTimer() {
-	let arcStart = 1.5 * Math.PI;
-	let pctFilled = 1 - timer.timeRemaining / timer.maxTime;
-	let amtFilled = 2 * Math.PI * pctFilled + arcStart;
+	let pctFilled = timer.timeRemaining / timer.maxTime;
+	let amtFilled = 2 * Math.PI * pctFilled;
 
-	//draw timer outline
+	//draw timer
 	ctx.beginPath();
 	ctx.arc(timer.x, timer.y, timer.r, 0, 2 * Math.PI);
 	ctx.stroke();
 
-	//draw timer filling
 	ctx.beginPath();
 	ctx.moveTo(timer.x, timer.y);
-	ctx.arc(timer.x, timer.y, timer.r, amtFilled, arcStart);
+	ctx.arc(timer.x, timer.y, timer.r, amtFilled, 0);
 	ctx.lineTo(timer.x, timer.y);
 	ctx.fillStyle = "#131911";
 	ctx.fill();
-	//ctx.stroke();
+	ctx.stroke();
 }
 
 //draws shield given corners
