@@ -131,7 +131,7 @@ function displayHUD() {
   rtx.strokeRect(15,80,100,20);
 
   rtx.fillStyle = "#C01616";
-  rtx.fillRect(16,21,98*(Math.max(Game.player.getHealth(),0)/100),18);
+  rtx.fillRect(16,21,98*(Math.max(Game.player.getHealth(),0)/Game.player.maxHealth),18);
   rtx.fillStyle = "#1F77ED";
   rtx.fillRect(16,51,98*(Game.player.getThirst()/100),18);
   rtx.fillStyle = "#29B519";

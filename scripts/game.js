@@ -5,6 +5,8 @@ var BARBARIAN = true;
 // Will you die of any cause?
 var PLAYER_DEATH = false;
 
+var setFire = false;
+
 var map_width = 64;
 var map_height = 64;
 var tileSet = document.createElement("img");
@@ -176,6 +178,7 @@ var Game = {
                 }
                 else if (next_state == CAstates.FIRE) {
                     flames.push([ix, iy]);
+                    setFire = true;
                 }
                 else if (next_state == CAstates.DIRT) {
                     dead.push([ix, iy]);
@@ -261,7 +264,10 @@ var Game = {
         this.frog_manager = new FrogManager();
 //      this.spawnFrog();
 //      this.spawnFrog();
-        this.barbarians.push(this._createBarbarian());
+        this.barbarians.push(this._createBarbarian());      
+        this.barbarians.push(this._createBarbarian());   
+        this.king_barbarian = this._createKingBarbarian();
+        this.barbarians.push(this.king_barbarian);
 
         this.freeCells = freeCells;
     },
@@ -278,6 +284,13 @@ var Game = {
     //generate a barbarian from the black (red) lodge
     _createBarbarian: function(){
         return new Barbarian(this.blackLodge._x, this.blackLodge._y,this.blackLodge);
+    },
+
+    //create special king barbarian
+    _createKingBarbarian: function(){
+        let x = this.blackLodge._x;
+        let y = this.blackLodge._y-3;
+        return new Barbarian(x,y,{_x:x, _y:y},true);
     },
 
     _generateBoxes: function(freeCells) {
@@ -305,6 +318,7 @@ var Game = {
         [1,0,1,0,0,0,1,0,1],
         [1,0,1,0,0,0,1,0,1],
         [0,0,1,1,0,1,1,0,0],
+        [0,0,0,0,0,0,0,0,0]
         ]
         for(let r=0;r<lodge.length;r++){
             for(let c=0;c<lodge[0].length;c++){
