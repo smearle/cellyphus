@@ -6,6 +6,7 @@ var BARBARIAN = true;
 var PLAYER_DEATH = false;
 
 var setFire = false;
+var grassLand20 = false;
 
 var map_width = 64;
 var map_height = 64;
@@ -153,6 +154,7 @@ var Game = {
       trees = [];
       dead = [];
       flames = [];
+      dirt = 0;
       // Iterate through all tiles on the map and determine its next state based on CA-like rules
       // For grass it is dumb GoL. For trees it is ...
       // For fire it is...
@@ -162,6 +164,9 @@ var Game = {
             // check for grass on valid tiles
             cur_tile = getTile(ix, iy);
             if ([tile_chars.GRASS, tile_chars.FLAME, tile_chars.TREE, tile_chars.DIRT].indexOf(this.map[key]) >= 0) {
+
+                if(this.map[key] == tile_chars.DIRT)
+                    dirt++;
 
                 next_state = census(ix, iy);
     //          console.log(next_state);
@@ -205,6 +210,18 @@ var Game = {
             var key = x+","+y;
             this.map[key] = tile_chars.FLAME;
         }
+
+        //add all together to determine ratio of foliage to dirt
+        let foliage = live.length + trees.length;
+        let non_foliage = dirt;
+
+        //console.log(foliage + " / " + non_foliage + " = " + (foliage/non_foliage))
+        //20% of the map covered in foliage
+        if(foliage/non_foliage >= 0.2){
+            grassLand20 = true;
+        }
+
+
       },
     //  toggle(cell.x, cell.y, 'next');
 

@@ -75,7 +75,7 @@ function initializeObjectives(){
 	addObjective("Kill a barbarian", function(){return deadBarbie;}, function(){healthReward(0.2)});
 	addObjective("Enter the barbarian base", function(){return playerInBase;}, function(){meatReward(5)});
 	addObjective("Kill the king barbarian", function(){return Game.king_barbarian == null;}, function(){enemyWin()}); 
-	addObjective("Cover the 25% of the map with foliage", function(){return false;}, function(){islandWin()});
+	addObjective("Cover the 20% of the map with foliage", function(){return grassLand20;}, function(){islandWin()});
 }
 
 
