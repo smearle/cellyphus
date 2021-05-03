@@ -1,6 +1,7 @@
 var FrogManager = function() {
 
     init_frog = Game._createBeing(Frog, freeCells);
+    init_frog.mortal = false;                           //primus the immortal
     this.frogs = [init_frog];
 }
 
@@ -25,6 +26,7 @@ var Frog = function(x, y) {
     this._draw();
     this._move_ticker = 0
     this.command = "auto";
+    this.mortal = true;
 }
 
 Frog.prototype.getSpeed = function() { return 100; }
