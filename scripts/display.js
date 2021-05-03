@@ -418,6 +418,9 @@ function changeSection(sec,tab){
 	document.getElementById("user_settings").style.display = "none";
 	document.getElementById("text_log").style.display = "none";
 	document.getElementById("obj_list").style.display = "none";
+
+	document.getElementById("tutorial").style.display = "none";
+	document.getElementById("stats").style.display = "block";
 	objDivShown = false;
 
 	if(sec == "minimap"){
@@ -432,6 +435,9 @@ function changeSection(sec,tab){
 		setObjsDiv();
 		document.getElementById("obj_list").style.display = "block";
 		objDivShown = true;
+
+		document.getElementById("stats").style.display = "none";
+		document.getElementById("tutorial").style.display = "block";
 	}
 
 }
