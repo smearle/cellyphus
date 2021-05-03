@@ -469,6 +469,10 @@ window.addEventListener("keydown", function(e) {
     if((e.keyCode == 32) && (!editingName)){
         e.preventDefault();
     }
+    if((e.keyCode == 13) && (editingName)){
+        document.activeElement.blur();
+        editingName = false;
+    }
 }, false);
 
 //Game.init();

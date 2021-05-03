@@ -578,6 +578,20 @@ function addNewFrogUI(index){
 	edittxt.onblur = function(){saveCharName(txtdiv);}
 	txtdiv.appendChild(edittxt);
 
+	//frog commands
+	let commandDiv = document.createElement("div");
+	commandDiv.classList.add("commands");
+	let frogComms = ["Build", "Attack", "Forage", "Auto"];
+	for(let c=0;c<frogComms.length;c++){
+		let but = document.createElement("button");
+		but.innerHTML = frogComms[c]
+		but.onclick = function(){frogCommand(but);}
+		commandDiv.appendChild(but);
+	}
+	txtdiv.appendChild(commandDiv);
+
+
+
 	//add it all together
 	d1.appendChild(txtdiv);
 	charDiv.appendChild(d1)
@@ -617,6 +631,24 @@ function saveCharName(e){
 
 	if(e.id == "playerSideStats")
 		changedName = true;
+}
+
+
+//give a frog a command
+function frogCommand(e){
+	//set frog mode
+	let command = e.innerHTML.toLowerCase();
+	let frogId = parseInt(e.parentNode.parentNode.parentNode.id.replace("frog",""));
+	Game.frog_manager.frogs[frogId].command = command;
+
+
+	//reset colors
+	let buttons = e.parentNode.getElementsByTagName("button");
+	for(let b=0;b<buttons.length;b++){
+		buttons[b].style.backgroundColor = "#efefef";
+	}
+	e.style.backgroundColor = "#24B12D";
+
 }
 
 render();

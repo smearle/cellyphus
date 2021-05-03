@@ -24,6 +24,7 @@ var Frog = function(x, y) {
     this.isBuilding = false;  // if the frog is on its way to build something
     this._draw();
     this._move_ticker = 0
+    this.command = "auto";
 }
 
 Frog.prototype.getSpeed = function() { return 100; }
