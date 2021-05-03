@@ -5,6 +5,9 @@ var deadBarbie = false;
 
 //main game loop
 EventHandler.prototype.step = function(e) {
+    //make inCombat boolean when barbarian comes
+    // if (inCombat)
+    //     return
 
     //ignore input while editing name
     if(editingName)
@@ -345,3 +348,5 @@ EventHandler.prototype.step = function(e) {
 
     
 }
+
+/*Game.init();*/

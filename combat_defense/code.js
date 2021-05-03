@@ -3,18 +3,22 @@
 //create zone that ai cant spawn in
 //setup circle to display time remaining
 
-//ctx.control global alpha or ctx.fill style
+//ctxCombat.control global alpha or ctxCombat.fill style
 
-//set up the canvas
-var canvas = document.getElementById("game");
-var ctx = canvas.getContext("2d");
-canvas.width = 320;
-canvas.height = 320;
+var Game = {
+	init : null,
+}
 
-var pCanvas = canvas.cloneNode(); //presentation canvas
-var pCtx = canvas.getContext("2d");
+//set up the canvasCombat
+var canvasCombat = document.getElementById("game");
+var ctxCombat = canvasCombat.getContext("2d");
+canvasCombat.width = 320;
+canvasCombat.height = 320;
+
+var pCanvas = canvasCombat.cloneNode(); //presentation canvasCombat
+var pCtx = canvasCombat.getContext("2d");
 //document.body.appendChild(pCanvas);
-//document.body.appendChild(canvas);
+//document.body.appendChild(canvasCombat);
 
 //audio feedback
 var aud_block = new Audio('audio/Shield_block.ogg');
@@ -85,8 +89,8 @@ var P = SAT.Polygon;
 
 //box character
 var player = {
-	x : canvas.width/2,
-	y : canvas.height/2,
+	x : canvasCombat.width/2,
+	y : canvasCombat.height/2,
 	maxSize : 48,
 	minSize : 16,
 	size : 16,
@@ -497,7 +501,7 @@ function anyActionKey(){
 function moveCamera(){
 	//if (shake)
 		//camera.x += 10;
-	//ctx.translate(camera.x, camera.y);
+	//ctxCombat.translate(camera.x, camera.y);
 }
 
 ////////////////   CAMERA FUNCTIONS   /////////////////
@@ -525,8 +529,8 @@ function randomizeAILocation() {
 	console.log(thirst);
 
 	//move ai position and collision mask
-	ai.x = Math.floor(Math.random() * (canvas.width + 1));
-	ai.y = Math.floor(Math.random() * (canvas.height + 1));
+	ai.x = Math.floor(Math.random() * (canvasCombat.width + 1));
+	ai.y = Math.floor(Math.random() * (canvasCombat.height + 1));
 
 	//ai.collisionMask.pos.x = ai.x;
 	//ai.collisionMask.pos.y = ai.y;
@@ -638,41 +642,41 @@ function drawTimer() {
 	let amtFilled = 2 * Math.PI * pctFilled + arcStart;
 
 	//draw timer outline
-	ctx.beginPath();
-	ctx.arc(timer.x, timer.y, timer.r, 0, 2 * Math.PI);
-	ctx.stroke();
+	ctxCombat.beginPath();
+	ctxCombat.arc(timer.x, timer.y, timer.r, 0, 2 * Math.PI);
+	ctxCombat.stroke();
 
 	//draw timer filling
-	ctx.beginPath();
-	ctx.moveTo(timer.x, timer.y);
-	ctx.arc(timer.x, timer.y, timer.r, amtFilled, arcStart);
-	ctx.lineTo(timer.x, timer.y);
-	ctx.fillStyle = "#131911";
-	ctx.fill();
-	//ctx.stroke();
+	ctxCombat.beginPath();
+	ctxCombat.moveTo(timer.x, timer.y);
+	ctxCombat.arc(timer.x, timer.y, timer.r, amtFilled, arcStart);
+	ctxCombat.lineTo(timer.x, timer.y);
+	ctxCombat.fillStyle = "#131911";
+	ctxCombat.fill();
+	//ctxCombat.stroke();
 }
 
 //draws shield given corners
 function drawShield(corners) {
-	ctx.beginPath();
-	ctx.moveTo(corners[0][0], corners[0][1]);
-	ctx.lineTo(corners[1][0], corners[1][1]);
-	ctx.lineTo(corners[2][0], corners[2][1]);
-	ctx.lineTo(corners[3][0], corners[3][1]);
-	ctx.closePath();
-	ctx.stroke();
+	ctxCombat.beginPath();
+	ctxCombat.moveTo(corners[0][0], corners[0][1]);
+	ctxCombat.lineTo(corners[1][0], corners[1][1]);
+	ctxCombat.lineTo(corners[2][0], corners[2][1]);
+	ctxCombat.lineTo(corners[3][0], corners[3][1]);
+	ctxCombat.closePath();
+	ctxCombat.stroke();
 }
 
 function render(){
-	ctx.save();
-	//ctx.setTransform(1,0,0,1,0,0);
+	ctxCombat.save();
+	//ctxCombat.setTransform(1,0,0,1,0,0);
 	moveCamera();
-	//ctx.translate(-camera.x, -camera.y);		//camera
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	//ctxCombat.translate(-camera.x, -camera.y);		//camera
+	ctxCombat.clearRect(0, 0, canvasCombat.width, canvasCombat.height);
 	
 	//background
-	ctx.fillStyle = backgroundColor;
-	ctx.fillRect(0,0,canvas.width, canvas.height);
+	ctxCombat.fillStyle = backgroundColor;
+	ctxCombat.fillRect(0,0,canvasCombat.width, canvasCombat.height);
 	
 	/*   add draw functions here  */
 
@@ -685,32 +689,32 @@ function render(){
 			for(let t=1;t<player.trail.length;t++){
 				let tp = player.trail[player.trail.length-1-t];		//get current trail object (from the back)
 				let tsize = size/(1+(0.5*t));
-				ctx.globalAlpha = 0.8-(t*0.25);		//make increasingly transparent
-				ctx.fillStyle = player.color;
-				ctx.fillRect(tp.x-tsize/2,tp.y-tsize/2,tsize,tsize)	//make increasingly small
+				ctxCombat.globalAlpha = 0.8-(t*0.25);		//make increasingly transparent
+				ctxCombat.fillStyle = player.color;
+				ctxCombat.fillRect(tp.x-tsize/2,tp.y-tsize/2,tsize,tsize)	//make increasingly small
 			}
 			//ai trail
 			for(let t=1;t<ai.trail.length;t++){
 				let tp = ai.trail[ai.trail.length-1-t];		//get current trail object (from the back)
 				let tsize = size/(1+(0.5*t));
-				ctx.globalAlpha = 0.8-(t*0.25);		//make increasingly transparent
-				ctx.fillStyle = ai.color;
-				ctx.fillRect(tp.x-tsize/2,tp.y-tsize/2,tsize,tsize)	//make increasingly small
+				ctxCombat.globalAlpha = 0.8-(t*0.25);		//make increasingly transparent
+				ctxCombat.fillStyle = ai.color;
+				ctxCombat.fillRect(tp.x-tsize/2,tp.y-tsize/2,tsize,tsize)	//make increasingly small
 			}
 		}
 
-	ctx.globalAlpha = 1.0;		//reset alpha just in case
+	ctxCombat.globalAlpha = 1.0;		//reset alpha just in case
 
-	ctx.fillStyle = player.color
-	ctx.fillRect(player.x-size/2,player.y-size/2,size,size)
+	ctxCombat.fillStyle = player.color
+	ctxCombat.fillRect(player.x-size/2,player.y-size/2,size,size)
 
 	//draw a dark green square to represent the AI
-	ctx.fillStyle = ai.color;
-	ctx.fillRect(ai.x-ai.width/2,ai.y-ai.height/2,ai.width,ai.height);
+	ctxCombat.fillStyle = ai.color;
+	ctxCombat.fillRect(ai.x-ai.width/2,ai.y-ai.height/2,ai.width,ai.height);
 
 	//draw ai target
-	ctx.fillStyle = "#000";
-	ctx.fillText("X", ai.target.x, ai.target.y);
+	ctxCombat.fillStyle = "#000";
+	ctxCombat.fillText("X", ai.target.x, ai.target.y);
 
 	//draw dark screen
 	if(darkScreen && gracePeriod){
@@ -720,14 +724,14 @@ function render(){
 		let delay = (pauseOnHit ? 10 : 20)
 
 		// Create gradient (with modifier for pause effect)
-		var grd = ctx.createRadialGradient(
+		var grd = ctxCombat.createRadialGradient(
 		160,160,140+(dt < delay ? 0 : dt),
 		160,160,200+(dt < delay ? 0 : dt));
 		grd.addColorStop(0,"rgba(255, 255, 255, 0)");
 		grd.addColorStop(1,"black");
 
-		ctx.fillStyle = grd;
-		ctx.fillRect(0,0,canvas.width,canvas.height);
+		ctxCombat.fillStyle = grd;
+		ctxCombat.fillRect(0,0,canvasCombat.width,canvasCombat.height);
 	}
 
 	drawTimer();
@@ -778,7 +782,7 @@ function render(){
 	document.getElementById("taken").innerHTML = gameVals.damageTaken;
 	document.getElementById("blocked").innerHTML = gameVals.damageBlocked;
 	document.getElementById("time").innerHTML = timer.timeRemaining;
-	ctx.restore();
+	ctxCombat.restore();
 }
 
 function step() {
@@ -859,7 +863,7 @@ function togAI(c){
 //main game loop
 function main(){
 	requestAnimationFrame(main);
-	canvas.focus();
+	canvasCombat.focus();
 
 	//panCamera();
 
@@ -886,7 +890,7 @@ function main(){
 		camera.x = 0;
 		camera.y = 0;
 	}
-	pCtx.drawImage(canvas,camera.x,camera.y); // present canvas at x, and y
+	pCtx.drawImage(canvasCombat,camera.x,camera.y); // present canvasCombat at x, and y
 
 	//keyboard ticks
 	var akey = anyKey();
@@ -912,7 +916,7 @@ function main(){
 			defendUp();
 			facingDirection = "up";
 		}
-		if(keys[downKey] && (player.y+size/2) < canvas.height) {
+		if(keys[downKey] && (player.y+size/2) < canvasCombat.height) {
 			defendDown();
 			facingDirection = "down";
 		}
@@ -920,7 +924,7 @@ function main(){
 			defendLeft();
 			facingDirection = "left";
 		}
-		if(keys[rightKey] && (player.x+size/2) < canvas.width) {
+		if(keys[rightKey] && (player.x+size/2) < canvasCombat.width) {
 			defendRight();
 			facingDirection = "right";
 		}
@@ -930,13 +934,13 @@ function main(){
 			if(keys[a_key] && facingDirection == "up" && (player.y-size/2) > 0) {
 				player.y -= player.dashSpeed;
 			}
-			if(keys[a_key] && facingDirection == "down" && (player.y+size/2) < canvas.height) {
+			if(keys[a_key] && facingDirection == "down" && (player.y+size/2) < canvasCombat.height) {
 				player.y += player.dashSpeed;
 			}
 			if(keys[a_key] && facingDirection == "left" && (player.x-size/2) > 0) {
 				player.x -= player.dashSpeed;
 			}
-			if(keys[a_key] && facingDirection == "right" && (player.x+size/2) < canvas.width) {
+			if(keys[a_key] && facingDirection == "right" && (player.x+size/2) < canvasCombat.width) {
 				player.x += player.dashSpeed;
 			}
 		}

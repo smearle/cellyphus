@@ -106,3 +106,4 @@ Frog.prototype._draw = function() {
     Game.display.draw(this._x, this._y, "..");
     Game.display.draw(this._x, this._y, "GG", "green");
 }
+

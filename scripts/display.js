@@ -620,3 +620,4 @@ function saveCharName(e){
 }
 
 render();
+
