@@ -1,5 +1,23 @@
 ///////////      GLOBAL VARIABLES       ///////////////////
 
+//swap between canvas and iframe
+var mainScreen=document.getElementById('game');
+var defenseScreen=document.getElementById('combatDefense');
+
+document.getElementById("swapScreen").onclick=function(){
+  swapCanvases();
+};
+
+function swapCanvases(){
+  if(mainScreen.style.visibility=='visible'){
+    mainScreen.style.visibility='hidden';
+    defenseScreen.style.visibility='visible';
+  }else{
+    mainScreen.style.visibility='visible';
+    defenseScreen.style.visibility='hidden';
+  }
+}
+
 //main game
 var canvas = document.getElementById("game");
 var ctx = canvas.getContext("2d");
