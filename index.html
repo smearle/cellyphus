@@ -185,6 +185,22 @@
                 margin-left: 2px;
             }
 
+            .gameWrapper {
+                position: relative;
+                /*width: 640px;
+                height: 640px;*/
+            }
+            /*.gameWrapper canvas{
+                position: absolute;
+                top: 0;
+                left: 0;
+            }*/
+            .gameWrapper iframe{
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
         </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
@@ -202,11 +218,12 @@
             <div id='consoleArea'></div>
             <div id='gameArea'>
                 <!-- game screen -->
-                <div style='display: block'>
+                <!-- <div style='display: block'> -->
+                <div class="gameWrapper">
                     <canvas id='game'>Game canvas</canvas>
                     <!-- <canvas id='attackGame' style='display:none'>Browser not supported for HMTL5</canvas>
                     <canvas id='defenseGame' style='display:none'>Browser not supported for HMTL5</canvas> -->
-                    <iframe src="combat_defense/index.html" style="height:200px;width:300px;border:none;" title="Iframe Example"></iframe>
+                    <iframe src="combat_defense/index.html" style="width:640px;height:640px;border:none;" title="Iframe Example"></iframe>
                 </div>
 
                 <!-- side menu -->
