@@ -7,6 +7,8 @@ var objectiveList = {
 
 }
 
+var ot = 0;
+
 //adds a new objective to the list (initially uncompleted)
 function addObjective(descr,act,reward, hintGif){
 	let i = objectiveList.descriptions.length;		//new index of entry
@@ -115,10 +117,14 @@ function setObjsDiv(){
 
 //show tutorial gif for the specific objective
 function showTutorialGif(i){
-	document.getElementById("tutGif").src = objectiveList.hints[i];
+	if(ot == 0){
+		ot = setTimeout(function(){document.getElementById("tutGif").src = objectiveList.hints[i];},2000);
+	}	
 }
 
 //default gif
 function hideTutorialGif(){
 	document.getElementById("tutGif").src = "imgs/tutorial/tutFrog.png";
+	clearTimeout(ot);
+	ot = 0;
 }
