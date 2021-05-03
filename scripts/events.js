@@ -2,6 +2,10 @@ var EventHandler = function() {
 }
 
 var deadBarbie = false;
+var ateGrass = false;
+var drankWater = false;
+var plantedSeeds = false;
+var playerInBase = false;
 
 //main game loop
 EventHandler.prototype.step = function(e) {
@@ -232,6 +236,8 @@ EventHandler.prototype.step = function(e) {
                         Game.log_display.drawText(0, 0, "You plant seeds.");
                         var[seed_x, seed_y] = getPlantTile(player._x, player._y);
                         setTile(seed_x, seed_y, tile_chars.GRASS);
+                        plantedSeeds = true;
+                        Game.player.seeds--;
                     }
                     else {
                         Game.log_display.drawText(0, 0, "You have no seeds to plant.");
@@ -260,8 +266,12 @@ EventHandler.prototype.step = function(e) {
                     newY = player._y;
                     if (trg_tile == tile_chars.WATER) {
                         player.thirst = Math.min(100, player.thirst + 25);
+                        drankWater = true;
                     }
                 }
+
+                if(!playerInBase && newX == Game.blackLodge._x && newY == Game.blackLodge._y)
+                    playerInBase = true;
 
                 validUpdate = true;
                 player.moved = true;
@@ -290,6 +300,7 @@ EventHandler.prototype.step = function(e) {
         setTile(player._x, player._y, "..");
         //drawTile(player._x, player._y);
         player.seeds += 1;
+        ateGrass = true;
 
     }
 
@@ -320,8 +331,8 @@ EventHandler.prototype.step = function(e) {
         //new day
         Game.days += 1;
 
-        //generate new barbarians on a new day
-        if (Game.gameTicks % Game.ticksPerDay == 0) {
+        //generate new barbarians on a new day if king is not dead
+        if (Game.gameTicks % Game.ticksPerDay == 0 && Game.kingBarbarian != null) {
             let newBarbie = Game._createBarbarian();
             Game.barbarians.push(newBarbie); 
             Game.scheduler.add(newBarbie, true);

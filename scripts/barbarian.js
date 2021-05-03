@@ -1,6 +1,6 @@
 //change to barbarian class
 //var Barbarian = function(x, y) {
-function Barbarian(x, y,lodge) {
+function Barbarian(x, y,lodge,king=false) {
     this._x = x;
     this._y = y;
     this.health = 100;
@@ -12,6 +12,7 @@ function Barbarian(x, y,lodge) {
     this.at_base = true;
     this.recharge = 0;
     this.delay = 0;
+    this.is_king = king;
     this._draw();
 }
 
