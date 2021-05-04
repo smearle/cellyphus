@@ -4,17 +4,27 @@
 var mainScreen=document.getElementById('game');
 var defenseScreen=document.getElementById('combatDefense');
 
+var sideScreen=document.getElementById('gameSide');
+var attackScreen=document.getElementById('combatAttack');
+
 document.getElementById("swapScreen").onclick=function(){
   swapCanvases();
 };
+swapCanvases();
 
 function swapCanvases(){
   if(mainScreen.style.visibility=='visible'){
     mainScreen.style.visibility='hidden';
     defenseScreen.style.visibility='visible';
+
+    sideScreen.style.visibility='hidden';
+    attackScreen.style.visibility='visible';
   }else{
     mainScreen.style.visibility='visible';
     defenseScreen.style.visibility='hidden';
+
+    sideScreen.style.visibility='visible';
+    attackScreen.style.visibility='hidden';
   }
 }
 
