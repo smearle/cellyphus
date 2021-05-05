@@ -67,7 +67,7 @@ Player.prototype.defend = function() //changes to defend minigame and registers 
 Player.prototype.act = function(newX, newY) {
     curr_tile = getTile(this._x, this._y);
     if (curr_tile == tile_chars.BED) {
-        this.health = Math.min(this.maxHealth, this.health++);
+        this.health = Math.min(this.maxHealth, this.health+1);
     }
     else {
         this.hunger = Math.max(this.hunger-1, 0);
@@ -97,10 +97,10 @@ Player.prototype.act = function(newX, newY) {
 
     //decrease player hunger, thirst, and health
     if (this.hunger == 0 && this.thirst == 0) {
-        Math.max(0, this.health--);
+        this.health = Math.max(0, this.health-1);
     }
     else {
-        this.healt++;
+        this.health = Math.min(this.maxHealth, this.health+1);
     }
 
 
