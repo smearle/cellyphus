@@ -65,7 +65,7 @@ var harvestImgs = {};
 for (let item in harvest_imgs) {
     harvestImg = new Image();
     harvestImg.src = "imgs/" + harvest_to_img[item] + ".png";
-    console.log(harvestImg.src);
+    //console.log(harvestImg.src);
     harvestImgs[item] = harvestImg;
 }
 
@@ -256,7 +256,7 @@ function render(){
 	requestAnimationFrame(render);
 
 	//game not set yet
-	if(Game == null)
+	if(Game == null || Game.curState == "start" || Game.curState == "end")
 		return;
 
   	drawMain();

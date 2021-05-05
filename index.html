@@ -4,6 +4,7 @@
         <META http-equiv="Content-Type" content="text/html; charset=ISO-8859-5">
         <title>Cellyphus</title>
         <style>
+            @font-face {font-family: Dwarf; src: url('dwarf.ttf');}
             body{
                 background-color:#2F5434;
                 text-align: center;
@@ -33,6 +34,12 @@
                 height:640px;
                 border:2px solid #000000;
             }
+
+            #titleScreen{
+                width:640px;
+                height:640px;
+                border:2px solid #000000;
+            }
             
             #container{
                 width:980px;
@@ -49,6 +56,13 @@
             }
 
             /* side bar */
+
+            #startMenu{
+                background-color:#678658;
+                width:332px;
+                height:640px;
+                border:2px solid black;
+            }
 
             .sidebar{
                 /*
@@ -211,7 +225,8 @@
         </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
-    <body onload="Game.init()">
+    <!--<body onload='startUpScreen()'>-->
+    <body onload='quickStartGame()'>
         <!-- title+coordinate display (hidden) -->
         <div  style='display: none'>
             <h1>Cellyphus</h1>
@@ -227,16 +242,20 @@
                 <!-- game screen -->
                 <!-- <div style='display: block'> -->
                 <div class="gameWrapper">
-                    <canvas id='game'>Game canvas</canvas>
+                    <canvas id='titleScreen' style='display:block'></canvas>
+                    <canvas id='game' style='display:none'>Game canvas</canvas>
                     <!-- <canvas id='attackGame' style='display:none'>Browser not supported for HMTL5</canvas>
                     <canvas id='defenseGame' style='display:none'>Browser not supported for HMTL5</canvas> -->
-                    <iframe id="combatDefense" src="combat_combined/combat_defense2/index.html" style="width:980px;height:640px;border:none;" title="Iframe Example"></iframe>
+                    <iframe id="combatDefense" src="combat_combined/combat_defense2/index.html" style="width:980px;height:640px;border:none;display:none" title="Iframe Example"></iframe>
                     
                 </div>
 
                 <!-- side menu -->
                 <div class="sideWrapper" style='display: grid'>
-                    <div id="gameSide">
+                    <div id='startMenu'>
+                        <button onclick='startGame()'>Start</button>
+                    </div>
+                    <div id="gameSide" style='display:none'>
                         <!-- mode tabs -->
                         <div id='drops'>
                             <div class='tabs' onclick='changeSection("minimap",this)' style='background-color: #ECCE0E' id='minimapTab'>Minimap</div>
@@ -341,6 +360,7 @@
             <script src="scripts/objectives.js"></script>
             <script src="scripts/display.js"></script>  
             <script src="scripts/events.js"></script>
+            <script src="scripts/title.js"></script>
         </div>
     </body>
 </html>

@@ -84,6 +84,7 @@ var Game = {
     blackLodge: null,
 
     gameTicks: 0,
+    curState: "start",
     ticksPerDay: 150,
     days: 0,
     tickPerSec: 800,
@@ -92,7 +93,7 @@ var Game = {
     //combatSubjects: {"None": 1, "Barbarian": 2},
     combatTarget: null,
 
-    init: function() {
+    setup:function(){
         ///  top console  ///
         this.display = new ROT.Display(display_options);
 
@@ -108,6 +109,10 @@ var Game = {
 
         this.log_combat = new ROT.Display({width:42, height:8, fontSize:14})
         document.getElementById("consoleArea").appendChild(this.log_combat.getContainer());
+    },
+
+    init: function() {
+        
 
         /// game area  ///
         //document.body.appendChild(this.display.getContainer());
@@ -439,8 +444,22 @@ function resetStep(){
     Game.st = setTimeout(repeatStep, Game.tickPerSec);
 }
 
-window.onload = function(){
+//start screens
+function startUpScreen(){
+    Game.setup();
+    Game.curState = "start";
+    document.getElementById("titleScreen").style.display = "block";
+    document.getElementById("startMenu").style.display = "block";
+    document.getElementById("gameSide").style.display = "none";
+    document.getElementById("game").style.display = "none";
+    drawTitle();
+    startTitleAnim();
+}
+
+//reset map and properties
+function resetGame(){
     Game.init();
+    Game.curState = "game";
     
     localStorage.clear();
     localStorage.setItem("damageTaken", 0);
@@ -452,6 +471,21 @@ window.onload = function(){
         clearTimeout(Game.st);
         Game.st = 0;
     }
+}
+
+
+//start the entire game (main game)
+function startGame(){
+    document.getElementById("titleScreen").style.display = "none";
+    document.getElementById("startMenu").style.display = "none";
+    document.getElementById("gameSide").style.display = "block";
+    document.getElementById("game").style.display = "block";
+    resetGame();
+}
+
+function quickStartGame(){
+    Game.setup();
+    startGame();
 }
 
 //change game mode
