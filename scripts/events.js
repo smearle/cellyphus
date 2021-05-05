@@ -358,15 +358,17 @@ EventHandler.prototype.step = function(e) {
     //former EVENTHANDLER.ACT() function - update the game state and ticks
     Game.gameTicks += 1;
 
+    console.log(Game.gameTicks, Game.ticksPerDay, Game.king_barbarian._x);
     if(Game.gameTicks % Game.ticksPerDay == 0) 
     {
         //new day
         Game.days += 1;
 
         //generate new barbarians on a new day if king is not dead
-        if (Game.gameTicks % Game.ticksPerDay == 0 && Game.kingBarbarian != null) {
+        if (Game.king_barbarian != null) {
             let newBarbie = Game._createBarbarian();
             Game.barbarians.push(newBarbie); 
+            barbarians[barb_id] = newBarbie;
             Game.scheduler.add(newBarbie, true);
         }
     }
