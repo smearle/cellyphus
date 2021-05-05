@@ -35,7 +35,7 @@ const tile_chars = {
 }
 
 
-frog_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.BARBARIAN, tile_chars.REDBRICK]
+frog_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.BARBARIAN, tile_chars.REDBRICK]
 barb_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.DOOR, tile_chars.BARBARIAN, tile_chars.REDBRICK]
 player_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.BARBARIAN, tile_chars.REDBRICK]
 

@@ -315,34 +315,7 @@ EventHandler.prototype.step = function(e) {
     if(!validUpdate)
         return;
 
-    //// PLAYER UPDATES
-
-    //test defend ->it shouldnt actually be here
-    player.defend();
-
-    // Move the player
-    player._x = newX;
-    player._y = newY;
-
-    //eat grass if on the tile
-    curr_tile = Game.map[player._x+","+player._y];
-    if (curr_tile == "gg") {
-        Game.log_display.drawText(0, 0, "You eat grass.")
-        player.hunger = Math.min(100, player.hunger + 25);
-        setTile(player._x, player._y, "..");
-        //drawTile(player._x, player._y);
-//      player.seeds += 1;
-        ateGrass = true;
-
-    }
-
-    //decrease player hunger, thirst, and health
-    if (player.hunger == 0 && player.thirst == 0) {
-        player.health--;
-    }
-    player.hunger = Math.max(player.hunger-1, 0);
-    player.thirst = Math.max(player.thirst-1, 0);
-
+    Game.player.act(newX, newY);
 
     ///// AI UPDATES
     let fgs = Game.frog_manager.frogs;
@@ -358,7 +331,6 @@ EventHandler.prototype.step = function(e) {
     //former EVENTHANDLER.ACT() function - update the game state and ticks
     Game.gameTicks += 1;
 
-    console.log(Game.gameTicks, Game.ticksPerDay, Game.king_barbarian._x);
     if(Game.gameTicks % Game.ticksPerDay == 0) 
     {
         //new day
