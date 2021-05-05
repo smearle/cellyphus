@@ -46,7 +46,7 @@ EventHandler.prototype.step = function(e) {
 
     // we need to detect [b]ed before [b]uild
     // TODO: refactor this harder forever
-    if (await_build_select) {
+    if (await_build_select && [82,87,68,70,66].indexOf(code) != -1) {
         return buildSelect(code);
     }
     if (await_harvest_select) {
@@ -58,7 +58,7 @@ EventHandler.prototype.step = function(e) {
 
     // detect "[b]uild" command
     if (code == 66) {
-        Game.log_display.drawText(0, 0, "Build: [w]all, [d]oor, [f]ire, [b]ed.");
+        Game.log_display.drawText(0, 0, "Build: [w]all, [d]oor, [f]ire, [b]ed, b[r]idge.");
         await_build_select = true;
 
         //open build menu

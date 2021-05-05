@@ -483,6 +483,9 @@ window.addEventListener("keydown", function(e) {
         document.activeElement.blur();
         editingName = false;
     }
+    if((e.keyCode == 27)){
+        cancelBuild();
+    }
 }, false);
 
 //Game.init();

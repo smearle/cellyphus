@@ -93,6 +93,7 @@ function cancelBuild(){
 	await_build_select = false;
     await_build_location = false;
     resetBuildItemsColor();
+    ghostBuild.active = false;
 }
 
 // TODO use this item name? <--- WHAT?
