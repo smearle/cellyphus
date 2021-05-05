@@ -1,6 +1,10 @@
+barb_id = 0;
+barbarians = {};
+barb_locs = {};
+
 //change to barbarian class
 //var Barbarian = function(x, y) {
-function Barbarian(x, y,lodge,king=false) {
+function Barbarian(x, y, lodge, id, king=false) {
     this._x = x;
     this._y = y;
     this.health = 100;
@@ -14,6 +18,7 @@ function Barbarian(x, y,lodge,king=false) {
     this.delay = 0;
     this.is_king = king;
     this._draw();
+    this.id = id;
 }
 
 Barbarian.prototype.getSpeed = function() { return this.speed; }
@@ -21,6 +26,7 @@ Barbarian.prototype.getHealth = function() { return this.health; }
 Barbarian.prototype.getLimpAmt = function(){return (Math.min(Math.floor(this.fullHealth/this.health),5));}
 
 Barbarian.prototype.act = function() {
+    delete barb_locs[[this._x, this._y]];
 //  console.log('barbarian tick');
     this.at_base = (this._x == this.base._x && this._y == this.base._y);
 
@@ -63,6 +69,7 @@ Barbarian.prototype.act = function() {
             this.recharge = 0;
         }
     }
+    barb_locs[[this._x, this._y]] = this.id;
 
     //Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
     //this._draw();

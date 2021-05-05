@@ -70,7 +70,7 @@ function orderBuild(item, x, y) {
     for (i = 0; i < Game.frog_manager.frogs.length; i ++) {
         frog = Game.frog_manager.frogs[i];
         // Look for idle frog
-        if (!(frog.isBuilding) && (getTile(x, y) == "..")) {
+        if (frog.wandering && (getTile(x, y) == "..")) {
           //console.log('assign frog');
            // Set the frog's targets
            orderFrogBuild(frog, item, x, y);

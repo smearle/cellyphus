@@ -27,6 +27,7 @@ var Frog = function(x, y) {
     this._move_ticker = 0
     this.command = "auto";
     this.mortal = true;
+    this.trg_barb = "-1";
 }
 
 Frog.prototype.getSpeed = function() { return 100; }
@@ -70,6 +71,14 @@ Frog.prototype.act = function() {
             val = harvest_orders[key];
             orderFrogHarvest(this, val, harvest_x, harvest_y);
         }
+        pending_attacks = Object.keys(attack_orders);
+        if (pending_attacks.length > 0 && !frog_impassable.includes(getTile(this._x, this._y))) {
+            key = pending_attacks[Math.floor(pending_attacks.length * Math.random())].split(",");
+            attack_x = parseInt(key[0]);
+            attack_y = parseInt(key[1]);
+            val = attack_orders[key];
+            orderFrogAttack(this, val, attack_x, attack_y);
+        }
     }
 
     // Head to some target
@@ -90,6 +99,19 @@ Frog.prototype.act = function() {
             }
             else if (this.isHarvesting) {
                 harvest(this, this._x_t, this._y_t);
+            }
+            else if (this.isAttacking) {
+                // FIXME: will attack anyone even if not the original target
+                if ([this._x_t, this._y_t] in barb_locs) {
+                    barb_id = barb_locs[[this._x_t, this._y_t]];
+                    attack(this, barb_id);
+                }
+                else {
+                    // FIXME: do this more often no?
+                    barb = barbarians[this.trg_barb];
+                    this._x_t = barb._x;
+                    this._y_t = barb._y;
+                }
             }
             else {
                 delete build_orders[[this._x_t, this._y_t]];

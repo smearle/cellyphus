@@ -39,7 +39,7 @@ EventHandler.prototype.step = function(e) {
 
     // debug command for spawning a new frog
     if (code == 78) {
-        console.log("spwan a frwag (debug)");
+        console.log("spwan a frog (debug)");
         Game.spawnFrog();
         validUpdate = true;
     }
@@ -49,9 +49,11 @@ EventHandler.prototype.step = function(e) {
     if (await_build_select) {
         return buildSelect(code);
     }
-
     if (await_harvest_select) {
         return harvestSelect(code);
+    }
+    if (await_attack_select) {
+        return attackSelect(code);
     }
 
     // detect "[b]uild" command
@@ -77,6 +79,12 @@ EventHandler.prototype.step = function(e) {
         // go ahead and wait for another event
         return
     };
+
+    if (code == 75) {
+        Game.log_display.drawText(0, 0, "Attack: [g]cut [t]chop.");
+        await_attack_select = true;
+        return
+    }
 
     // detect "[m]ap" command
     if (code == 77) {
@@ -188,9 +196,11 @@ EventHandler.prototype.step = function(e) {
                 if (await_build_location) {
                     orderBuild(next_build, x, y)
                 }
-                if (await_harvest_location) {
-                    console.log(next_harvest);
+                else if (await_harvest_location) {
                     orderHarvest(next_harvest, x, y)
+                }
+                else if (await_attack_location) {
+                    orderAttack(next_attack, x, y);
                 }
             }
 
@@ -363,7 +373,7 @@ EventHandler.prototype.step = function(e) {
 
 
     // Tick grass and tree cellular automata
-    Game.simulateGrass()
+    Game.simulateGrass();
 
 
     //redraw everything and update map for ROT.Js and status messages

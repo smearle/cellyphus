@@ -14,6 +14,7 @@ var tileSet = document.createElement("img");
 
 tileSet.src = "tileset.png";
 
+
 const tile_chars = {
     WALL: "|",
     REDWALL: "||",
@@ -275,10 +276,16 @@ var Game = {
         this.frog_manager = new FrogManager();
 //      this.spawnFrog();
 //      this.spawnFrog();
-        this.barbarians.push(this._createBarbarian());      
-        this.barbarians.push(this._createBarbarian());   
+        barb_0 = this._createBarbarian()
+        this.barbarians.push(barb_0);      
+        barbarians[barb_id] = barb_0
+        barb_1 = this._createBarbarian()
+        this.barbarians.push(barb_1);   
+        barbarians[barb_id] = barb_1
         this.king_barbarian = this._createKingBarbarian();
         this.barbarians.push(this.king_barbarian);
+        barbarians[barb_id] = this.king_barbarian
+
 
         this.freeCells = freeCells;
     },
@@ -294,14 +301,17 @@ var Game = {
 
     //generate a barbarian from the black (red) lodge
     _createBarbarian: function(){
-        return new Barbarian(this.blackLodge._x, this.blackLodge._y,this.blackLodge);
+        // TODO: reset this at some point I guess to prevent overflow
+        barb_id ++;
+        return new Barbarian(this.blackLodge._x, this.blackLodge._y, this.blackLodge, barb_id);
     },
 
     //create special king barbarian
     _createKingBarbarian: function(){
+        barb_id++;
         let x = this.blackLodge._x;
         let y = this.blackLodge._y-3;
-        return new Barbarian(x,y,{_x:x, _y:y},true);
+        return new Barbarian(x,y,{_x:x, _y:y}, barb_id, true);
     },
 
     _generateBoxes: function(freeCells) {
