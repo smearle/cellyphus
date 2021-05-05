@@ -307,7 +307,7 @@ let ghostBuild = {active:false, x:0,y:0,img:null}
 ghostBuild.img = new Image();
 function drawGhostBuild(e){
 	//not in build mode? ignore
-	if(!await_build_location){
+	if(!await_build_location || await_build_select){
 		ghostBuild.active = false;
 		return;
 	}
