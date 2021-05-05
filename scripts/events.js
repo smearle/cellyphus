@@ -50,14 +50,29 @@ EventHandler.prototype.step = function(e) {
         return buildSelect(code);
     }
 
+    if (await_harvest_select) {
+        return harvestSelect(code);
+    }
+
     // detect "[b]uild" command
     if (code == 66) {
         Game.log_display.drawText(0, 0, "Build: [w]all, [d]oor, [f]ire, [b]ed.");
         await_build_select = true;
 
-
         //open build menu
         changeSection("build",document.getElementById("buildTab"));
+
+        // go ahead and wait for another event
+        return
+    };
+
+    // detect "[h]arvest" command
+    if (code == 72) {
+        Game.log_display.drawText(0, 0, "Harvest: [g]rass, [t]ree.");
+        await_harvest_select = true;
+
+        //open build menu
+//      changeSection("harvest",document.getElementById("harvestTab"));
 
         // go ahead and wait for another event
         return
@@ -172,6 +187,10 @@ EventHandler.prototype.step = function(e) {
                 //direct build location on the map
                 if (await_build_location) {
                     orderBuild(next_build, x, y)
+                }
+                if (await_harvest_location) {
+                    console.log(next_harvest);
+                    orderHarvest(next_harvest, x, y)
                 }
             }
 
@@ -299,7 +318,7 @@ EventHandler.prototype.step = function(e) {
         player.hunger = Math.min(100, player.hunger + 25);
         setTile(player._x, player._y, "..");
         //drawTile(player._x, player._y);
-        player.seeds += 1;
+//      player.seeds += 1;
         ateGrass = true;
 
     }

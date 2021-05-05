@@ -60,6 +60,15 @@ for (let item in build_imgs) {
     alphaImgs[item] = alphaImg;
 }
 
+var harvestImgs = {};
+
+for (let item in harvest_imgs) {
+    harvestImg = new Image();
+    harvestImg.src = "imgs/" + harvest_to_img[item] + ".png";
+    console.log(harvestImg.src);
+    harvestImgs[item] = harvestImg;
+}
+
 render_tiles = [];
 var Imgs = {};
 
@@ -346,12 +355,10 @@ function drawMain(){
         mapCtx.drawImage(img, x*tw, y*th, tw, th);
     }
 
-    // Not using rn. In case there's additional layers of tiles we want to render separately from rot.js
-    for (let key in render_tiles) {
+    for (let key in harvest_orders) {
         [x, y] = key.split(",");
-        img = Imgs[render_tiles[key]];
+        img = harvestImgs[harvest_orders[key]];
         tw = Game.display.getOptions().tileWidth;
-        th = Game.display.getOptions().tileHeight;
         mapCtx = gameMapCanvas.getContext("2d");
         mapCtx.drawImage(img, x*tw, y*th, tw, th);
     }
@@ -376,6 +383,11 @@ function drawMain(){
 // draw a tile on the main map
 function drawAlphaTile(img, x, y){
     img = alphaImgs[img];
+    ctx.drawImage(img, x, y, 16, 16);
+}
+
+function drawHarvestOverlay(img, x, y) {
+    img = harvestImgs[img];
     ctx.drawImage(img, x, y, 16, 16);
 }
 

@@ -169,14 +169,8 @@ var Game = {
                     dirt++;
 
                 next_state = census(ix, iy);
-    //          console.log(next_state);
                 if (next_state == CAstates.GRASS) {
-    //          live.push(key);
                     live.push([ix, iy]);
-    //            live.push({
-    //              x: ix,
-    //              y: iy,
-    //            });
                 }
                 else if (next_state == CAstates.TREE) {
                     trees.push([ix, iy]);
@@ -353,11 +347,12 @@ var Game = {
     },
 
     _generateGrass: function(freeCells) {
-        for (var i=0;i<130;i++) {
+        for (var i=0;i<170;i++) {
             var index = Math.floor(ROT.RNG.getUniform() * freeCells.length);
             var key = freeCells.splice(index, 1)[0];
             this.map[key] = "gg";
         }
+        this.simulateGrass();
     },
 
     _drawWholeMap: function() {

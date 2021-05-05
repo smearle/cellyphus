@@ -61,7 +61,7 @@ Barbarian.prototype.act = function() {
         if(this.recharge >= 10){
             this.health += 5;
             this.recharge = 0;
-        }   
+        }
     }
 
     //Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
@@ -138,7 +138,7 @@ Barbarian.prototype.idle = function(){
 
     let x = this._x + d[0];
     let y = this._y + d[1];
-    
+
 
     //valid spot to move to
     if(barbPassableCallback(x,y)){
@@ -235,4 +235,3 @@ Barbarian.prototype._draw = function() {
     Game.display.draw(this._x, this._y, "..", "transparent");
     Game.display.draw(this._x, this._y, "SS", "transparent");
 }
-

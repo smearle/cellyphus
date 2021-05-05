@@ -11,6 +11,7 @@ const build_items = {
     FIRE: "fire",
     BED: "bed",
     BRIDGE: "bridge",
+    SEED: "grass",
 }
 
 var next_build = build_items.NONE
@@ -94,11 +95,10 @@ function cancelBuild(){
     resetBuildItemsColor();
 }
 
-// TODO use this item name?
+// TODO use this item name? <--- WHAT?
 function orderFrogBuild(frog, item, x, y) {
    frog._x_t = x;
    frog._y_t = y
-// console.log('order frog build');
    frog.isBuilding = true;
    frog.wandering = false;
 }
