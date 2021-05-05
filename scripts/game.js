@@ -431,6 +431,11 @@ function resetStep(){
 
 window.onload = function(){
     Game.init();
+    
+    localStorage.clear();
+    localStorage.setItem("damageTaken", 0);
+    localStorage.setItem("damageRegistered", false);
+
     if(Game.game_mode == "real"){
         Game.st = setTimeout(repeatStep, Game.tickPerSec);
     }else{

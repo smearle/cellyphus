@@ -23,12 +23,15 @@ var Player = function(x, y) {
     this._draw();
 }
 
+
 Player.prototype.getSpeed = function() { return 100; }
 Player.prototype.getX = function() { return this._x; }
 Player.prototype.getY = function() { return this._y; }
 Player.prototype.getHealth = function() { return this.health; }
 Player.prototype.getHunger = function() { return this.hunger; }
 Player.prototype.getThirst = function() { return this.thirst; }
+Player.prototype.takeDamage = function(dmg) { this.health -= dmg; }
+Player.prototype.healDamage = function(dmg) { this.health += dmg; }
 
 //combat functions
 Player.prototype.punchChance = function() //percent chance to hit punch
@@ -50,10 +53,19 @@ Player.prototype.slamChance = function() //integer percent chance to hit slam
 
     if (chance > 100) { chance = 100; }
     return chance;
+}
+Player.prototype.defend = function() //changes to defend minigame and registers damage taken
+{
+    localStorage.setItem("damageRegistered", true);
+    let dmg =  localStorage.getItem("damageTaken");
+    console.log("damage: " + dmg); 
+    this.takeDamage(dmg);
+    localStorage.setItem("damageTaken", 0);
 } 
 
 //calls main game loop
 Player.prototype.act = function() {
+    
 //  console.log('player tick');
     if (this.getHealth() <= 0 || Game.player.getThirst() <= 0 || Game.player.getHunger() <= 0)
     {
