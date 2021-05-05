@@ -1,11 +1,11 @@
 ///////////      GLOBAL VARIABLES       ///////////////////
 
 //swap between canvas and iframe
-var mainScreen=document.getElementById('game');
+var mainScreen=document.getElementById('gameArea');
 var defenseScreen=document.getElementById('combatDefense');
 
 var sideScreen=document.getElementById('gameSide');
-var attackScreen=document.getElementById('combatAttack');
+//var attackScreen=document.getElementById('combatAttack');
 
 document.getElementById("swapScreen").onclick=function(){
   swapCanvases();
@@ -18,13 +18,13 @@ function swapCanvases(){
     defenseScreen.style.visibility='visible';
 
     sideScreen.style.visibility='hidden';
-    attackScreen.style.visibility='visible';
+    //attackScreen.style.visibility='visible';
   }else{
     mainScreen.style.visibility='visible';
     defenseScreen.style.visibility='hidden';
 
     sideScreen.style.visibility='visible';
-    attackScreen.style.visibility='hidden';
+    //attackScreen.style.visibility='hidden';
   }
 }
 

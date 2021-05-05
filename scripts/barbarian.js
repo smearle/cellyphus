@@ -104,7 +104,8 @@ Barbarian.prototype.chase = function(){
             {
                 var atk = Math.floor(Math.random() * this.power) + 1; //random damage between 0 to power
     //          console.log("attack: " + atk);
-                Game.player.health -= atk;
+                /*Game.player.health -= atk;*/
+                Game.player.takeDamage(atk);
 
                 combatTextEnemy("The Barbarian bashed you for " + atk + " damage!");
             }

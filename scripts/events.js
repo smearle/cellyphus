@@ -288,6 +288,9 @@ EventHandler.prototype.step = function(e) {
 
     //// PLAYER UPDATES
 
+    //test defend ->it shouldnt actually be here
+    player.defend();
+
     // Move the player
     player._x = newX;
     player._y = newY;
