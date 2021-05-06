@@ -17,6 +17,14 @@ EventHandler.prototype.step = function(e) {
     if(editingName)
         return
 
+    //player is dead, why bother
+    if(Game.player.dead){
+        showDeathScreen();
+        clearTimeout(Game.st);
+        Game.st = 0;
+        return;
+    }
+
     var validUpdate = false;
 
     player = Game.player;

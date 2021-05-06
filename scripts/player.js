@@ -7,6 +7,10 @@ var Player = function(x, y) {
     this.maxThirst = 100;
     this.maxHunger = 100;
 
+    this.dead = false;
+    this.immortal = false;
+    this.cod = "Here lies the player.\nCause of death: Being a dumbass";          //cause of death
+
     this.health = 100;
     this.thirst = 100;
     this.hunger = 100;
@@ -106,25 +110,28 @@ Player.prototype.act = function(newX, newY) {
 
     
 //  console.log('player tick');
-    if (this.getHealth() <= 0 || this.getThirst() <= 0 || this.getHunger() <= 0)
+    if (!this.immortal && this.getHealth() <= 0 || this.getThirst() <= 0 || this.getHunger() <= 0)
     {
-        var message = "You survived " + Game.days + " days. ";
+        var message = "You survived " + Game.days + " days.";
         if (this.getHealth() <= 0)
         {
-            message += "You lost all your health!";
+            message += "\nYou lost all your health!";
         }
         else if (this.getThirst() <= 0)
         {
-            message += "You died from dehydration!";
+            message += "\nYou died from dehydration!";
         }
         if (this.getHunger() <= 0)
         {
-            message += "You starved to death!";
+            message += "\nYou starved to death!";
         }
+        /*
         if (PLAYER_DEATH) {
             Game.engine.lock();
         }
         displayText(message);
+        */
+        this.cod = message;
     }
 }
 

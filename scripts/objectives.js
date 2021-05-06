@@ -46,6 +46,17 @@ function addObjective(descr,act,reward, hintGif){
 
 }
 
+//calculate percentage completed
+function objCompleted(){
+	let c = 0;
+	let l = objectiveList.completed;
+	for(let o=0;o<l.length;o++){
+		if(l[o])
+			c++;
+	}
+	return Math.round((c/l.length)*100);
+}
+
 /// REWARDS
 
 function meatReward(n){

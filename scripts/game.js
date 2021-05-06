@@ -472,7 +472,7 @@ function resetGame(){
     else
         localStorage.stepMode = Game.game_mode;
 
-    toggleGameMode(Game.game_mode);
+    toggleGameStep(Game.game_mode);
     document.getElementById("gameModeSelect").value = Game.game_mode;
 }
 
@@ -503,8 +503,8 @@ function whichGameMode(){
     }
 }
 
-//change game mode
-function toggleGameMode(v){
+//change game step (realtime or turn based)
+function toggleGameStep(v){
     Game.game_mode = v;
     if(v == "turn"){
         clearTimeout(Game.st);
@@ -516,6 +516,17 @@ function toggleGameMode(v){
         document.getElementById("game_speed").disabled = false;
         localStorage.stepMode = "real";
     }
+}
+
+//show death screen for the player with stats
+function showDeathScreen(){
+    Game.curState = "end";
+    document.getElementById("deathScreen").style.display = "block";
+    document.getElementById("endMenu").style.display = "block";
+    document.getElementById("gameSide").style.display = "none";
+    document.getElementById("game").style.display = "none";
+
+    document.getElementById("objCompPerc").innerHTML = "Objectives Completed:<br>" + objCompleted() + "%";
 }
 
 
@@ -530,13 +541,17 @@ window.addEventListener("keydown", function(e) {
     if((e.keyCode == 32) && (!editingName)){
         e.preventDefault();
     }
+    //enter name
     if((e.keyCode == 13) && (editingName)){
         document.activeElement.blur();
         editingName = false;
     }
+    //cancel current build
     if((e.keyCode == 27)){
         cancelBuild();
     }
+
+    //title or game on start
     if((e.keyCode == 191)){
         if(localStorage.startType && localStorage.startType == "title"){
             alert("Switching to game mode on start");
@@ -546,6 +561,14 @@ window.addEventListener("keydown", function(e) {
             localStorage.startType = "title";
         }
     }
+
+    //immortality
+    if(e.keyCode == 220){
+        Game.player.immortal = true;
+        alert("You are blessed with immortality from the game dev gods!")
+    }
+
+
 }, false);
 
 //Game.init();

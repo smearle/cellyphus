@@ -256,12 +256,16 @@ function render(){
 	requestAnimationFrame(render);
 
 	//game not set yet
-	if(Game == null || Game.curState == "start" || Game.curState == "end")
+	if(Game == null || Game.curState == "start")
 		return;
 
-  	drawMain();
-  	drawMiniMap();
-
+	//dead
+	else if(Game.curState == "end"){
+		drawDeath();
+	}else{
+		drawMain();
+  		drawMiniMap();
+	}
 }
 
 //switches focus to a point clicked on the minimap
@@ -696,6 +700,36 @@ function frogCommand(e){
 	e.style.backgroundColor = "#24B12D";
 
 }
+
+/////////////////    END SCREEN VISUALS   ////////////////
+
+var deathCanvas = document.getElementById("deathScreen");
+var dtx = deathCanvas.getContext("2d");
+deathCanvas.width = 640;
+deathCanvas.height = 640;
+
+var grave = new Image();
+grave.src = "imgs/gravestone.png";
+
+function drawDeath(){
+	dtx.clearRect(0,0,deathCanvas.width,deathCanvas.height);
+
+	dtx.fillStyle = "#000";
+	dtx.fillRect(0,0,deathCanvas.width,deathCanvas.height);
+
+	//show Cause of Death
+	dtx.fillStyle = "#fff";
+	dtx.font = "24px Dwarf";
+	dtx.textAlign = "center";
+	let mesparts = Game.player.cod.split("\n");
+	for(let p=0;p<mesparts.length;p++)
+		dtx.fillText(mesparts[p], deathCanvas.width/2,20*p+220);
+
+	//show grave
+	if(grave.width > 0)
+		dtx.drawImage(grave, 0, 0, 31, 31, (canvas.width/2)-32, 280, 64, 64);
+}
+
 
 render();
 
