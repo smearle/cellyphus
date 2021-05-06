@@ -462,7 +462,7 @@ function resetGame(){
     Game.init();
     Game.curState = "game";
     
-    localStorage.clear();
+    //localStorage.clear();
     localStorage.setItem("damageTaken", 0);
     localStorage.setItem("damageRegistered", false);
 
@@ -490,9 +490,13 @@ function quickStartGame(){
 }
 
 function whichGameMode(){
+    if(!localStorage.startType || localStorage.startType == null){
+        localStorage.startType = "title";
+    }
+
     if(localStorage.startType && localStorage.startType == "game"){
         quickStartGame();
-    }else{
+    }else if(localStorage.startType && localStorage.startType == "title"){
         startUpScreen();
     }
 }
@@ -532,10 +536,10 @@ window.addEventListener("keydown", function(e) {
     if((e.keyCode == 191)){
         if(localStorage.startType && localStorage.startType == "title"){
             alert("Switching to game mode on start");
-            localStorage.startType = "game"
-        }else{
+            localStorage.startType = "game";
+        }else if(localStorage.startType && localStorage.startType == "game"){
             alert("Switching to title mode on start");
-            localStorage.startType = "title"
+            localStorage.startType = "title";
         }
     }
 }, false);
