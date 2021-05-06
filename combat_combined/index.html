@@ -8,7 +8,20 @@
 				text-align: center;
 			}
 
+			#container{
+        width:980px;
+        height:756px;
+        margin-left: auto;
+        margin-right:auto;
 
+      }
+
+      #gameArea{
+        display: flex;
+        width:980px;
+        height:640px;
+        border: 2px solid black
+      }
 			
 			#juiceTog{
 				/*width:340px;
@@ -56,9 +69,11 @@
 	</head>
 	<body onload='init()'>
 
-		<div id='container' style='display: flex'>
+		<div id='container'>
 
-			<iframe id="combatDefense" src="combat_defense2/index.html" style="width:980px;height:640px;border:none;" title="Iframe Example"></iframe>
+			<div id='gameArea'>
+				<iframe id="combatDefense" src="combat_defense2/index.html" style="width:980px;height:640px;border:none;" title="Iframe Example"></iframe>
+			</div>
 
 			<!-- <canvas id='game'>Browser not supported for HMTL5</canvas>
 

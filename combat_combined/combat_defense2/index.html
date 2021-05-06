@@ -2,75 +2,83 @@
 	<head>
 		<title>Cellyphus Defense</title>
 		<style>
-			body{
-				background-color:#ffffff;
-				/*background-color: black;*/
-				text-align: center;
-			}
+            body{
+                background-color:#2F5434;
+                text-align: center;
+            }
+            /* crispy pixel rendering */
+            canvas{
+                image-rendering: -moz-crisp-edges;
+                image-rendering: -webkit-crisp-edges;
+                image-rendering: pixelated;
+                image-rendering: crisp-edges;
+            }
 
-			#gameArea{
-        display: flex;
-        width:980px;
-        height:640px;
-        border: 2px solid black
-      }
+            #game{
+                /*
+                width:68%;
+                height:100%;
+                */
+                width:640px;
+                height:640px;
+                border:2px solid #000000;
+            }
+            
+            #container{
+                width:980px;
+                height:756px;
+                margin-left: auto;
+                margin-right:auto;
 
-			.sidebar{
-        /*
-        width:15%;
-        height:100%;
-        */
-        width:332px;
-        height:300px;
-        border:2px solid #000;
-        background-color: #dedede;
-        display: block;
-      }
+            }
+            #gameArea{
+                display: flex;
+                width:980px;
+                height:640px;
+                border: 2px solid black
+            }
 
-			#juiceTog{
-				/*width:340px;
-				height:640px;*/
-				/*color: #ffffff;*/
+            /* side bar */
 
-				/*background-color: #dedede;
-				width:300px;
-				height:300px;
-				border:2px solid black;*/
+            .sidebar{
+                /*
+                width:15%;
+                height:100%;
+                */
+                width:332px;
+                height:300px;
+                border:2px solid #000;
+                background-color: #dedede;
+                display: block;
+            }
 
-				padding-left: 0;
-				padding-right: 0;
-				margin-left: 4px;
-			  margin-right: auto;
+            /* CHARACTER CAMERA FOCUS SELECTION */
+            
 
-			  text-align: left;
-			  padding-left:5px;
-				margin-top: 0;
-				margin-bottom: auto;
-			}
-			#juiceTog input{
-				margin-right: 7px;
-			}
-			#game{
-				/*width:640px;
-				height:640px;*/
-				width:600px;
-				height:600px;
-				border:2px solid black;
+            /*swap iframe stuff*/
+            .gameWrapper {
+                position: relative;
+                /*width: 640px;
+                height: 640px;*/
+            }
+            .gameWrapper iframe{
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
 
-				
-				padding-right: 0;
-				margin-left: auto;
+            .sideWrapper {
+                position: relative;
+                /*width: 640px;
+                height: 640px;*/
+            }
+            .sideWrapper iframe{
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
 
-				
-				margin-top: 0;
-				margin-bottom: auto;
-			}
-
-			canvas {
-				display: block;
-			}
-			}
-		</style>
+        </style>
 	</head>
 	<body onload='init()'>
 		<!--<div id="debugBar"><p id="debug" style="color:black">...</p></div>-->
@@ -96,16 +104,7 @@
 				</div>
 
 				<div class="sidebar" id='juiceTog'>
-					<h4 style='text-align: center'>Values:</h4>
-					<p>Damage Taken: <ins id='taken'></ins></p>
-					<p>Damage Blocked: <ins id='blocked'></ins></p>
-					<p>Time Remaining: <ins id='time'></ins></p>
-					<!-- put juicy features here -->
-
-					Thirst Input: <input type="text" id="thirst" size="5" value="50">
-	      	<button onclick="updateHitReset()">Update</button>
-
-	      	<p></p>
+					
 	      	<button onclick="startGame()">Start</button>
 	      	
 	      	<button onclick="">Attack</button>
