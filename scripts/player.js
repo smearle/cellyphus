@@ -132,6 +132,7 @@ Player.prototype.act = function(newX, newY) {
         displayText(message);
         */
         this.cod = message;
+        this.dead = true;
     }
 }
 

@@ -481,6 +481,8 @@ function resetGame(){
 function startGame(){
     document.getElementById("titleScreen").style.display = "none";
     document.getElementById("startMenu").style.display = "none";
+    document.getElementById("deathScreen").style.display = "none";
+    document.getElementById("endMenu").style.display = "none";
     document.getElementById("gameSide").style.display = "block";
     document.getElementById("game").style.display = "block";
     resetGame();
@@ -527,6 +529,10 @@ function showDeathScreen(){
     document.getElementById("game").style.display = "none";
 
     document.getElementById("objCompPerc").innerHTML = "Objectives Completed:<br>" + objCompleted() + "%";
+    Game.log_display.drawText(0, 6, "");
+    Game.log_combat.drawText(0, 6, "");
+    let rtx = Game.resource_display.getContext("2d");
+    rtx.clearRect(0,0,Game.resource_display.width,Game.resource_display.height)
 }
 
 
