@@ -466,12 +466,14 @@ function resetGame(){
     localStorage.setItem("damageTaken", 0);
     localStorage.setItem("damageRegistered", false);
 
-    if(Game.game_mode == "real"){
-        Game.st = setTimeout(repeatStep, Game.tickPerSec);
-    }else{
-        clearTimeout(Game.st);
-        Game.st = 0;
-    }
+    //set to real-time or turn based time
+    if(localStorage.stepMode)
+        Game.game_mode = localStorage.stepMode;
+    else
+        localStorage.stepMode = Game.game_mode;
+
+    toggleGameMode(Game.game_mode);
+    document.getElementById("gameModeSelect").value = Game.game_mode;
 }
 
 
@@ -508,9 +510,11 @@ function toggleGameMode(v){
         clearTimeout(Game.st);
         Game.st = 0;
         document.getElementById("game_speed").disabled = true;
+        localStorage.stepMode = "turn";
     }else{
         Game.st = setTimeout(repeatStep, Game.tickPerSec);
         document.getElementById("game_speed").disabled = false;
+        localStorage.stepMode = "real";
     }
 }
 
