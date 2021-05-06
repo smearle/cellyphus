@@ -10,7 +10,7 @@ var Player = function(x, y) {
     this.health = 100;
     this.thirst = 100;
     this.hunger = 100;
-    this.seeds = 30;
+    this.seeds = 20;
     this.wood = 30;
     this.meat = 0;
 
@@ -64,10 +64,49 @@ Player.prototype.defend = function() //changes to defend minigame and registers 
 } 
 
 //calls main game loop
-Player.prototype.act = function() {
+Player.prototype.act = function(newX, newY) {
+    curr_tile = getTile(this._x, this._y);
+    if (curr_tile == tile_chars.BED) {
+        this.health = Math.min(this.maxHealth, this.health+1);
+    }
+    else {
+        this.hunger = Math.max(this.hunger-1, 0);
+        this.thirst = Math.max(this.thirst-1, 0);
+    }
+
+    //// PLAYER UPDATES
+
+    //test defend ->it shouldnt actually be here
+    this.defend();
+
+    // Move the player
+    this._x = newX;
+    this._y = newY;
+
+    //eat grass if on the tile
+    curr_tile = Game.map[this._x+","+player._y];
+    if (curr_tile == "gg") {
+        Game.log_display.drawText(0, 0, "You eat grass.")
+        this.hunger = Math.min(100, this.hunger + 25);
+        setTile(this._x, this._y, "..");
+        //drawTile(player._x, player._y);
+//      player.seeds += 1;
+        ateGrass = true;
+
+    }
+
+    //decrease player hunger, thirst, and health
+    if (this.hunger == 0 && this.thirst == 0) {
+        this.health = Math.max(0, this.health-1);
+    }
+    else {
+        this.health = Math.min(this.maxHealth, this.health+1);
+    }
+
+
     
 //  console.log('player tick');
-    if (this.getHealth() <= 0 || Game.player.getThirst() <= 0 || Game.player.getHunger() <= 0)
+    if (this.getHealth() <= 0 || this.getThirst() <= 0 || this.getHunger() <= 0)
     {
         var message = "You survived " + Game.days + " days. ";
         if (this.getHealth() <= 0)

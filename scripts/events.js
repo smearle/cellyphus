@@ -39,22 +39,27 @@ EventHandler.prototype.step = function(e) {
 
     // debug command for spawning a new frog
     if (code == 78) {
-        console.log("spwan a frwag (debug)");
+        console.log("spwan a frog (debug)");
         Game.spawnFrog();
         validUpdate = true;
     }
 
     // we need to detect [b]ed before [b]uild
     // TODO: refactor this harder forever
-    if (await_build_select) {
+    if (await_build_select && [82,87,68,70,66].indexOf(code) != -1) {
         return buildSelect(code);
+    }
+    if (await_harvest_select) {
+        return harvestSelect(code);
+    }
+    if (await_attack_select) {
+        return attackSelect(code);
     }
 
     // detect "[b]uild" command
     if (code == 66) {
-        Game.log_display.drawText(0, 0, "Build: [w]all, [d]oor, [f]ire, [b]ed.");
+        Game.log_display.drawText(0, 0, "Build: [w]all, [d]oor, [f]ire, [b]ed, b[r]idge.");
         await_build_select = true;
-
 
         //open build menu
         changeSection("build",document.getElementById("buildTab"));
@@ -62,6 +67,24 @@ EventHandler.prototype.step = function(e) {
         // go ahead and wait for another event
         return
     };
+
+    // detect "[h]arvest" command
+    if (code == 72) {
+        Game.log_display.drawText(0, 0, "Harvest: [g]rass, [t]ree.");
+        await_harvest_select = true;
+
+        //open build menu
+//      changeSection("harvest",document.getElementById("harvestTab"));
+
+        // go ahead and wait for another event
+        return
+    };
+
+    if (code == 75) {
+        Game.log_display.drawText(0, 0, "Attack: [g]cut [t]chop.");
+        await_attack_select = true;
+        return
+    }
 
     // detect "[m]ap" command
     if (code == 77) {
@@ -172,6 +195,12 @@ EventHandler.prototype.step = function(e) {
                 //direct build location on the map
                 if (await_build_location) {
                     orderBuild(next_build, x, y)
+                }
+                else if (await_harvest_location) {
+                    orderHarvest(next_harvest, x, y)
+                }
+                else if (await_attack_location) {
+                    orderAttack(next_attack, x, y);
                 }
             }
 
@@ -286,34 +315,7 @@ EventHandler.prototype.step = function(e) {
     if(!validUpdate)
         return;
 
-    //// PLAYER UPDATES
-
-    //test defend ->it shouldnt actually be here
-    player.defend();
-
-    // Move the player
-    player._x = newX;
-    player._y = newY;
-
-    //eat grass if on the tile
-    curr_tile = Game.map[player._x+","+player._y];
-    if (curr_tile == "gg") {
-        Game.log_display.drawText(0, 0, "You eat grass.")
-        player.hunger = Math.min(100, player.hunger + 25);
-        setTile(player._x, player._y, "..");
-        //drawTile(player._x, player._y);
-        player.seeds += 1;
-        ateGrass = true;
-
-    }
-
-    //decrease player hunger, thirst, and health
-    if (player.hunger == 0 && player.thirst == 0) {
-        player.health--;
-    }
-    player.hunger = Math.max(player.hunger-1, 0);
-    player.thirst = Math.max(player.thirst-1, 0);
-
+    Game.player.act(newX, newY);
 
     ///// AI UPDATES
     let fgs = Game.frog_manager.frogs;
@@ -335,16 +337,17 @@ EventHandler.prototype.step = function(e) {
         Game.days += 1;
 
         //generate new barbarians on a new day if king is not dead
-        if (Game.gameTicks % Game.ticksPerDay == 0 && Game.kingBarbarian != null) {
+        if (Game.king_barbarian != null) {
             let newBarbie = Game._createBarbarian();
             Game.barbarians.push(newBarbie); 
+            barbarians[barb_id] = newBarbie;
             Game.scheduler.add(newBarbie, true);
         }
     }
 
 
     // Tick grass and tree cellular automata
-    Game.simulateGrass()
+    Game.simulateGrass();
 
 
     //redraw everything and update map for ROT.Js and status messages

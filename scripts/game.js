@@ -14,6 +14,7 @@ var tileSet = document.createElement("img");
 
 tileSet.src = "tileset.png";
 
+
 const tile_chars = {
     WALL: "|",
     REDWALL: "||",
@@ -34,7 +35,7 @@ const tile_chars = {
 }
 
 
-frog_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.BARBARIAN, tile_chars.REDBRICK]
+frog_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.BARBARIAN, tile_chars.REDBRICK]
 barb_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.DOOR, tile_chars.BARBARIAN, tile_chars.REDBRICK]
 player_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.BARBARIAN, tile_chars.REDBRICK]
 
@@ -83,6 +84,7 @@ var Game = {
     blackLodge: null,
 
     gameTicks: 0,
+    curState: "start",
     ticksPerDay: 150,
     days: 0,
     tickPerSec: 800,
@@ -91,7 +93,7 @@ var Game = {
     //combatSubjects: {"None": 1, "Barbarian": 2},
     combatTarget: null,
 
-    init: function() {
+    setup:function(){
         ///  top console  ///
         this.display = new ROT.Display(display_options);
 
@@ -107,6 +109,10 @@ var Game = {
 
         this.log_combat = new ROT.Display({width:42, height:8, fontSize:14})
         document.getElementById("consoleArea").appendChild(this.log_combat.getContainer());
+    },
+
+    init: function() {
+        
 
         /// game area  ///
         //document.body.appendChild(this.display.getContainer());
@@ -169,14 +175,8 @@ var Game = {
                     dirt++;
 
                 next_state = census(ix, iy);
-    //          console.log(next_state);
                 if (next_state == CAstates.GRASS) {
-    //          live.push(key);
                     live.push([ix, iy]);
-    //            live.push({
-    //              x: ix,
-    //              y: iy,
-    //            });
                 }
                 else if (next_state == CAstates.TREE) {
                     trees.push([ix, iy]);
@@ -281,10 +281,16 @@ var Game = {
         this.frog_manager = new FrogManager();
 //      this.spawnFrog();
 //      this.spawnFrog();
-        this.barbarians.push(this._createBarbarian());      
-        this.barbarians.push(this._createBarbarian());   
+        barb_0 = this._createBarbarian()
+        this.barbarians.push(barb_0);      
+        barbarians[barb_id] = barb_0
+        barb_1 = this._createBarbarian()
+        this.barbarians.push(barb_1);   
+        barbarians[barb_id] = barb_1
         this.king_barbarian = this._createKingBarbarian();
         this.barbarians.push(this.king_barbarian);
+        barbarians[barb_id] = this.king_barbarian
+
 
         this.freeCells = freeCells;
     },
@@ -300,14 +306,17 @@ var Game = {
 
     //generate a barbarian from the black (red) lodge
     _createBarbarian: function(){
-        return new Barbarian(this.blackLodge._x, this.blackLodge._y,this.blackLodge);
+        // TODO: reset this at some point I guess to prevent overflow
+        barb_id ++;
+        return new Barbarian(this.blackLodge._x, this.blackLodge._y, this.blackLodge, barb_id);
     },
 
     //create special king barbarian
     _createKingBarbarian: function(){
+        barb_id++;
         let x = this.blackLodge._x;
         let y = this.blackLodge._y-3;
-        return new Barbarian(x,y,{_x:x, _y:y},true);
+        return new Barbarian(x,y,{_x:x, _y:y}, barb_id, true);
     },
 
     _generateBoxes: function(freeCells) {
@@ -353,11 +362,12 @@ var Game = {
     },
 
     _generateGrass: function(freeCells) {
-        for (var i=0;i<130;i++) {
+        for (var i=0;i<170;i++) {
             var index = Math.floor(ROT.RNG.getUniform() * freeCells.length);
             var key = freeCells.splice(index, 1)[0];
             this.map[key] = "gg";
         }
+        this.simulateGrass();
     },
 
     _drawWholeMap: function() {
@@ -434,8 +444,22 @@ function resetStep(){
     Game.st = setTimeout(repeatStep, Game.tickPerSec);
 }
 
-window.onload = function(){
+//start screens
+function startUpScreen(){
+    Game.setup();
+    Game.curState = "start";
+    document.getElementById("titleScreen").style.display = "block";
+    document.getElementById("startMenu").style.display = "block";
+    document.getElementById("gameSide").style.display = "none";
+    document.getElementById("game").style.display = "none";
+    drawTitle();
+    startTitleAnim();
+}
+
+//reset map and properties
+function resetGame(){
     Game.init();
+    Game.curState = "game";
     
     localStorage.clear();
     localStorage.setItem("damageTaken", 0);
@@ -447,6 +471,21 @@ window.onload = function(){
         clearTimeout(Game.st);
         Game.st = 0;
     }
+}
+
+
+//start the entire game (main game)
+function startGame(){
+    document.getElementById("titleScreen").style.display = "none";
+    document.getElementById("startMenu").style.display = "none";
+    document.getElementById("gameSide").style.display = "block";
+    document.getElementById("game").style.display = "block";
+    resetGame();
+}
+
+function quickStartGame(){
+    Game.setup();
+    startGame();
 }
 
 //change game mode
@@ -477,6 +516,9 @@ window.addEventListener("keydown", function(e) {
     if((e.keyCode == 13) && (editingName)){
         document.activeElement.blur();
         editingName = false;
+    }
+    if((e.keyCode == 27)){
+        cancelBuild();
     }
 }, false);
 

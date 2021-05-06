@@ -11,6 +11,7 @@ const build_items = {
     FIRE: "fire",
     BED: "bed",
     BRIDGE: "bridge",
+    SEED: "grass",
 }
 
 var next_build = build_items.NONE
@@ -69,7 +70,7 @@ function orderBuild(item, x, y) {
     for (i = 0; i < Game.frog_manager.frogs.length; i ++) {
         frog = Game.frog_manager.frogs[i];
         // Look for idle frog
-        if (!(frog.isBuilding) && (getTile(x, y) == "..")) {
+        if (frog.wandering && (getTile(x, y) == "..")) {
           //console.log('assign frog');
            // Set the frog's targets
            orderFrogBuild(frog, item, x, y);
@@ -92,13 +93,13 @@ function cancelBuild(){
 	await_build_select = false;
     await_build_location = false;
     resetBuildItemsColor();
+    ghostBuild.active = false;
 }
 
-// TODO use this item name?
+// TODO use this item name? <--- WHAT?
 function orderFrogBuild(frog, item, x, y) {
    frog._x_t = x;
    frog._y_t = y
-// console.log('order frog build');
    frog.isBuilding = true;
    frog.wandering = false;
 }
