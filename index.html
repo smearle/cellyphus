@@ -16,6 +16,37 @@
                 image-rendering: pixelated;
                 image-rendering: crisp-edges;
             }
+
+            /* tutorial/start/end screen */
+
+            #titleScreen{
+                width:640px;
+                height:640px;
+                border:2px solid #000000;
+            }
+
+            #startMenu{
+                background-color:#678658;
+                width:332px;
+                height:640px;
+                border:2px solid black;
+                font-family:'Dwarf';
+            }
+            .tutImg{
+                width:120px;
+                padding-left:10px;
+                padding-right: 10px;
+            }
+
+            .tutTxt{
+                width:150px;
+                margin: auto 0px auto 5px;
+                padding: 20px 0px;
+            }
+
+
+            /* main game screen */
+
             #consoleArea{
                 /*
                 width:100%;
@@ -30,12 +61,6 @@
                 width:68%;
                 height:100%;
                 */
-                width:640px;
-                height:640px;
-                border:2px solid #000000;
-            }
-
-            #titleScreen{
                 width:640px;
                 height:640px;
                 border:2px solid #000000;
@@ -56,13 +81,6 @@
             }
 
             /* side bar */
-
-            #startMenu{
-                background-color:#678658;
-                width:332px;
-                height:640px;
-                border:2px solid black;
-            }
 
             .sidebar{
                 /*
@@ -225,8 +243,7 @@
         </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
-    <!--<body onload='startUpScreen()'>-->
-    <body onload='quickStartGame()'>
+    <body onload='whichGameMode()'>
         <!-- title+coordinate display (hidden) -->
         <div  style='display: none'>
             <h1>Cellyphus</h1>
@@ -246,15 +263,44 @@
                     <canvas id='game' style='display:none'>Game canvas</canvas>
                     <!-- <canvas id='attackGame' style='display:none'>Browser not supported for HMTL5</canvas>
                     <canvas id='defenseGame' style='display:none'>Browser not supported for HMTL5</canvas> -->
-                    <iframe id="combatDefense" src="combat_combined/combat_defense2/index.html" style="width:980px;height:640px;border:none;display:none" title="Iframe Example"></iframe>
+                    <iframe id="combatDefense" src="combat_combined/combat_defense2/index.html" style="width:980px;height:640px;border:none;visibility: hidden" title="Iframe Example"></iframe>
                     
                 </div>
 
                 <!-- side menu -->
                 <div class="sideWrapper" style='display: grid'>
+                    <!-- START MENU SIDEBAR -->
                     <div id='startMenu'>
-                        <button onclick='startGame()'>Start</button>
+                        <div style='width:200px;border:1px dashed black;margin:auto;margin-top:10px;color:white;font-size:24px;padding:10px'>Controls</div>
+                        <div style='margin:auto;margin-top:15px;' width='300'>
+                            <div style='display:flex'>
+                                <div class='tutImg' ><img src='imgs/tutorial/wasd.png' width='100' height='60'></div>
+                                <div class='tutTxt'>Move Player<br>Combat</div>
+                            </div>
+                            <div style='display:flex'>
+                                <div class='tutImg' width='120' height='60'><img src='imgs/tutorial/pointer.png' width='20' height='30' style='margin: auto 0px auto 5px;padding: 20px 0px;'></div>
+                                <div class='tutTxt'>Command Frogs<br>Select UI</div>
+                            </div>
+                            <div style='display:flex'>
+                                <div class='tutImg'><img src='imgs/tutorial/v_key.png' width='65' height='60'></div>
+                                <div class='tutTxt'>Plant Seeds</div>
+                            </div>
+                            <div style='display:flex'>
+                                <div class='tutImg'><img src='imgs/tutorial/b_key.png' width='65' height='60'></div>
+                                <div class='tutTxt'>Build Menu Shortcut</div>
+                            </div>
+                            <div style='display:flex'>
+                                <div class='tutImg'><img src='imgs/tutorial/esc_key.png' width='90' height='60'></div>
+                                <div class='tutTxt'>Cancel Build</div>
+                            </div>
+                            <div style='display:flex'>
+                                <div class='tutImg'><img src='imgs/tutorial/m_key.png' width='65' height='60'></div>
+                                <div class='tutTxt'>Minimap Shortcut</div>
+                            </div>
+                        </div>
+                        <button onclick='startGame()' style="width:100px;height:50px;font-size:20px;font-family:'Dwarf';background-color:green;color:white;margin-top: 50px">Start</button>
                     </div>
+                    <!-- GAME SIDEBAR -->
                     <div id="gameSide" style='display:none'>
                         <!-- mode tabs -->
                         <div id='drops'>

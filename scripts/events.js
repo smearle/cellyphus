@@ -259,8 +259,8 @@ EventHandler.prototype.step = function(e) {
                 newX = player._x;
                 newY = player._y;
 
-                // Q to plant seeds
-                if (code == 81) {
+                // V to plant seeds
+                if (code == 86) {
                     if (Game.player.seeds > 0) {
                         Game.log_display.drawText(0, 0, "You plant seeds.");
                         var[seed_x, seed_y] = getPlantTile(player._x, player._y);

@@ -454,6 +454,7 @@ function startUpScreen(){
     document.getElementById("game").style.display = "none";
     drawTitle();
     startTitleAnim();
+    Game.log_display.drawText(12, 1, "A game by:\n\nSam Earle\nDaniel Tse\nM Charity");
 }
 
 //reset map and properties
@@ -488,6 +489,14 @@ function quickStartGame(){
     startGame();
 }
 
+function whichGameMode(){
+    if(localStorage.startType && localStorage.startType == "game"){
+        quickStartGame();
+    }else{
+        startUpScreen();
+    }
+}
+
 //change game mode
 function toggleGameMode(v){
     Game.game_mode = v;
@@ -519,6 +528,15 @@ window.addEventListener("keydown", function(e) {
     }
     if((e.keyCode == 27)){
         cancelBuild();
+    }
+    if((e.keyCode == 191)){
+        if(localStorage.startType && localStorage.startType == "title"){
+            alert("Switching to game mode on start");
+            localStorage.startType = "game"
+        }else{
+            alert("Switching to title mode on start");
+            localStorage.startType = "title"
+        }
     }
 }, false);
 
