@@ -97,16 +97,17 @@ function initializeObjectives(){
 
 	addObjective("Change your name", function(){return changedName;}, function(){healthReward(0.05)}, "imgs/tutorial/change_name.gif");
 	addObjective("Walk around", function(){return player.moved;}, function(){seedReward(20)}, "imgs/tutorial/walk_around.gif");
-	addObjective("Eat grass", function(){return ateGrass;}, function(){seedReward(10)}, "imgs/tutorial/eat_grass.gif");
+	addObjective("Eat grass", function(){return ateGrass;}, function(){seedReward(20)}, "imgs/tutorial/eat_grass.gif");
 	addObjective("Drink water", function(){return drankWater;}, function(){seedReward(10)}, "imgs/tutorial/drink_water.gif");
 	addObjective("Plant Seeds", function(){return plantedSeeds;}, function(){woodReward(10)}, "imgs/tutorial/plant_seeds.gif");
 	addObjective("Order a frog to build something", function(){return built_something;}, function(){woodReward(20)},"imgs/tutorial/order_build.gif");
 	addObjective("Build a house", function(){return false;}, function(){woodReward(25)},"imgs/tutorial/build_house.gif");
 	addObjective("Start a fire", function(){return setFire;}, function(){seedReward(20)},"imgs/tutorial/fire.gif");
+	addObjective("Create a new frog minion", function(){return spawnedFrog;}, function(){meatReward(7)},"imgs/tutorial/placeholder.gif");
 	addObjective("Survive 3 days", function(){return Game.days >= 3;}, function(){healthReward(0.2)},"imgs/tutorial/3days.gif");
 	addObjective("Have 3 frogs", function(){return Game.frog_manager.frogs.length >= 3;}, function(){healthReward(0.2)},"imgs/tutorial/placeholder.gif");
 	addObjective("Kill a barbarian", function(){return deadBarbie;}, function(){healthReward(0.2)},"imgs/tutorial/placeholder.gif");
-	addObjective("Enter the barbarian base", function(){return playerInBase;}, function(){meatReward(5)},"imgs/tutorial/placeholder.gif");
+	addObjective("Enter the barbarian base", function(){return playerInBase;}, function(){meatReward(10)},"imgs/tutorial/placeholder.gif");
 	addObjective("Kill the king barbarian", function(){return Game.king_barbarian == null;}, function(){enemyWin()},"imgs/tutorial/placeholder.gif"); 
 	addObjective("Cover the 20% of the map with foliage", function(){return grassLand20;}, function(){islandWin()},"imgs/tutorial/placeholder.gif");
 }
