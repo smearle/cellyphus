@@ -149,6 +149,9 @@ var Game = {
 
         //set objectives
         initializeObjectives();
+
+        //clear log
+        txtLog = [];
     },
 
     //TODO: factor this out, into vegetation code
@@ -275,24 +278,26 @@ var Game = {
         this._generateBlackLodge();
         this._drawWholeMap();
 
-        this.player = this._createBeing(Player, freeCells);
+        
         //this.mouse = this._createBeing(Cow, freeCells);
         //this.hawk = this._createBeing(Hawk, freeCells);
         this.frog_manager = new FrogManager();
 //      this.spawnFrog();
 //      this.spawnFrog();
+        this.barbarians = [];
         barb_0 = this._createBarbarian()
         this.barbarians.push(barb_0);      
-        barbarians[barb_id] = barb_0
+        barbarians[barb_id] = barb_0;
         barb_1 = this._createBarbarian()
         this.barbarians.push(barb_1);   
-        barbarians[barb_id] = barb_1
+        barbarians[barb_id] = barb_1;
         this.king_barbarian = this._createKingBarbarian();
         this.barbarians.push(this.king_barbarian);
-        barbarians[barb_id] = this.king_barbarian
-
+        barbarians[barb_id] = this.king_barbarian;
 
         this.freeCells = freeCells;
+
+        this.player = this._createBeing(Player, freeCells);
     },
 
     _createBeing: function(what, freeCells) {
@@ -447,6 +452,9 @@ function resetStep(){
 //start screens
 function startUpScreen(){
     Game.setup();
+    titleScreen();
+}
+function titleScreen(){
     Game.curState = "start";
     document.getElementById("titleScreen").style.display = "block";
     document.getElementById("startMenu").style.display = "block";
@@ -486,6 +494,7 @@ function startGame(){
     document.getElementById("gameSide").style.display = "block";
     document.getElementById("game").style.display = "block";
     resetGame();
+    stopTitleAnim();
 }
 
 function quickStartGame(){

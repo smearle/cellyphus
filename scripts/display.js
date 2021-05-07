@@ -503,7 +503,7 @@ function selectBuildDiv(code,r){
 
 	//set build item
 	buildSelect(code)
-	displayText('Build ' + r.innerHTML.toUpperCase() + '. Select location.');
+	//displayText('Build ' + r.innerHTML.toUpperCase() + '. Select location.');
 }
 
 //reset colors of build item tabs

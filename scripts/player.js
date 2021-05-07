@@ -110,7 +110,7 @@ Player.prototype.act = function(newX, newY) {
 
     
 //  console.log('player tick');
-    if (!this.immortal && this.getHealth() <= 0 || this.getThirst() <= 0 || this.getHunger() <= 0)
+    if (!this.immortal && (this.getHealth() <= 0 || this.getThirst() <= 0 || this.getHunger() <= 0))
     {
         var message = "You survived " + Game.days + " days.";
         if (this.getHealth() <= 0)
