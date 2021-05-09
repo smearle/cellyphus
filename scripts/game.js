@@ -537,6 +537,27 @@ function titleScreen(){
 
 //reset map and properties
 function resetGame(){
+    //remove frog divs
+    if(Game.frog_manager != null){
+        let old_frogs = Game.frog_manager.frogs;
+        for(let f=1;f<old_frogs.length;f++){
+            document.getElementById("frog"+f).remove();
+        }
+    }
+    
+
+    //reset properties
+    Game.map = {};
+    Game.engine = null;
+    Game.player = null;
+    Game.event_handler = null;
+    Game.frog_manager = null;
+    Game.barbarians = [];
+    Game.blackLodge = null;
+    Game.kingWall = null;
+    Game.days = 0;
+    Game.gameTicks = 0;
+
     Game.init();
     Game.curState = "game";
     
