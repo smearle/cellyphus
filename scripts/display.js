@@ -52,6 +52,9 @@ player4.src = "imgs/player_super_king.png";
 var kingBarb = new Image();
 kingBarb.src = "imgs/king.png";
 
+var kingWallSpr = new Image();
+kingWallSpr.src = "imgs/kingWall.png";
+
 //minimap icons
 var playerIcon = new Image();
 playerIcon.src = "imgs/sprites/player_icon.png";
@@ -402,6 +405,9 @@ function drawMain(){
 		overwriteChar(Game.player, player3, mapCtx);
 	else if(Game.king_barbarian == null && grassLand20)
 		overwriteChar(Game.player, player4, mapCtx);
+
+	if(Game.kingWall.intact)
+		overwriteChar(Game.kingWall,kingWallSpr,mapCtx)
 
 
 	//draw ghost build for hover mouse if active

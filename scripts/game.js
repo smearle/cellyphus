@@ -84,6 +84,7 @@ var Game = {
     frog_manager: null,
     barbarians: [],
     blackLodge: null,
+    kingWall:null,
 
     gameTicks: 0,
     curState: "start",
@@ -360,7 +361,7 @@ var Game = {
         let lodge = [
         [0,0,0,1,1,1,0,0,0],
         [0,0,0,1,0,1,0,0,0],
-        [1,1,1,1,1,1,1,1,1],
+        [1,1,1,1,2,1,1,1,1],
         [1,0,1,0,0,0,1,0,1],
         [1,0,1,0,0,0,1,0,1],
         [0,0,1,1,0,1,1,0,0],
@@ -371,6 +372,9 @@ var Game = {
                 let nkey = ((x+c)+","+(y+r));
                 if(lodge[r][c] == 1){
                     this.map[nkey] = tile_chars.REDBRICK;
+                }else if(lodge[r][c] == 2){
+                    this.map[nkey] = tile_chars.REDWALL;
+                    this.kingWall = {_x:x+c,_y:y+r,intact:true}
                 }else{
                     this.map[nkey] = tile_chars.DIRT;
                 }
