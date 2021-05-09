@@ -41,15 +41,35 @@ var mtx = minimapCanvas.getContext("2d");
 miniCanvas.width = 332;
 miniCanvas.height = 300;
 
+//overwrite sprites
+var player2 = new Image();
+player2.src = "imgs/player_barb_king.png";
+var player3 = new Image();
+player3.src = "imgs/player_grass_king.png";
+var player4 = new Image();
+player4.src = "imgs/player_super_king.png";
+
+var kingBarb = new Image();
+kingBarb.src = "imgs/king.png";
+
 //minimap icons
 var playerIcon = new Image();
 playerIcon.src = "imgs/sprites/player_icon.png";
+var playerBarbKingIcon = new Image();
+playerBarbKingIcon.src = "imgs/sprites/player_king1.png";
+var playerGrassKingIcon = new Image();
+playerGrassKingIcon.src = "imgs/sprites/player_king2.png";
+var playerSuperKingIcon = new Image();
+playerSuperKingIcon.src = "imgs/sprites/player_super_king.png";
 
 var frogIcon = new Image();
 frogIcon.src = "imgs/sprites/frog_icon.png";
 
 var barbIcon = new Image();
 barbIcon.src = "imgs/sprites/barbarian_icon.png";
+
+var kingIcon = new Image();
+kingIcon.src = "imgs/sprites/king2.png"
 
 //get transparent blueprint tiles
 var alphaImgs = {};
@@ -350,12 +370,12 @@ function drawMain(){
 	panCamera();
     
     // Draw all the blueprints as transparent versions of the items that are planned for building
+    mapCtx = gameMapCanvas.getContext("2d");
     for (let key in build_orders) {
         [x, y] = key.split(",");
         img = alphaImgs[build_orders[key]];
         tw = Game.display.getOptions().tileWidth;
         th = Game.display.getOptions().tileHeight;
-        mapCtx = gameMapCanvas.getContext("2d");
         mapCtx.drawImage(img, x*tw, y*th, tw, th);
     }
 
@@ -363,7 +383,6 @@ function drawMain(){
         [x, y] = key.split(",");
         img = harvestImgs[harvest_orders[key]];
         tw = Game.display.getOptions().tileWidth;
-        mapCtx = gameMapCanvas.getContext("2d");
         mapCtx.drawImage(img, x*tw, y*th, tw, th);
     }
 
@@ -372,6 +391,17 @@ function drawMain(){
 	ctx.drawImage(gameMapCanvas,
 		camera.x,camera.y,canvas.width/camera.zoom,canvas.height/camera.zoom,
 		0,0,canvas.width,canvas.height);
+
+	//draw any overwritten sprites
+	if(Game.king_barbarian != null)
+		overwriteChar(Game.king_barbarian,kingBarb, mapCtx);
+		//king player
+	if(Game.king_barbarian == null && !grassLand20)
+		overwriteChar(Game.player, player2, mapCtx);
+	else if(Game.king_barbarian != null && grassLand20)
+		overwriteChar(Game.player, player3, mapCtx);
+	else if(Game.king_barbarian == null && grassLand20)
+		overwriteChar(Game.player, player4, mapCtx);
 
 
 	//draw ghost build for hover mouse if active
@@ -382,6 +412,13 @@ function drawMain(){
 	}
 
 	//ctx.restore();
+}
+
+//overwrite the character coordinates with this sprite
+function overwriteChar(c,o,tx){
+	if(o.width > 0){
+		tx.drawImage(o, 0,0,32,32,c._x*tw, c._y*th, tw,th);
+	}
 }
 
 // draw a tile on the main map
@@ -419,7 +456,16 @@ function drawMiniMap(){
 	mtx.drawImage(gameMapCanvas, 0,0,miniCanvas.width,miniCanvas.height);
 
 	//maybe add icons for the characters?
-	mtx.drawImage(playerIcon, 0,0,16,16, (Game.player._x*scw)-(iconSize/2), (Game.player._y*sch)-(iconSize/2), iconSize,iconSize);
+	let pi = playerIcon;
+	if(Game.king_barbarian == null && !grassLand20)
+		pi = playerBarbKingIcon;
+	else if(Game.king_barbarian != null && grassLand20)
+		pi = playerGrassKingIcon;
+	else if(Game.king_barbarian == null && grassLand20)
+		pi = playerSuperKingIcon;
+	mtx.drawImage(pi, 0,0,16,16, (Game.player._x*scw)-(iconSize/2), (Game.player._y*sch)-(iconSize/2), iconSize,iconSize);
+	
+
 	let frogs = Game.frog_manager.frogs;
 	for(let f=0;f<frogs.length;f++){
 		let frog = frogs[f];
@@ -428,7 +474,7 @@ function drawMiniMap(){
 	let barbs = Game.barbarians
 	for(let b=0;b<barbs.length;b++){
 		let barb = barbs[b];
-		mtx.drawImage(barbIcon, 0,0,16,16, (barb._x*scw)-(iconSize/2), (barb._y*sch)-(iconSize/2), iconSize,iconSize);
+		mtx.drawImage((barb.is_king ? kingIcon : barbIcon), 0,0,16,16, (barb._x*scw)-(iconSize/2), (barb._y*sch)-(iconSize/2), iconSize,iconSize);
 	}
 
 

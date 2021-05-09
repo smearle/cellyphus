@@ -74,13 +74,18 @@ function healthReward(f){
 }
 
 function enemyWin(){
-	console.log("KING OF THE ISLAND!")
-	//do something special
+	console.log("HERO OF THE ISLAND!");
+	meatReward(100);
+	document.getElementById("player").getElementsByTagName("img")[0].src = (grassLand20 ? "imgs/player_super_king.png" : "imgs/player_barb_king.png");
+	document.getElementById("player").getElementsByClassName("charName")[0].style.color = (grassLand20 ? "#910FAB" : "#E32608");
 }
 
 function islandWin(){
-	console.log("GREEN THUMB!")
-	//do something special
+	console.log("SAVIOR OF THE ISLAND");
+	seedReward(100);
+	woodReward(50);
+	document.getElementById("player").getElementsByTagName("img")[0].src = (Game.king_barbarian == null ? "imgs/player_super_king.png" : "imgs/player_grass_king.png");
+	document.getElementById("player").getElementsByClassName("charName")[0].style.color = (Game.king_barbarian == null ? "#910FAB" : "#29AB0F");
 }
 
 //create new objectives for the game on start
