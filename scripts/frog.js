@@ -31,6 +31,7 @@ var Frog = function(x, y) {
 }
 
 Frog.prototype.getSpeed = function() { return 100; }
+Frog.prototype.canMove = function(x,y){return !Game.anyAtPos(x,y);}
 
 
 Frog.prototype.act = function() {
@@ -130,8 +131,10 @@ Frog.prototype.act = function() {
             x = path[0][0];
             y = path[0][1];
             //Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
-            this._x = x;
-            this._y = y;
+            if(this.canMove(x,y)){
+                this._x = x;
+                this._y = y;
+            }
         }
     }
     //this._draw();

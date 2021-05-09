@@ -345,7 +345,7 @@ var Game = {
         this.kingWall.intact = false;
         let key = (this.kingWall._x+","+this.kingWall._y);
         this.map[key] = tile_chars.DIRT;
-    }
+    },
 
     _generateBoxes: function(freeCells) {
         for (var i=0;i<10;i++) {
@@ -437,6 +437,29 @@ var Game = {
         new_frog = this._createBeing(Frog, [x+","+y]);
         this.frog_manager.frogs.push(new_frog);
         addNewFrogUI(this.frog_manager.frogs.length-1);
+    },
+
+    //check if movable entities at current position
+    entityAtPos: function(e,x,y){
+        return e._x == x && e._y == y;
+    },
+    anyAtPos: function(x,y){
+        if(this.entityAtPos(this.player,x,y))
+            return true;
+
+        let frogs = this.frog_manager.frogs;
+        for(let f=0;f<frogs.length;f++){
+            if(this.entityAtPos(frogs[f],x,y))
+                return true;
+        }
+
+        let barbs = this.barbarians;
+        for(let b=0;b<barbs.length;b++){
+            if(this.entityAtPos(barbs[b],x,y))
+                return true;
+        }
+
+        return false;
     }
 };
 
