@@ -636,6 +636,16 @@ function shieldCollided(shield) {
 
 //////////////////  RENDER FUNCTIONS  ////////////////////
 
+//change continue button to be visible
+function contVisible() {
+  document.getElementById("cont").style.visibility = "visible";
+}
+
+//change continue button to be hidden
+function contHidden() {
+  document.getElementById("cont").style.visibility = "hidden";
+}
+
 //draw circular timer and sector to denote time
 function drawTimer() {
 	let arcStart = 1.5 * Math.PI;
@@ -798,6 +808,7 @@ function step() {
     expected += interval;
     if (timer.timeRemaining <= 0) {
     	paused = true;
+    	contVisible();
     }  
 
     if (timer.timeRemaining != 0) {
@@ -805,10 +816,15 @@ function step() {
     }
 }
 
+function goToAtk() {
+	localStorage.setItem("combatType", "atk");
+}
+
 //////////////   GAME LOOP FUNCTIONS   //////////////////
 
 //game initialization function
 function init(){
+	contHidden();
 
 	//initialize upper right shield corners
 	[shieldUR.x, shieldUR.y] = getDiagXY(player.x, player.y, (shieldUR.buffer + shieldUR.height / 2), 1, -1);
@@ -889,7 +905,12 @@ function main(){
   	// console.log("dmg stored: " + localStorage.getItem("damageTaken"));
   	
   	//gameVals.damageTaken = 0;
-  } 
+  }
+
+  var combatState = localStorage.getItem("combatType"); 
+  if (combatState.localeCompare("atk") == 0) {
+		contHidden();
+	}
 
 	//collision mask should be at same location as ai
 	ai.collisionMask.pos.x = ai.x;

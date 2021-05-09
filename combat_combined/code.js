@@ -24,13 +24,13 @@ function swapCanvases(){
 }
 
 function showAtk(){
-	//localStorage.setItem("combatType", "atk");
+	localStorage.setItem("combatType", "atk");
 	atkFrame.style.visibility='visible';
   defFrame.style.visibility='hidden';
 }
 
 function showDef(){
-	//localStorage.setItem("combatType", "def");
+	localStorage.setItem("combatType", "def");
 	atkFrame.style.visibility='hidden';
   defFrame.style.visibility='visible';
 }
@@ -39,13 +39,12 @@ function showMinigame(){
 	console.log("call num: " + num);
 	num += 1;
 	var combatState = localStorage.getItem("combatType"); 
-	console.log(combatState + "1");
-	if (combatState.localeCompare("atk")) {
-		console.log(combatState + "2");
+	if (combatState.localeCompare("atk") == 0) {
+		console.log("atk" + combatState + "2");
 		showAtk();
 	}
-	else if (combatState.localeCompare("def")) {
-		console.log(combatState + "2");
+	else if (combatState.localeCompare("def") == 0) {
+		console.log("def" + combatState + "2");
 		showDef();
 	}
 }
@@ -53,8 +52,8 @@ function showMinigame(){
 var num = 0;
 
 function main(){
-	//requestAnimationFrame(main);
-	//showMinigame();	
+	requestAnimationFrame(main);
+	showMinigame();	
 }
 main();
-var game = setInterval(showMinigame, 1000);
+//var game = setInterval(showMinigame, 1000);

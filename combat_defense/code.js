@@ -636,6 +636,8 @@ function shieldCollided(shield) {
 
 //////////////////  RENDER FUNCTIONS  ////////////////////
 
+
+
 //draw circular timer and sector to denote time
 function drawTimer() {
 	let arcStart = 1.5 * Math.PI;
