@@ -340,6 +340,13 @@ var Game = {
         return new Barbarian(x,y,{_x:x, _y:y}, barb_id, true);
     },
 
+    //destroy the king wall
+    _destroyWall:function(){
+        this.kingWall.intact = false;
+        let key = (this.kingWall._x+","+this.kingWall._y);
+        this.map[key] = tile_chars.DIRT;
+    }
+
     _generateBoxes: function(freeCells) {
         for (var i=0;i<10;i++) {
             var index = Math.floor(ROT.RNG.getUniform() * freeCells.length);
