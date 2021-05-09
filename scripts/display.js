@@ -129,7 +129,7 @@ var objDivShown = false;
 
 //var displayText = function(str) {
 function displayText(str) {
-    Game.log_display.drawText(0, 6, str);
+    Game.log_display.drawText(0, 3, str);
     addToLog(str)
 }
 
@@ -406,7 +406,7 @@ function drawMain(){
 	else if(Game.king_barbarian == null && grassLand20)
 		overwriteChar(Game.player, player4, mapCtx);
 
-	if(Game.kingWall.intact)
+	if(Game.kingWall && Game.kingWall.intact)
 		overwriteChar(Game.kingWall,kingWallSpr,mapCtx)
 
 
@@ -469,18 +469,18 @@ function drawMiniMap(){
 		pi = playerGrassKingIcon;
 	else if(Game.king_barbarian == null && grassLand20)
 		pi = playerSuperKingIcon;
-	mtx.drawImage(pi, 0,0,16,16, (Game.player._x*scw)-(iconSize/2), (Game.player._y*sch)-(iconSize/2), iconSize,iconSize);
+	mtx.drawImage(pi, 0,0,16,16, (Game.player._x*scw)-(iconSize/3), (Game.player._y*sch)-(iconSize/2), iconSize,iconSize);
 	
 
 	let frogs = Game.frog_manager.frogs;
 	for(let f=0;f<frogs.length;f++){
 		let frog = frogs[f];
-		mtx.drawImage(frogIcon, 0,0,16,16, (frog._x*scw)-(iconSize/2), (frog._y*sch)-(iconSize/2), iconSize,iconSize);
+		mtx.drawImage(frogIcon, 0,0,16,16, (frog._x*scw)-(iconSize/3), (frog._y*sch)-(iconSize/2), iconSize,iconSize);
 	}
 	let barbs = Game.barbarians
 	for(let b=0;b<barbs.length;b++){
 		let barb = barbs[b];
-		mtx.drawImage((barb.is_king ? kingIcon : barbIcon), 0,0,16,16, (barb._x*scw)-(iconSize/2), (barb._y*sch)-(iconSize/2), iconSize,iconSize);
+		mtx.drawImage((barb.is_king ? kingIcon : barbIcon), 0,0,16,16, (barb._x*scw)-(iconSize/3), (barb._y*sch)-(iconSize/2), iconSize,iconSize);
 	}
 
 

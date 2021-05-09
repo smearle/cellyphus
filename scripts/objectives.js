@@ -61,21 +61,26 @@ function objCompleted(){
 
 function meatReward(n){
 	Game.player.meat += n;
+	displayText("Gained [" + n + "] meat!");
 }
 function seedReward(n){
 	Game.player.seeds += n;
+	displayText("Gained [" + n + "] seeds!");
 }
 function woodReward(n){
 	Game.player.wood += n;
+	displayText("Gained [" + n + "] wood!");
 }
 function healthReward(f){
 	Game.player.maxHealth *= (1+f);
 	Game.player.health = Game.player.maxHealth;
+	displayText("Gained [" + Math.round(f*100) + "] more maximum health!");
 }
 
 function enemyWin(){
 	console.log("HERO OF THE ISLAND!");
 	meatReward(100);
+	healthReward(0.5);
 	document.getElementById("player").getElementsByTagName("img")[0].src = (grassLand20 ? "imgs/player_super_king.png" : "imgs/player_barb_king.png");
 	document.getElementById("player").getElementsByClassName("charName")[0].style.color = (grassLand20 ? "#910FAB" : "#E32608");
 }
@@ -84,6 +89,7 @@ function islandWin(){
 	console.log("SAVIOR OF THE ISLAND");
 	seedReward(100);
 	woodReward(50);
+	healthReward(0.5);
 	document.getElementById("player").getElementsByTagName("img")[0].src = (Game.king_barbarian == null ? "imgs/player_super_king.png" : "imgs/player_grass_king.png");
 	document.getElementById("player").getElementsByClassName("charName")[0].style.color = (Game.king_barbarian == null ? "#910FAB" : "#29AB0F");
 }
@@ -108,13 +114,13 @@ function initializeObjectives(){
 	addObjective("Order a frog to build something", function(){return built_something;}, function(){woodReward(20)},"imgs/tutorial/order_build.gif");
 	addObjective("Build a house", function(){return false;}, function(){woodReward(25)},"imgs/tutorial/build_house.gif");
 	addObjective("Start a fire", function(){return setFire;}, function(){seedReward(20)},"imgs/tutorial/fire.gif");
-	addObjective("Create a new frog minion", function(){return spawnedFrog;}, function(){meatReward(7)},"imgs/tutorial/placeholder.gif");
+	addObjective("Create a new frog minion", function(){return spawnedFrog;}, function(){meatReward(7)},"imgs/tutorial/minion.gif");
 	addObjective("Survive 3 days", function(){return Game.days >= 3;}, function(){healthReward(0.2)},"imgs/tutorial/3days.gif");
-	addObjective("Have 3 frogs", function(){return Game.frog_manager.frogs.length >= 3;}, function(){healthReward(0.2)},"imgs/tutorial/placeholder.gif");
-	addObjective("Kill a barbarian", function(){return deadBarbie;}, function(){healthReward(0.2)},"imgs/tutorial/placeholder.gif");
-	addObjective("Enter the barbarian base", function(){return playerInBase;}, function(){meatReward(10)},"imgs/tutorial/placeholder.gif");
-	addObjective("Kill the king barbarian", function(){return Game.king_barbarian == null;}, function(){enemyWin()},"imgs/tutorial/placeholder.gif"); 
-	addObjective("Cover the 20% of the map with foliage", function(){return grassLand20;}, function(){islandWin()},"imgs/tutorial/placeholder.gif");
+	addObjective("Have 3 frogs", function(){return Game.frog_manager.frogs.length >= 3;}, function(){healthReward(0.2)},"imgs/tutorial/3frogs.gif");
+	addObjective("Kill a barbarian", function(){return deadBarbie;}, function(){healthReward(0.2)},"imgs/tutorial/kill_barb.gif");
+	addObjective("Enter the barbarian base", function(){return playerInBase;}, function(){meatReward(10)},"imgs/tutorial/enter_base.gif");
+	addObjective("Kill the king barbarian", function(){return Game.king_barbarian == null;}, function(){enemyWin()},"imgs/tutorial/kill_king.gif"); 
+	addObjective("Cover 20% of the map with foliage", function(){return grassLand20;}, function(){islandWin()},"imgs/tutorial/grass20.gif");
 }
 
 

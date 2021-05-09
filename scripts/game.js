@@ -219,8 +219,8 @@ var Game = {
         //console.log("fire: " + flames.length)
 
         //spawn a new frog at the 7th flame
-        if(flames.length >= 7 && !arsonicFrogMade){
-            [x, y] = flames[6];
+        if(flames.length >= 5 && !arsonicFrogMade){
+            [x, y] = flames[4];
             Game.spawnFrogAt(x,y)
             arsonicFrogMade = true;
             displayText("A new frog is created from the ashes of the earth! @ (" + x + "," + y +")");
@@ -234,7 +234,7 @@ var Game = {
         let foliage = live.length + trees.length;
         let non_foliage = dirt;
 
-        //console.log(foliage + " / " + non_foliage + " = " + (foliage/non_foliage))
+        console.log(foliage + " / " + non_foliage + " = " + (foliage/non_foliage))
         //20% of the map covered in foliage
         if(foliage/non_foliage >= 0.2){
             grassLand20 = true;
@@ -337,7 +337,14 @@ var Game = {
         barb_id++;
         let x = this.blackLodge._x;
         let y = this.blackLodge._y-3;
-        return new Barbarian(x,y,{_x:x, _y:y}, barb_id, true);
+        let kb = new Barbarian(x,y,{_x:x, _y:y}, barb_id, true);
+
+        //modify properties
+        kb.fullHealth = 200;
+        kb.health = 200;
+        kb.power = 10;
+
+        return kb;
     },
 
     //destroy the king wall
@@ -399,6 +406,18 @@ var Game = {
             this.map[key] = "gg";
         }
         this.simulateGrass();
+    },
+
+    _newGrass: function(){
+        for (x=0; x<map_width; x++) {
+            for (y=0; y<map_height; y++) {
+                var key = x+","+y;
+                if (this.map[key] == ".." && Math.random()>=0.9){
+                    this.map[key] = tile_chars.GRASS;
+                }
+            }
+        }
+        displayText("The frog gods have gifted you with bountiful grass!")
     },
 
     _drawWholeMap: function() {

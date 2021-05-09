@@ -40,6 +40,7 @@ Player.prototype.getHunger = function() { return this.hunger; }
 Player.prototype.getThirst = function() { return this.thirst; }
 Player.prototype.takeDamage = function(dmg) { this.health -= dmg; }
 Player.prototype.healDamage = function(dmg) { this.health += dmg; }
+Player.prototype.canMove = function(x,y){return !Game.anyAtPos(x,y);}
 
 //combat functions
 Player.prototype.punchChance = function() //percent chance to hit punch
@@ -106,8 +107,11 @@ Player.prototype.act = function(newX, newY) {
     this.defend();
 
     // Move the player
-    this._x = newX;
-    this._y = newY;
+    if(this.canMove(newX,newY)){
+        this._x = newX;
+        this._y = newY;
+    }
+    
 
     //eat grass if on the tile
     curr_tile = Game.map[this._x+","+player._y];
@@ -126,7 +130,7 @@ Player.prototype.act = function(newX, newY) {
         if((Game.gameTicks % 2 == 0))
             this.health = Math.max(0, this.health-1);
     }
-    else {
+    else if((Game.gameTicks % 10 == 0)){
         this.health = Math.min(this.maxHealth, this.health+1);
     }
 

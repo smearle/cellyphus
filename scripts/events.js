@@ -162,6 +162,10 @@ EventHandler.prototype.step = function(e) {
             let i = Game.barbarians.indexOf(Game.combatTarget);
             if (i > -1){
                 Game.barbarians.splice(i,1);
+
+                //ding dong the bitch is dead
+                if(Game.combatTarget == Game.king_barbarian)
+                    Game.king_barbarian = null;
             }
             Game.combatTarget = null;
             deadBarbie = true;
@@ -354,8 +358,14 @@ EventHandler.prototype.step = function(e) {
 
         Game.player.seeds += 7;     //some seeds from the gods
         displayText("A new day ("  + Game.days + ") has started! The frog gods gift you 7 seeds for your endurance.")
+
+
     }
 
+    //new grass on the island
+    if((Game.days > 0) && (Game.days % 3 == 0) && (Game.gameTicks % Game.ticksPerDay == 1)){
+        Game._newGrass();
+    }
 
     // Tick grass and tree cellular automata
     Game.simulateGrass();

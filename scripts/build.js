@@ -21,8 +21,8 @@ const build_info = {
 	"wall": "Prevents movement from all characters",
 	"door" : "Only allows the player and frogs to enter",
 	"fire" : "For a bit of arson ;)",
-	"bed" : "Replenish health and pass time",
-	"bridge": "Walk on water.",
+	"bed" : "Replenish health",
+	"bridge": "Walk across water.",
 }
 
 const build_imgs = {}
