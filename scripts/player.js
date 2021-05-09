@@ -14,6 +14,10 @@ var Player = function(x, y) {
     this.health = 100;
     this.thirst = 100;
     this.hunger = 100;
+    this.thirstDecay = 0;
+    this.hungerDecay = 0;
+
+
     this.seeds = 20;
     this.wood = 30;
     this.meat = 0;
@@ -67,6 +71,24 @@ Player.prototype.defend = function() //changes to defend minigame and registers 
     localStorage.setItem("damageTaken", 0);
 } 
 
+//increase hunger by a certain rate
+Player.prototype.incHunger = function(rate) {
+    this.hungerDecay++;
+    if(this.hungerDecay >= rate){
+        this.hunger = Math.max(this.hunger-1, 0);
+        this.hungerDecay = 0;
+    }
+};
+
+//increase thirst by a certain rate
+Player.prototype.incThirst = function(rate){
+    this.thirstDecay++;
+    if(this.thirstDecay >= rate){
+        this.thirst = Math.max(this.thirst-1, 0);
+        this.thirstDecay = 0;
+    }
+}
+
 //calls main game loop
 Player.prototype.act = function(newX, newY) {
     curr_tile = getTile(this._x, this._y);
@@ -74,8 +96,8 @@ Player.prototype.act = function(newX, newY) {
         this.health = Math.min(this.maxHealth, this.health+1);
     }
     else {
-        this.hunger = Math.max(this.hunger-1, 0);
-        this.thirst = Math.max(this.thirst-1, 0);
+        this.incHunger(Math.ceil(Game.ticksPerDay*3/this.maxHunger));       //3 days to starvation
+        this.incThirst(Math.ceil((Game.ticksPerDay/2)/this.maxThirst));     //half a day to dehydration
     }
 
     //// PLAYER UPDATES
@@ -99,9 +121,10 @@ Player.prototype.act = function(newX, newY) {
 
     }
 
-    //decrease player hunger, thirst, and health
-    if (this.hunger == 0 && this.thirst == 0) {
-        this.health = Math.max(0, this.health-1);
+    //decrease player health if at quarter hunger or thirst every third tick
+    if (((this.hunger <= (this.maxHunger/4)) || (this.thirst <= (this.maxThirst/4)))) {
+        if((Game.gameTicks % 2 == 0))
+            this.health = Math.max(0, this.health-1);
     }
     else {
         this.health = Math.min(this.maxHealth, this.health+1);
@@ -110,7 +133,7 @@ Player.prototype.act = function(newX, newY) {
 
     
 //  console.log('player tick');
-    if (!this.immortal && this.getHealth() <= 0 || this.getThirst() <= 0 || this.getHunger() <= 0)
+    if (!this.immortal && (this.getHealth() <= 0 || this.getThirst() <= 0 || this.getHunger() <= 0))
     {
         var message = "You survived " + Game.days + " days.";
         if (this.getHealth() <= 0)
@@ -133,6 +156,10 @@ Player.prototype.act = function(newX, newY) {
         */
         this.cod = message;
         this.dead = true;
+
+        showDeathScreen();
+        clearTimeout(Game.st);
+        Game.st = 0;
     }
 }
 

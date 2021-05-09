@@ -7,6 +7,8 @@ var PLAYER_DEATH = false;
 
 var setFire = false;
 var grassLand20 = false;
+var spawnedFrog = false;
+var arsonicFrogMade = false;
 
 var map_width = 64;
 var map_height = 64;
@@ -35,7 +37,7 @@ const tile_chars = {
 }
 
 
-frog_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.BARBARIAN, tile_chars.REDBRICK]
+frog_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.BARBARIAN, tile_chars.REDBRICK]
 barb_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.PLAYER, tile_chars.WATER, tile_chars.DOOR, tile_chars.BARBARIAN, tile_chars.REDBRICK]
 player_impassable = [tile_chars.TREE, tile_chars.WALL, tile_chars.WATER, tile_chars.FROGMAN, tile_chars.BARBARIAN, tile_chars.REDBRICK]
 
@@ -149,6 +151,9 @@ var Game = {
 
         //set objectives
         initializeObjectives();
+
+        //clear log
+        txtLog = [];
     },
 
     //TODO: factor this out, into vegetation code
@@ -210,6 +215,19 @@ var Game = {
             var key = x+","+y;
             this.map[key] = tile_chars.FLAME;
         }
+        //console.log("fire: " + flames.length)
+
+        //spawn a new frog at the 7th flame
+        if(flames.length >= 7 && !arsonicFrogMade){
+            [x, y] = flames[6];
+            Game.spawnFrogAt(x,y)
+            arsonicFrogMade = true;
+            displayText("A new frog is created from the ashes of the earth! @ (" + x + "," + y +")");
+            //console.log("fire frog boy!")
+        }
+        else if(flames.length == 0){        //reset whether a new arson frog can be made
+            arsonicFrogMade = false;
+        }
 
         //add all together to determine ratio of foliage to dirt
         let foliage = live.length + trees.length;
@@ -227,17 +245,17 @@ var Game = {
 
     _generateCellMap: function() {
         var freeCells = [];
-        var map = new ROT.Map.Cellular(map_width, map_height, {
+        var m = new ROT.Map.Cellular(map_width, map_height, {
             born: [4, 5, 6, 7, 8],
             survive: [2, 3, 4, 5],
         })
-        map.randomize(0.9);
+        m.randomize(0.9);
         for (var i = 10; i>=0; i--) {
-            map.create(i ? null: this.display.DEBUG);
+            m.create(i ? null: this.display.DEBUG);
         }
         for (x=0; x<map_width; x++) {
             for (y=0; y<map_height; y++) {
-                if (!(map._map[x][y])) {
+                if (!(m._map[x][y])) {
                     var key = x+","+y;
                     freeCells.push(key);
                     this.map[key] = "..";
@@ -275,24 +293,26 @@ var Game = {
         this._generateBlackLodge();
         this._drawWholeMap();
 
-        this.player = this._createBeing(Player, freeCells);
+        
         //this.mouse = this._createBeing(Cow, freeCells);
         //this.hawk = this._createBeing(Hawk, freeCells);
         this.frog_manager = new FrogManager();
 //      this.spawnFrog();
 //      this.spawnFrog();
+        this.barbarians = [];
         barb_0 = this._createBarbarian()
         this.barbarians.push(barb_0);      
-        barbarians[barb_id] = barb_0
+        barbarians[barb_id] = barb_0;
         barb_1 = this._createBarbarian()
         this.barbarians.push(barb_1);   
-        barbarians[barb_id] = barb_1
+        barbarians[barb_id] = barb_1;
         this.king_barbarian = this._createKingBarbarian();
         this.barbarians.push(this.king_barbarian);
-        barbarians[barb_id] = this.king_barbarian
-
+        barbarians[barb_id] = this.king_barbarian;
 
         this.freeCells = freeCells;
+
+        this.player = this._createBeing(Player, freeCells);
     },
 
     _createBeing: function(what, freeCells) {
@@ -394,6 +414,7 @@ var Game = {
     },
 
     spawnFrog: function() {
+        spawnedFrog = true;
         freeCells = this._getFreeFrogSpawnCells();
         new_frog = this._createBeing(Frog, freeCells);
         this.frog_manager.frogs.push(new_frog);
@@ -401,7 +422,8 @@ var Game = {
     },
 
     spawnFrogAt: function(x, y) {
-        new_frog = new Frog(x, y);
+        spawnedFrog = true;
+        new_frog = this._createBeing(Frog, [x+","+y]);
         this.frog_manager.frogs.push(new_frog);
         addNewFrogUI(this.frog_manager.frogs.length-1);
     }
@@ -447,6 +469,9 @@ function resetStep(){
 //start screens
 function startUpScreen(){
     Game.setup();
+    titleScreen();
+}
+function titleScreen(){
     Game.curState = "start";
     document.getElementById("titleScreen").style.display = "block";
     document.getElementById("startMenu").style.display = "block";
@@ -486,6 +511,7 @@ function startGame(){
     document.getElementById("gameSide").style.display = "block";
     document.getElementById("game").style.display = "block";
     resetGame();
+    stopTitleAnim();
 }
 
 function quickStartGame(){
@@ -572,6 +598,11 @@ window.addEventListener("keydown", function(e) {
     if(e.keyCode == 220){
         Game.player.immortal = true;
         alert("You are blessed with immortality from the game dev gods!")
+    }
+
+    //inifnite seeds
+    if(e.keyCode == 190){
+        Game.player.seeds = 1000;
     }
 
 

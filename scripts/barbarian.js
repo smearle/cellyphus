@@ -41,8 +41,8 @@ Barbarian.prototype.act = function() {
         return;
     }
 
-    //strong enough to fight
-    if(this.health > 30){
+    //strong enough to fight - but a king never runs from a challenge
+    if(this.is_king || this.health > 30){
         //within range? chase the player or flee
         if(this.getDistance(Game.player) < this.radar){
             this.chase();

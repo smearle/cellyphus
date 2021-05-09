@@ -351,6 +351,9 @@ EventHandler.prototype.step = function(e) {
             barbarians[barb_id] = newBarbie;
             Game.scheduler.add(newBarbie, true);
         }
+
+        Game.player.seeds += 7;     //some seeds from the gods
+        displayText("A new day ("  + Game.days + ") has started! The frog gods gift you 7 seeds for your endurance.")
     }
 
 

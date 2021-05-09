@@ -503,7 +503,7 @@ function selectBuildDiv(code,r){
 
 	//set build item
 	buildSelect(code)
-	displayText('Build ' + r.innerHTML.toUpperCase() + '. Select location.');
+	//displayText('Build ' + r.innerHTML.toUpperCase() + '. Select location.');
 }
 
 //reset colors of build item tabs
@@ -583,6 +583,7 @@ function camFocusChar(b){
 	b.style.backgroundColor = "#ECCE0E";
 }
 
+//latin frog names based on ordinance
 function getFrogName(index){
 	let names = ["Primus", "Secondus", "Tertius", "Quartus", "Quintus", "Sextus", "Septimus", "Octonus", "Novemus", "Decemus"]
 	return (index < names.length ? names[index] : names[index%names.length] + " " + roman(Math.floor(index/names.length)));
@@ -594,6 +595,7 @@ function roman(n){
 	return num[n]
 }
 
+//adds a new clickable frog from the list to the index ui
 function addNewFrogUI(index){
 	let charDiv = document.getElementById("stats");
 
@@ -714,6 +716,7 @@ grave.src = "imgs/gravestone.png";
 function drawDeath(){
 	dtx.clearRect(0,0,deathCanvas.width,deathCanvas.height);
 
+	//background
 	dtx.fillStyle = "#000";
 	dtx.fillRect(0,0,deathCanvas.width,deathCanvas.height);
 
