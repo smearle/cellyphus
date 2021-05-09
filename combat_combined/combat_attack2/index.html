@@ -1,82 +1,40 @@
 <html>
 	<head>
 		<title>Cellyphus Attack</title>
-		<style>
-			body{
-				/*background-color:#ffffff;*/
-				background-color: black;
-				text-align: center;
-			}
-			#juiceTog{
-				/*width:340px;
-				height:640px;*/
-				color: #ffffff;
-				/*background-color: #dedede;*/
-				width:300px;
-				height:600px;
-				border:2px solid black;
-
-				padding-left: 0;
-				padding-right: 0;
-				margin-left: 4px;
-			  margin-right: auto;
-
-			  text-align: left;
-			  padding-left:5px;
-				margin-top: 0;
-				margin-bottom: auto;
-			}
-			#juiceTog input{
-				margin-right: 7px;
-			}
-			#game{
-				/*width:640px;
-				height:640px;*/
-				width:600px;
-				height:600px;
-				border:2px solid black;
-
-				
-				padding-right: 0;
-				margin-left: auto;
-
-				
-				margin-top: 0;
-				margin-bottom: auto;
-			}
-
-			canvas {
-				display: block;
-			}
-			}
-		</style>
+		<link rel="stylesheet" type="text/css" href="combatStyles.css">
 	</head>
 	<body onload='init()'>
 		<!--<div id="debugBar"><p id="debug" style="color:black">...</p></div>-->
-		<div id='container' style='display: flex'>
+		<div id='gameArea'>
 
 			<canvas id='game'>Browser not supported for HMTL5</canvas>
 
-			<div id='juiceTog'>
-				<h4 style='text-align: center'>Values:</h4>
-				<p>Damage Dealt: <ins id='score'></ins></p>
-				<p>Time Remaining: <ins id='time'></ins></p>
-				<!-- put juicy features here -->
+			<div class="sideWrapper" style='display: grid'>
+				<div class="sidebar" id='juiceTog'>
+					<h4 style='text-align: center'>Stats:</h4>
+					<p>Damage Dealt: <ins id='score'></ins></p>
+					<p>Time Remaining: <ins id='time'></ins></p>
+					<!-- put juicy features here -->
 
-				Hunger Input: <input type="text" id="hunger" size="5" value="50">
-      	<button onclick="updateSize()">Update</button>
 
-      	<p></p>
-      	<button onclick="startGame()">Start</button>
-      	<button onclick="">Defend</button>
+					Hunger Input: <input type="text" id="hunger" size="5" value="50">
+					<button onclick="updateSize()" class="gameStartBtns">Update</button>
+					<p></p>
+	      	
+				</div>
 
-				<!-- select/deselect all button -->
-				<div style='text-align: center;margin-top: 50px'>
-
+				<div class="sidebar" id='juiceTog'>
+					
+	      	<button onclick="startGame()" class="gameStartBtns">Attack</button>
+	      	
+	      	<button onclick="" class="gameStartBtns">Heal</button>
 				</div>
 			</div>
+
 			
 		</div>
+
+	
 		
 		<script src="code.js"></script>
 	</body>

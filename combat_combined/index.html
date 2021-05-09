@@ -1,78 +1,29 @@
 <html>
 	<head>
-		<title>Cellyphus Defense</title>
+		<title>Cellyphus Combat Combined</title>
 		<style>
-			body{
-				background-color:#ffffff;
-				/*background-color: black;*/
-				text-align: center;
+			*{
+			  margin: 0;
+			  padding: 0;
 			}
 
-			#container{
-        width:980px;
-        height:756px;
-        margin-left: auto;
-        margin-right:auto;
-
-      }
-
-      #gameArea{
-        display: flex;
-        width:980px;
-        height:640px;
-        border: 2px solid black
-      }
-			
-			#juiceTog{
-				/*width:340px;
-				height:640px;*/
-				color: #ffffff;
-				/*background-color: #dedede;*/
-				width:300px;
-				height:600px;
-				border:2px solid black;
-
-				padding-left: 0;
-				padding-right: 0;
-				margin-left: 4px;
-			  margin-right: auto;
-
-			  text-align: left;
-			  padding-left:5px;
-				margin-top: 0;
-				margin-bottom: auto;
-			}
-			#juiceTog input{
-				margin-right: 7px;
-			}
-			#game{
-				/*width:640px;
-				height:640px;*/
-				width:600px;
-				height:600px;
-				border:2px solid black;
-
-				
-				padding-right: 0;
-				margin-left: auto;
-
-				
-				margin-top: 0;
-				margin-bottom: auto;
-			}
-
-			canvas {
-				display: block;
-			}
-			}
+			#gameArea{
+				position:relative;
+				width: 980px;
+    		height: 645px;
+    	}
+			#atkFrame{position:absolute;}
+			#defFrame{position:absolute;}
 		</style>
 	</head>
-	<body onload='init()'>
+	<body onload="init()">
 
 		<div id='container'>
 
 			<div id='gameArea'>
-				<iframe id="combatDefense" src="combat_defense2/index.html" style="width:980px;height:640px;border:none;" title="Iframe Example"></iframe>
+				<iframe id="defFrame" src="combat_defense2/index.html" style="width:985px;height:648px;border:none;" title="defense game"></iframe>
+				<iframe id="atkFrame" src="combat_attack2/index.html" style="width:985px;height:648px;border:none;" title="attack game"></iframe>
+				
 			</div>
 
 			<!-- <canvas id='game'>Browser not supported for HMTL5</canvas>
@@ -89,10 +40,12 @@
       	<p></p>
       	<button onclick="startGame()">Start</button>
 			</div> -->
-
-			
+			<button onclick="swapCanvases()">Swap Canvas Visibilities</button>
+			<button onclick="showAtk()">Swap to Attack</button>
+			<button onclick="showDef()">Swap to Defense</button>
 		</div>
-		<button onclick="">Attack</button>
-		<script src="sat.js"></script>
+		<!-- <button onclick="">Attack</button> -->
+		
+				
 		<script src="code.js"></script>
 	</body>
