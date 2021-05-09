@@ -308,6 +308,16 @@ function collided(){
 
 //////////////////  RENDER FUNCTIONS  ////////////////////
 
+//change continue button to be visible
+function contVisible() {
+  document.getElementById("cont").style.visibility = "visible";
+}
+
+//change continue button to be hidden
+function contHidden() {
+  document.getElementById("cont").style.visibility = "hidden";
+}
+
 //draw circular timer and sector to denote time
 function drawTimer() {
 	let arcStart = 1.5 * Math.PI;
@@ -469,12 +479,17 @@ function step() {
     	player.x = 30;
     	player.y = 30;
     	paused = true;
+    	contVisible();
     }  
 
     if (timer.timeRemaining != 0) {
     	setTimeout(step, Math.max(0, interval - dt)); // take into account drift
     }
 
+}
+
+function goToDef() {
+	localStorage.setItem("combatType", "def");
 }
 
 //////////////   GAME LOOP FUNCTIONS   //////////////////
@@ -568,7 +583,12 @@ function main(){
   	player.x = 30;
   	player.y = 30;
   	paused = true;
-  }  
+  } 
+
+  var combatState = localStorage.getItem("combatType"); 
+  if (combatState.localeCompare("def") == 0) {
+		contHidden();
+	}
 
 	currShakeTime = (new Date).getTime();
 	if (currShakeTime < endShakeTime) {
