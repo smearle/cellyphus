@@ -363,6 +363,14 @@ EventHandler.prototype.step = function(e) {
             Game.barbarians.push(newBarbie); 
             barbarians[barb_id] = newBarbie;
             Game.scheduler.add(newBarbie, true);
+
+            //add another on the second day to make up for the lack of barbarians on the first day
+            if(Game.days == 1){
+                let newBarbie2 = Game._createBarbarian();
+                Game.barbarians.push(newBarbie2); 
+                barbarians[barb_id] = newBarbie2;
+                Game.scheduler.add(newBarbie2, true);
+            }
         }
 
         Game.player.seeds += 7;     //some seeds from the gods

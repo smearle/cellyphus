@@ -67,6 +67,13 @@ kingBarb.src = "imgs/king.png";
 var kingWallSpr = new Image();
 kingWallSpr.src = "imgs/kingWall.png";
 
+//highlight sprites
+var playHighL = new Image();
+playHighL.src = "imgs/player_highlight.png";
+
+var frogHighL = new Image();
+frogHighL.src = "imgs/frog_highlight.png";
+
 //minimap icons
 var playerIcon = new Image();
 playerIcon.src = "imgs/sprites/player_icon.png";
@@ -306,6 +313,7 @@ function render(){
 //switches focus to a point clicked on the minimap
 function camFocusPt(p){
 	camera.focus = {_x:p[0], _y:p[1]};
+	camera.focusChar = null;
 	panCamera();
 
 	//set highlight
@@ -313,6 +321,8 @@ function camFocusPt(p){
 	for(let i =0;i<icons.length;i++){
 		icons[i].style.backgroundColor = "#ffffff00";
 	}
+
+
 }
 
 //move the camera 
@@ -428,6 +438,13 @@ function drawMain(){
 		ctx.drawImage(ghostBuild.img, ghostBuild.x*tw, ghostBuild.y*th, tw,th);
 		ctx.globalAlpha = 1.0;
 	}
+
+	//sprite highlight
+	if(camera.focusChar == Game.player && playHighL.width > 0){
+		overwriteChar(camera.focusChar,playHighL,mapCtx)
+	}
+	else if(camera.focusChar != null && frogHighL.width > 0)
+		overwriteChar(camera.focusChar,frogHighL,mapCtx)
 
 	//ctx.restore();
 }
@@ -546,6 +563,8 @@ function changeSection(sec,tab){
 
 		document.getElementById("stats").style.display = "none";
 		document.getElementById("tutorial").style.display = "block";
+
+		cancelObjTab();
 	}
 
 }
@@ -626,14 +645,18 @@ function camFocusChar(b){
 	let ent = Game.player;
 
 	//player
-	if(b.id == "player")
+	if(b.id == "player"){
 		ent = Game.player;
+		camera.focusChar = Game.player;
+	}
 
 	//get frog in the array of frogs
-	else if(b.id.includes("frog")){
+	else if(b.id && b.id.includes("frog")){
 		let fi = parseInt(b.id.replace("frog",""));
-		if(fi < Game.frog_manager.frogs.length)
+		if(fi < Game.frog_manager.frogs.length){
 			ent = Game.frog_manager.frogs[fi];
+			camera.focusChar = Game.frog_manager.frogs[fi];
+		}
 	}
 
 	camera.focus = ent;

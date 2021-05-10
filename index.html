@@ -65,7 +65,7 @@
                 font-family:'Dwarf';
                 background-color:green;
                 color:white;
-                margin-top: 50px
+                margin-top: 10px
             }
 
             /* main game screen */
@@ -287,7 +287,7 @@
                     <canvas id='deathScreen' style='display:none'>end screen</canvas>
                     <!-- <canvas id='attackGame' style='display:none'>Browser not supported for HMTL5</canvas>
                     <canvas id='defenseGame' style='display:none'>Browser not supported for HMTL5</canvas> -->
-                    <iframe id="combatDefense" src="combat_combined/index.html" style="width:1020px;height:650px;border:none;visibility: hidden" title="Iframe Example"></iframe>
+                    <iframe id="combatDefense" src="combat_combined/combat_index.html" style="width:1020px;height:650px;border:none;visibility: hidden" title="Iframe Example"></iframe>
                     
                 </div>
 
@@ -300,6 +300,10 @@
                             <div style='display:flex'>
                                 <div class='tutImg' ><img src='imgs/tutorial/wasd.png' width='100' height='60'></div>
                                 <div class='tutTxt'>Move Player<br>Combat</div>
+                            </div>
+                            <div style='display:flex'>
+                                <div class='tutImg'><img src='imgs/tutorial/space_key.png' width='100' height='60'></div>
+                                <div class='tutTxt'>Wait Turn</div>
                             </div>
                             <div style='display:flex'>
                                 <div class='tutImg' width='120' height='60'><img src='imgs/tutorial/pointer.png' width='20' height='30' style='margin: auto 0px auto 5px;padding: 20px 0px;'></div>
@@ -321,6 +325,7 @@
                                 <div class='tutImg'><img src='imgs/tutorial/m_key.png' width='65' height='60'></div>
                                 <div class='tutTxt'>Minimap Shortcut</div>
                             </div>
+                            
                         </div>
                         <button onclick='startGame()' class='gameStartBtns'>Start</button>
                     </div>
@@ -342,7 +347,7 @@
                             <div class='tabs' onclick='changeSection("build",this)' id='buildTab'>Build</div>
                             <div class='tabs' onclick='changeSection("obj",this)' id='objTab'>Objectives</div>
                             <div class='tabs' onclick='changeSection("log",this)' id='logTab'>Log</div>
-                            <div class='tabs' onclick='changeSection("settings",this)' id='settingsTab'>Settings</div>
+                            <div class='tabs' onclick='changeSection("settings",this)' id='settingsTab'>Settings<br>Controls</div>
                         </div>
 
                         <!-- minimap and build menu -->
@@ -387,7 +392,46 @@
                                     </div>
                                     <div style='display: table-row'>
                                         <div style='display: table-cell;width:100px'>Game Mode: </div>
-                                        <div style='display: table-cell'><select onchange='toggleGameStep(this.value)' id='gameModeSelect'><option value='real'>RealTime</option><option value='turn'>Turn Only</option></select></div>
+                                        <div style='display: table-cell'><select onchange='toggleGameStep(this.value)' id='gameModeSelect'><option value='turn'>Turn Only</option><option value='real'>RealTime</option></select></div>
+                                    </div>
+
+                                </div>
+                                <br>
+                                <div style='display: table'>
+                                    <div style='display: table-row'>
+                                        <b>-- Controls --</b><br>
+                                    </div>
+                                    <div style='display: table-row'>
+                                        <div style='display: table-cell'>WASD</div>
+                                        <div style='display: table-cell'>Move / Combat</div>
+                                    </div>
+                                    <div style='display: table-row'>
+                                        <div style='display: table-cell'>Space</div>
+                                        <div style='display: table-cell'>Next turn</div>
+                                    </div>
+                                    <div style='display: table-row'>
+                                        <div style='display: table-cell'>LMB</div>
+                                        <div style='display: table-cell'>Command frogs / Select UI</div>
+                                    </div>
+                                    <div style='display: table-row'>
+                                        <div style='display: table-cell'>V</div>
+                                        <div style='display: table-cell'>Plant Seeds</div>
+                                    </div>
+                                    <div style='display: table-row'>
+                                        <div style='display: table-cell'>H</div>
+                                        <div style='display: table-cell'>Harvest Seeds</div>
+                                    </div>
+                                    <div style='display: table-row'>
+                                        <div style='display: table-cell'>B</div>
+                                        <div style='display: table-cell'>Build shortcut</div>
+                                    </div>
+                                    <div style='display: table-row'>
+                                        <div style='display: table-cell'>M</div>
+                                        <div style='display: table-cell'>Minimap shortcut</div>
+                                    </div>
+                                    <div style='display: table-row'>
+                                        <div style='display: table-cell'>Esc</div>
+                                        <div style='display: table-cell'>Cancel Build</div>
                                     </div>
                                 </div>
                             </div>

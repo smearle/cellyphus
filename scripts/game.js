@@ -91,7 +91,7 @@ var Game = {
     ticksPerDay: 150,
     days: 0,
     tickPerSec: 800,
-    game_mode: 'real',
+    game_mode: 'turn',
     st : 0,
     //combatSubjects: {"None": 1, "Barbarian": 2},
     combatTarget: null,
@@ -301,12 +301,14 @@ var Game = {
 //      this.spawnFrog();
 //      this.spawnFrog();
         this.barbarians = [];
+        /* no barbarians on first day
         barb_0 = this._createBarbarian()
         this.barbarians.push(barb_0);      
         barbarians[barb_id] = barb_0;
         barb_1 = this._createBarbarian()
         this.barbarians.push(barb_1);   
         barbarians[barb_id] = barb_1;
+        */
         this.king_barbarian = this._createKingBarbarian();
         this.barbarians.push(this.king_barbarian);
         barbarians[barb_id] = this.king_barbarian;
@@ -530,6 +532,8 @@ function titleScreen(){
     document.getElementById("startMenu").style.display = "block";
     document.getElementById("gameSide").style.display = "none";
     document.getElementById("game").style.display = "none";
+    document.getElementById("deathScreen").style.display = "none";
+    document.getElementById("endMenu").style.display = "none";
     drawTitle();
     startTitleAnim();
     Game.log_display.drawText(12, 1, "A game by:\n\nSam Earle\nDaniel Tse\nM Charity");
@@ -574,6 +578,9 @@ function resetGame(){
 
     toggleGameStep(Game.game_mode);
     document.getElementById("gameModeSelect").value = Game.game_mode;
+
+    camera.focusChar = Game.player;
+    blinkObjTab();
 }
 
 
@@ -624,6 +631,7 @@ function toggleGameStep(v){
 //show death screen for the player with stats
 function showDeathScreen(){
     Game.curState = "end";
+    cancelObjTab();
     document.getElementById("deathScreen").style.display = "block";
     document.getElementById("endMenu").style.display = "block";
     document.getElementById("gameSide").style.display = "none";
