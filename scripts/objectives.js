@@ -162,3 +162,18 @@ function hideTutorialGif(){
 	clearTimeout(ot);
 	ot = 0;
 }
+
+//make the objective tab blink to get the player's attention
+var blot = 0;
+var bi = 0;
+function blinkObjTab(){
+    cancelObjTab();
+	blot = setInterval(function(){bi++;document.getElementById("objTab").style.backgroundColor = (bi % 2 == 0 ? "#1FF406" : "#efefef")},400)
+}
+function cancelObjTab(){
+	clearInterval(blot);
+	blot = 0;
+	bi = 0;
+	document.getElementById("objTab").style.backgroundColor = "#efefef";
+
+}
