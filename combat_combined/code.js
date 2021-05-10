@@ -9,7 +9,6 @@ swapCanvases();
 };*/
 
 function init(){
-	console.log("init");
 	localStorage.setItem("combatType", "atk");
 }
 
@@ -36,15 +35,12 @@ function showDef(){
 }
 
 function showMinigame(){
-	console.log("call num: " + num);
 	num += 1;
 	var combatState = localStorage.getItem("combatType"); 
 	if (combatState.localeCompare("atk") == 0) {
-		console.log("atk" + combatState + "2");
 		showAtk();
 	}
 	else if (combatState.localeCompare("def") == 0) {
-		console.log("def" + combatState + "2");
 		showDef();
 	}
 }

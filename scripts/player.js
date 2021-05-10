@@ -67,7 +67,7 @@ Player.prototype.defend = function() //changes to defend minigame and registers 
 {
     localStorage.setItem("damageRegistered", true);
     let dmg =  localStorage.getItem("damageTaken");
-    console.log("damage: " + dmg); 
+    //console.log("damage: " + dmg); 
     this.takeDamage(dmg);
     localStorage.setItem("damageTaken", 0);
 } 
@@ -103,8 +103,8 @@ Player.prototype.act = function(newX, newY) {
 
     //// PLAYER UPDATES
 
-    //test defend ->it shouldnt actually be here
-    this.defend();
+    /*//test defend ->it shouldnt actually be here
+    this.defend();*/
 
     // Move the player
     if(this.canMove(newX,newY)){

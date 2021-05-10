@@ -482,7 +482,8 @@ function step() {
     	contVisible();
 
     	//LEFT OFF HERE
-    	localStorage.set("damageDealt", gameVals.damageDealt);
+    	console.log("over: " + gameVals.damageDealt);
+    	localStorage.setItem("damageDealt", gameVals.damageDealt);
     }  
 
     if (timer.timeRemaining != 0) {

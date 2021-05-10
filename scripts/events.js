@@ -108,6 +108,15 @@ EventHandler.prototype.step = function(e) {
 
 
     if (Game.combatTarget != null) {
+        showCombat();
+
+        //register damage dealt
+        Game.combatTarget.health -= localStorage.getItem("damageDealt");
+
+        //reset damage counter to 0
+        localStorage.setItem("damageDealt", 0)
+
+
         //freeze movement
         rand = Math.floor(Math.random() * 101);
         did_combat = true;

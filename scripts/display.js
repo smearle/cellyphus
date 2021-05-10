@@ -2,7 +2,7 @@
 
 //swap between canvas and iframe
 var mainScreen=document.getElementById('gameArea');
-var defenseScreen=document.getElementById('combatDefense');
+var combatScreen=document.getElementById('combatDefense');
 
 var sideScreen=document.getElementById('gameSide');
 //var attackScreen=document.getElementById('combatAttack');
@@ -15,17 +15,29 @@ swapCanvases();
 function swapCanvases(){
   if(mainScreen.style.visibility=='visible'){
     mainScreen.style.visibility='hidden';
-    defenseScreen.style.visibility='visible';
-
     sideScreen.style.visibility='hidden';
-    //attackScreen.style.visibility='visible';
+    combatScreen.style.visibility='visible';
+
   }else{
     mainScreen.style.visibility='visible';
-    defenseScreen.style.visibility='hidden';
-
     sideScreen.style.visibility='visible';
-    //attackScreen.style.visibility='hidden';
+    combatScreen.style.visibility='hidden';
+
   }
+}
+
+function showMain(){
+	//localStorage.setItem("combatType", "atk");
+	mainScreen.style.visibility='visible';
+  sideScreen.style.visibility='visible';
+  combatScreen.style.visibility='hidden';
+}
+
+function showCombat(){
+	//localStorage.setItem("combatType", "def");
+	mainScreen.style.visibility='hidden';
+  sideScreen.style.visibility='hidden';
+  combatScreen.style.visibility='visible';
 }
 
 //main game

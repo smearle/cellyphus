@@ -895,7 +895,7 @@ function main(){
   	paused = true;
 
   	//store damage taken
-  	console.log("damageRegistered: " + localStorage.getItem("damageRegistered"));
+  	//console.log("damageRegistered: " + localStorage.getItem("damageRegistered"));
   	if(!localStorage.getItem("damageRegistered")) {
   		localStorage.setItem("damageTaken", gameVals.damageTaken);
   		console.log("dmg stored: " + localStorage.getItem("damageTaken"));
