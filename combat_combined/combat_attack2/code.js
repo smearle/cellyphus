@@ -440,7 +440,7 @@ function render(){
 //--------------------------------------------------------------------------------------------------------------
 	
 	//draw damage counters
-	document.getElementById("score").innerHTML = gameVals.damageDealt;
+	document.getElementById("dealt").innerHTML = gameVals.damageDealt;
 
 	// if(gameVals.damaged) {
 	// 	setTimeout(function(){
@@ -480,6 +480,9 @@ function step() {
     	player.y = 30;
     	paused = true;
     	contVisible();
+
+    	//LEFT OFF HERE
+    	localStorage.set("damageDealt", gameVals.damageDealt);
     }  
 
     if (timer.timeRemaining != 0) {
