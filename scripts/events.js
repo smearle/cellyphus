@@ -7,16 +7,13 @@ var drankWater = false;
 var plantedSeeds = false;
 var playerInBase = false;
 
-//main game loop
-EventHandler.prototype.step = function(e) {
-    //make inCombat boolean when barbarian comes
-    //
+//always step
+function combatStep(){
     if ((localStorage.enemyHP <= 0  || localStorage.combatType == 'esc') && combatScreen.style.visibility == 'visible') {
         Game.combatTarget.health = localStorage.getItem("enemyHP");
         console.log("we have escaped combat");
         Game.combatTarget.disengage = false;
         localStorage.combatType = 'atk';
-
 
         //enemy has died
         if (Game.combatTarget.getHealth() <= 0)
@@ -43,22 +40,27 @@ EventHandler.prototype.step = function(e) {
 
     }
 
-    else if (Game.combatTarget != null) {
-        
-        if(combatScreen.style.visibility == 'hidden') {
-            localStorage.setItem("enemyHP", Game.combatTarget.getHealth());
-            localStorage.setItem("playerHP", Game.player.getHealth());
-            localStorage.setItem("playerThirst", Game.player.getThirst());
-            localStorage.setItem("playerHunger", Game.player.getHunger());
-            showCombat();
-        }
+    else if (Game.combatTarget != null && combatScreen.style.visibility == 'hidden') {
+        localStorage.setItem("enemyHP", Game.combatTarget.getHealth());
+        localStorage.setItem("playerHP", Game.player.getHealth());
+        localStorage.setItem("playerThirst", Game.player.getThirst());
+        localStorage.setItem("playerHunger", Game.player.getHunger());
+        showCombat();
+        console.log("fight club!");
+    }
+}
 
-        return
+var combatInterval = setInterval(function(){
+    combatStep();
+},200)
+
+//main game loop
+EventHandler.prototype.step = function(e) {
+    //don't bother when in combat
+    if(combatScreen.style.visibility == 'visible'){
+        return;
     }
     
-    
-
-
     //ignore input while editing name
     if(editingName)
         return

@@ -111,7 +111,7 @@ Barbarian.prototype.chase = function(){
         if (Math.abs(this._x - x) > 1 || Math.abs(this._y - y) > 1) {
             //this._draw();
         }
-        else {
+        else if(Game.combatTarget == null) {
             Game.combatTarget = this;
     //      Game.engine.lock();
             //do text based combat here
