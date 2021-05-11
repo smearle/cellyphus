@@ -558,7 +558,7 @@ function changeSection(sec,tab){
 	}else if(sec == "build"){
 		document.getElementById("build_opt").style.display = "block";
     }else if(sec == "order"){
-        document.getElementById("order_opt").style.display = "order";
+        document.getElementById("order_opt").style.display = "block";
 	}else if(sec == "settings"){
 		document.getElementById("user_settings").style.display = "block";
 	}else if(sec == "log"){
@@ -606,13 +606,28 @@ function selectBuildDiv(code,r){
 }
 
 //select order item to build from the menu selection
-function selectOrderDiv(code,r){
-//resetOrderItemsColor();
+function selectOrderDiv(code,r,atk=false){
+    resetOrderItemsColor();
 	r.style.backgroundColor = "#ECCE0E";
-
-	//set build item
-//buildSelect(code)
+    console.log("selecting attak order? "+atk);
+	//set order item
+    if (atk){
+        attackSelect(code);
+    }
+    else {
+        harvestSelect(code);
+    }
 	//displayText('Build ' + r.innerHTML.toUpperCase() + '. Select location.');
+}
+
+//reset colors of build item tabs
+function resetOrderItemsColor(){
+	//set background color
+	let allTabs = document.getElementsByClassName("orderItem");
+	for(let t=0;t<allTabs.length;t++){
+		if(allTabs[t].id != "cancelOrder")
+			allTabs[t].style.backgroundColor = "#dedede";
+	}
 }
 
 //reset colors of build item tabs
@@ -624,7 +639,6 @@ function resetBuildItemsColor(){
 			allTabs[t].style.backgroundColor = "#dedede";
 	}
 }
-
 
 //TEXT LOGGER
 

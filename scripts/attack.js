@@ -14,15 +14,15 @@ var next_attack = attack_items.NONE
 
 //temp attack item descriptions
 const attack_info = {
-	"chop": "Chop the forest.",
-    "cut": "Cut the grass.",
+	"chop_atk": "Chop the enemy.",
+    "cut_atk": "Cut the enemy.",
 }
 
 const attackImgs = {}
 
 attack_to_img = {
-    "chop": "axe",
-    "cut": "sickle",
+    "chop_atk": "axe",
+    "cut_atk": "sickle",
 }
 
 for (let key in attack_info) {
