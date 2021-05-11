@@ -88,7 +88,7 @@ var player = {
 	speed : 3,
 	base_speed : 3,
 	dashSpeed : 8,
-	color : '#f00',
+	color : "#0D7612",
 	trail : [],
 	ct : 0,			//trail interval
 	pt : 200		//pause time (ms)
@@ -99,7 +99,7 @@ var ai = {
 	x : canvas.width * 3 / 6,
 	y : canvas.height * 1 / 5,
   size : 16,
-	color : "#0D7612",
+	color : '#f00',
 	vel : {x : 0, y : 0},
 	charged : true,				//whether in the middle of an attack
 	maxSpeed : player.speed*3,		//max speed to attack (dependent on player)
@@ -143,6 +143,15 @@ var paused = true;				//if players are currently paused
 
 //////////////////    GENERIC FUNCTIONS   ///////////////
 
+//returns true if enemy or player are dead
+function isGameOver(){
+	var playerHP = localStorage.getItem("playerHP");
+	var enemyHP = localStorage.getItem("enemyHP");
+	if (playerHP <= 0 || enemyHP <= 0) {
+		return true;
+	}
+	return false;
+}
 
 //checks if an element is in an array
 function inArr(arr, e){
@@ -153,9 +162,10 @@ function inArr(arr, e){
 
 //get health input
 function updateSize() {
-	var hunger = document.getElementById("hunger").value;
+	var hunger = localStorage.getItem("playerHunger");//document.getElementById("hunger").value;
 	var diff = player.maxSize - player.minSize;
 	var scale = diff * parseInt(hunger) / 100;
+
 
 	player.size = player.minSize + scale;
   //x = getOrderedQuestion(x);
@@ -439,9 +449,11 @@ function render(){
 
 //--------------------------------------------------------------------------------------------------------------
 	
-	//draw damage counters
+	//show damage stats
+	document.getElementById("playerHP").innerHTML = localStorage.getItem("playerHP") ? localStorage.getItem("playerHP") : 0;
+	document.getElementById("enemyHP").innerHTML = localStorage.getItem("enemyHP") ? localStorage.getItem("enemyHP") : 0;
 	document.getElementById("dealt").innerHTML = gameVals.damageDealt;
-
+	
 	// if(gameVals.damaged) {
 	// 	setTimeout(function(){
 	// 	  // Code to be executed after timeout goes here
@@ -458,7 +470,6 @@ function render(){
 	//ctx.fillText("Hello World", 10, 50);
 
 	//time
-	document.getElementById("time").innerHTML = gameVals.timeRemaining;
 	
 	ctx.restore();
 }
@@ -481,8 +492,6 @@ function step() {
     	paused = true;
     	contVisible();
 
-    	//LEFT OFF HERE
-    	console.log("over: " + gameVals.damageDealt);
     	//store damage dealt in current turn
     	localStorage.setItem("damageDealt", gameVals.damageDealt);
 
@@ -490,6 +499,9 @@ function step() {
     	var prevHP = localStorage.getItem("enemyHP");
     	var currHP = prevHP - gameVals.damageDealt;
     	localStorage.setItem("enemyHP", currHP);
+
+    	//checks if game is over
+    	//console.log(isGameOver());
     }  
 
     if (timer.timeRemaining != 0) {
@@ -506,12 +518,7 @@ function goToDef() {
 
 //game initialization function
 function init(){
-	//set checkbox onchange functions
-	let checkboxes = document.getElementsByClassName("featTog");
-	for(let c=0;c<checkboxes.length;c++){
-		checkboxes[c].onchange = function(){changeFeature(checkboxes[c].id)};
-	}
-	changeChecks('select');		//select all to start
+	
 
 	//uncomment to toggle target
 	//targetPlayer();
@@ -564,15 +571,6 @@ function changeFeature(feat){
 	}
 }
 
-//changes all the values of the feature toggles from on/off
-function changeChecks(selectType){
-	let val = (selectType == "deselect" ? false : true);
-	let checkboxes = document.getElementsByClassName("featTog");
-	for(let c=0;c<checkboxes.length;c++){
-		checkboxes[c].checked = val;
-		changeFeature(checkboxes[c].id)
-	}
-}
 
 //toggle ai movement
 function togAI(c){
@@ -586,6 +584,7 @@ function main(){
 
 	//panCamera();
 
+	updateSize();
 	render();
 
 	//stop movement when timer is done
@@ -750,7 +749,6 @@ function main(){
 	//var settings = "(" + ai.target.x + ", " + ai.target.y + ") - " + Math.round(dist(ai,ai.target)) + " - (" + ai.vel.x + ", " + ai.vel.y + ")";
 	var settings = paused;
 
-	//document.getElementById('debug').innerHTML = settings;
 }
 
 

@@ -111,14 +111,20 @@ EventHandler.prototype.step = function(e) {
         // change to turn only on combat
         toggleGameStep("turn");
 
+        console.log("event running");
+
         // pull enemy and player stats pre combat
+
         localStorage.setItem("enemyHP", Game.combatTarget.getHealth());
         localStorage.setItem("playerHP", Game.player.getHealth());
+        localStorage.setItem("playerThirst", Game.player.getThirst());
+        localStorage.setItem("playerHunger", Game.player.getHunger());
 
         //console.log("enemyHP: " + localStorage.getItem("enemyHP") + " playerHP: " + localStorage.getItem("playerHP"));
 
         //swap to combat window
         showCombat();
+        Game.combatTarget.health = localStorage.getItem("enemyHP");
 
 
 

@@ -66,7 +66,7 @@ var gameVals = {
 	damageTaken : 0,
 	damageBlocked: 0,
 	damaged : false,
-	damagePerHit : 3,
+	damagePerHit : 5,
 	//time
 }
 
@@ -254,6 +254,16 @@ var paused = true;				//if players are currently paused
 
 
 //////////////////    GENERIC FUNCTIONS   ///////////////
+
+//returns true if enemy or player are dead
+function isGameOver(){
+	var playerHP = localStorage.getItem("playerHP");
+	var enemyHP = localStorage.getItem("enemyHP");
+	if (playerHP <= 0 || enemyHP <= 0) {
+		return true;
+	}
+	return false;
+}
 
 //returns the horizontal and vertical components that make up diagonal given diagonal len
 //second and third parameter indicate direction of x and y respectively
@@ -527,7 +537,7 @@ function updateHitReset() {
 
 //send AI to random location on screen after some period of time
 function randomizeAILocation() {
-	let thirst = document.getElementById("thirst").value;
+	let thirst = localStorage.getItem("playerThirst");//document.getElementById("thirst").value;
 
 	//move ai position and collision mask
 	ai.x = Math.floor(Math.random() * (canvasCombat.width + 1));
@@ -789,10 +799,12 @@ function render(){
 		shieldCollided(shieldL);
 	}
 
-	//draw html text
+	//show damage stats
+	document.getElementById("playerHP").innerHTML = localStorage.getItem("playerHP") ? localStorage.getItem("playerHP") : 0;
+	document.getElementById("enemyHP").innerHTML = localStorage.getItem("enemyHP") ? localStorage.getItem("enemyHP") : 0;
 	document.getElementById("taken").innerHTML = gameVals.damageTaken;
 	document.getElementById("blocked").innerHTML = gameVals.damageBlocked;
-	document.getElementById("time").innerHTML = timer.timeRemaining;
+
 	ctxCombat.restore();
 }
 
@@ -817,6 +829,9 @@ function step() {
     	var prevHP = localStorage.getItem("playerHP");
     	var currHP = prevHP - gameVals.damageTaken;
     	localStorage.setItem("playerHP", currHP);
+
+    	//checks if game is over
+    	//console.log(isGameOver());
     }  
 
     if (timer.timeRemaining != 0) {

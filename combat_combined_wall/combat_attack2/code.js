@@ -294,10 +294,10 @@ function collided(){
 	let ph = py+player.size;			
 
 	//ai dimensions (top left to bottom right corners)
-	let ax = ai.x-ai.size/2;
-	let ay = ai.y-ai.size/2;
-	let aw = ax+ai.size;	
-	let ah = ay+ai.size;
+	let ax = ai.x-ai.width/2;
+	let ay = ai.y-ai.height/2;
+	let aw = ax+ai.width;	
+	let ah = ay+ai.height;
 
 	//within box boundaries
 	return (px < aw && pw > ax && py < ah && ph > ay);
@@ -397,10 +397,11 @@ function render(){
 			//ai trail
 			for(let t=1;t<ai.trail.length;t++){
 				let tp = ai.trail[ai.trail.length-1-t];		//get current trail object (from the back)
-				let tsize = ai.size/(1+(0.5*t));
+				let tWsize = ai.width/(1+(0.5*t));
+				let tHsize = ai.height/(1+(0.5*t));
 				ctx.globalAlpha = 0.8-(t*0.25);		//make increasingly transparent
 				ctx.fillStyle = ai.color;
-				ctx.fillRect(tp.x-tsize/2,tp.y-tsize/2,tsize,tsize)	//make increasingly small
+				ctx.fillRect(tp.x-tWsize/2,tp.y-tHsize/2,tWsize,tHsize)	//make increasingly small
 			}
 		}
 
