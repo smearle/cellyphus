@@ -7,6 +7,10 @@ var combatScreen=document.getElementById('combatDefense');
 var sideScreen=document.getElementById('gameSide');
 //var attackScreen=document.getElementById('combatAttack');
 
+// Combina harvest and attack orders into "orders" for the sake of UI
+const order_info = Object.assign({}, harvest_info, attack_info);
+const order_imgs = Object.assign({}, harvest_imgs, attack_imgs);
+
 document.getElementById("swapScreen").onclick=function(){
   swapCanvases();
 };
@@ -579,6 +583,15 @@ function showBuildDesc(b){
 	document.getElementById("buildIcon").src = build_imgs[b];
 }
 
+//shows icon and order description in build tab when hovered over
+function showOrderDesc(b){
+	//set description and icon based on item
+	document.getElementById("orderDesc").innerHTML = order_info[b];
+	document.getElementById("orderIcon").src = order_imgs[b];
+}
+
+
+
 //select item to build from the menu selection
 function selectBuildDiv(code,r){
 	resetBuildItemsColor();
@@ -586,6 +599,16 @@ function selectBuildDiv(code,r){
 
 	//set build item
 	buildSelect(code)
+	//displayText('Build ' + r.innerHTML.toUpperCase() + '. Select location.');
+}
+
+//select order item to build from the menu selection
+function selectOrderDiv(code,r){
+//resetOrderItemsColor();
+	r.style.backgroundColor = "#ECCE0E";
+
+	//set build item
+//buildSelect(code)
 	//displayText('Build ' + r.innerHTML.toUpperCase() + '. Select location.');
 }
 
