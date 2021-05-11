@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+    <head>
+        <META http-equiv="Content-Type" content="text/html; charset=ISO-8859-5">
+        <title>Cellyphus</title>
+        <style>
+            body{
+                background-color:#2F5434;
+                text-align: center;
+            }
+            /* crispy pixel rendering */
+            canvas{
+                image-rendering: -moz-crisp-edges;
+                image-rendering: -webkit-crisp-edges;
+                image-rendering: pixelated;
+                image-rendering: crisp-edges;
+            }
+
+            #game{
+                /*
+                width:68%;
+                height:100%;
+                */
+                width:640px;
+                height:640px;
+                border:2px solid #000000;
+            }
+            
+            #container{
+                width:980px;
+                height:756px;
+                margin-left: auto;
+                margin-right:auto;
+
+            }
+            #gameArea{
+                display: flex;
+                width:980px;
+                height:640px;
+                border: 2px solid black
+            }
+
+            /* side bar */
+
+            .sidebar{
+                /*
+                width:15%;
+                height:100%;
+                */
+                width:332px;
+                height:300px;
+                border:2px solid #000;
+                background-color: #dedede;
+                display: block;
+            }
+
+            /* CHARACTER CAMERA FOCUS SELECTION */
+            
+
+            /*swap iframe stuff*/
+            .gameWrapper {
+                position: relative;
+                /*width: 640px;
+                height: 640px;*/
+            }
+            .gameWrapper iframe{
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+            .sideWrapper {
+                position: relative;
+                /*width: 640px;
+                height: 640px;*/
+            }
+            .sideWrapper iframe{
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+        </style>
+
+    </head>
+    <body onload="Game.init()">
+        <!-- title+coordinate display (hidden) -->
+        <div  style='display: none'>
+            <h1>Cellyphus</h1>
+            <p>You clicked: <span id="clickedCoords">Nothing yet. Click a tile.</span></p>
+        </div>
+
+
+        <!-- game area -->
+        <div id='container'>
+            <!-- top console (canvases added via game.js init() )-->
+            <div id='gameArea'>
+                <!-- game screen -->
+                <!-- <div style='display: block'> -->
+                <div class="gameWrapper">
+                    <canvas id='game'>Game canvas</canvas>
+                    <!-- <canvas id='attackGame' style='display:none'>Browser not supported for HMTL5</canvas>
+                    <canvas id='defenseGame' style='display:none'>Browser not supported for HMTL5</canvas> -->
+                    <iframe id="combatDefense" src="combat_defense2/index.html" style="width:640px;height:640px;border:none;" title="Iframe Example"></iframe>
+                    
+                </div>
+
+                <!-- side menu -->
+                <div class="sideWrapper" style='display: grid'>
+                    <div id="gameSide">
+                        <!-- mode tabs -->
+
+                        <!-- minimap and build menu -->
+                        <div class='sidebar' id='minimap'>
+                            <canvas id='minimapCanvas' style='cursor:crosshair;'>Minimap canvas</canvas>
+                                                        
+                        </div> 
+                        
+                        <!-- character focus selection -->
+                        <div class='sidebar' style='overflow: auto' >
+                            
+                            <div id='tutorial' style='display:none'>
+                                <img src='imgs/tutorial/tutFrog.png' id='tutGif' style='width:100%;height:100%' >
+                            </div>  
+                        </div>
+
+                    </div>
+                    <!-- <iframe id="combatAttack" src="combat_attack/index.html" style="border:none;" title="Iframe Example"></iframe> -->
+                </div>
+            </div>
+            <button id="swapScreen">Swap Canvas Visibilities</button>
+
+        </div>
+    </body>
+</html>
