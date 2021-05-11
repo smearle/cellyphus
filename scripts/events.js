@@ -10,8 +10,54 @@ var playerInBase = false;
 //main game loop
 EventHandler.prototype.step = function(e) {
     //make inCombat boolean when barbarian comes
-    // if (inCombat)
-    //     return
+    //
+    if ((localStorage.enemyHP <= 0  || localStorage.combatType == 'esc') && combatScreen.style.visibility == 'visible') {
+        Game.combatTarget.health = localStorage.getItem("enemyHP");
+        console.log("we have escaped combat");
+        Game.combatTarget.disengage = false;
+        localStorage.combatType = 'atk';
+
+
+        //enemy has died
+        if (Game.combatTarget.getHealth() <= 0)
+        {
+            Game.combatTarget.health = 0;
+            combatTextPlayer("You defeated the enemy");
+            Game.scheduler.remove(Game.combatTarget)
+            let i = Game.barbarians.indexOf(Game.combatTarget);
+            if (i > -1){
+                Game.barbarians.splice(i,1);
+
+                //ding dong the bitch is dead
+                if(Game.combatTarget == Game.king_barbarian)
+                    Game.king_barbarian = null;
+            }
+            Game.combatTarget = null;
+            deadBarbie = true;
+        }
+
+
+        Game.combatTarget = null
+        showMain();
+
+
+    }
+
+    else if (Game.combatTarget != null) {
+        
+        if(combatScreen.style.visibility == 'hidden') {
+            localStorage.setItem("enemyHP", Game.combatTarget.getHealth());
+            localStorage.setItem("playerHP", Game.player.getHealth());
+            localStorage.setItem("playerThirst", Game.player.getThirst());
+            localStorage.setItem("playerHunger", Game.player.getHunger());
+            showCombat();
+        }
+
+        return
+    }
+    
+    
+
 
     //ignore input while editing name
     if(editingName)
@@ -106,19 +152,22 @@ EventHandler.prototype.step = function(e) {
 
     ///////////   COMBAT UPDATE    ///////////////
 
+    if (Game.combatTarget == null) {
+        showMain();
+    }
 
     if (Game.combatTarget != null) {
-        // change to turn only on combat
-        toggleGameStep("turn");
 
-        console.log("event running");
+        localStorage.setItem("isEscape", false);
+
+        // change to turn only on combat
+        //toggleGameStep("turn");
+
+
 
         // pull enemy and player stats pre combat
 
-        localStorage.setItem("enemyHP", Game.combatTarget.getHealth());
-        localStorage.setItem("playerHP", Game.player.getHealth());
-        localStorage.setItem("playerThirst", Game.player.getThirst());
-        localStorage.setItem("playerHunger", Game.player.getHunger());
+        
 
         //console.log("enemyHP: " + localStorage.getItem("enemyHP") + " playerHP: " + localStorage.getItem("playerHP"));
 
@@ -180,24 +229,7 @@ EventHandler.prototype.step = function(e) {
         }
 
 
-        //enemy has died
-        if (Game.combatTarget.getHealth() <= 0)
-        {
-            Game.combatTarget.health = 0;
-            combatTextPlayer("You defeated the enemy");
-            Game.scheduler.remove(Game.combatTarget)
-            let i = Game.barbarians.indexOf(Game.combatTarget);
-            if (i > -1){
-                Game.barbarians.splice(i,1);
-
-                //ding dong the bitch is dead
-                if(Game.combatTarget == Game.king_barbarian)
-                    Game.king_barbarian = null;
-            }
-            Game.combatTarget = null;
-            deadBarbie = true;
-        }
-
+        
         newX = player._x;
         newY = player._y;
 

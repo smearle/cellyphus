@@ -66,7 +66,7 @@ var gameVals = {
   maxTime : 20,
   timeRemaining : 20,
   damaged : false,
-  damagePerHit : 3
+  damagePerHit : 10 //3
   //time
 }
 
@@ -74,8 +74,8 @@ var timer = {
 	x: 100,
 	y: 20,
 	r: 12,
-	maxTime : 20,
-	timeRemaining : 20,
+	maxTime : 15,
+	timeRemaining : 15,
 }
 
 //box character
@@ -321,11 +321,15 @@ function collided(){
 //change continue button to be visible
 function contVisible() {
   document.getElementById("cont").style.visibility = "visible";
+  document.getElementById("attack").style.visibility = "hidden";
+  document.getElementById("heal").style.visibility = "hidden";
 }
 
 //change continue button to be hidden
 function contHidden() {
   document.getElementById("cont").style.visibility = "hidden";
+  document.getElementById("attack").style.visibility = "visible";
+  document.getElementById("heal").style.visibility = "visible";
 }
 
 //draw circular timer and sector to denote time
@@ -501,7 +505,11 @@ function step() {
     	localStorage.setItem("enemyHP", currHP);
 
     	//checks if game is over
-    	//console.log(isGameOver());
+    	if(isGameOver()) {
+    		contHidden();
+    		localStorage.setItem("damageDealt", 0);
+    		localStorage.setItem("damageTaken", 0);
+    	}
     }  
 
     if (timer.timeRemaining != 0) {
@@ -589,8 +597,8 @@ function main(){
 
 	//stop movement when timer is done
   if (timer.timeRemaining <= 0) {
-  	player.x = 30;
-  	player.y = 30;
+  	player.x = canvas.width / 2;
+  	player.y = canvas.width / 2;
   	paused = true;
   } 
 

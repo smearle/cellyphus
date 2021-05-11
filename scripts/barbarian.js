@@ -19,6 +19,8 @@ function Barbarian(x, y, lodge, id, king=false) {
     this.is_king = king;
     this._draw();
     this.id = id;
+
+    this.disengage = true;
 }
 
 Barbarian.prototype.getSpeed = function() { return this.speed; }
@@ -32,7 +34,15 @@ Barbarian.prototype.act = function() {
     this.at_base = (this._x == this.base._x && this._y == this.base._y);
 
     //right next to player? in combat
-    if((this.getDistance(Game.player) == 1) && (Game.combatTarget == null)){Game.combatTarget = this;}
+    if((this.getDistance(Game.player) == 1) && (Game.combatTarget == null) && this.disengage){
+    	this.disengage = false;
+    	Game.combatTarget = this;
+    }
+    else {
+    	if(this.getDistance(Game.player) > 2) {
+    		this.disengage = true;
+    	}
+    }
 
     //skip turns if low health
     this.delay++;
