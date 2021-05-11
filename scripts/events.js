@@ -9,34 +9,47 @@ var playerInBase = false;
 
 //always step
 function combatStep(){
-    if ((localStorage.enemyHP <= 0  || localStorage.combatType == 'esc') && combatScreen.style.visibility == 'visible') {
-        Game.combatTarget.health = localStorage.getItem("enemyHP");
-        console.log("we have escaped combat");
-        Game.combatTarget.disengage = false;
-        localStorage.combatType = 'atk';
+    
 
-        //enemy has died
-        if (Game.combatTarget.getHealth() <= 0)
-        {
-            Game.combatTarget.health = 0;
-            combatTextPlayer("You defeated the enemy");
-            Game.scheduler.remove(Game.combatTarget)
-            let i = Game.barbarians.indexOf(Game.combatTarget);
-            if (i > -1){
-                Game.barbarians.splice(i,1);
+    if (combatScreen.style.visibility == 'visible') {
 
-                //ding dong the bitch is dead
-                if(Game.combatTarget == Game.king_barbarian)
-                    Game.king_barbarian = null;
+        //i lived bitch
+        if((localStorage.enemyHP <= 0  || localStorage.combatType == 'esc')){
+            Game.combatTarget.health = localStorage.getItem("enemyHP");
+            console.log("we have escaped combat");
+            Game.combatTarget.disengage = false;
+            localStorage.combatType = 'atk';
+
+            //enemy has died
+            if (Game.combatTarget.getHealth() <= 0)
+            {
+                Game.combatTarget.health = 0;
+                combatTextPlayer("You defeated the enemy");
+                Game.scheduler.remove(Game.combatTarget)
+                let i = Game.barbarians.indexOf(Game.combatTarget);
+                if (i > -1){
+                    Game.barbarians.splice(i,1);
+
+                    //ding dong the bitch is dead
+                    if(Game.combatTarget == Game.king_barbarian)
+                        Game.king_barbarian = null;
+                }
+                Game.combatTarget = null;
+                deadBarbie = true;
             }
-            Game.combatTarget = null;
-            deadBarbie = true;
+
+
+            Game.combatTarget = null
+            showMain();
         }
-
-
-        Game.combatTarget = null
-        showMain();
-
+        //guess i'll die
+        else if(localStorage.playerHP <= 0){
+            showMain();
+            localStorage.combatType = 'atk';
+            Game.combatTarget = null;
+            Game.player.health = localStorage.playerHP;
+            Game.player.act();
+        }
 
     }
 
@@ -52,10 +65,11 @@ function combatStep(){
 
 var combatInterval = setInterval(function(){
     combatStep();
-},200)
+},200);
 
 //main game loop
 EventHandler.prototype.step = function(e) {
+
     //don't bother when in combat
     if(combatScreen.style.visibility == 'visible'){
         return;
