@@ -1,9 +1,10 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
         <META http-equiv="Content-Type" content="text/html; charset=ISO-8859-5">
         <title>Cellyphus</title>
         <style>
+            @font-face {font-family: Dwarf; src: url('dwarf.ttf');}
             body{
                 background-color:#2F5434;
                 text-align: center;
@@ -15,6 +16,60 @@
                 image-rendering: pixelated;
                 image-rendering: crisp-edges;
             }
+
+            /* tutorial/start/end screen */
+
+            #titleScreen{
+                width:640px;
+                height:640px;
+                border:2px solid #000000;
+            }
+
+            #startMenu{
+                background-color:#678658;
+                width:332px;
+                height:640px;
+                border:2px solid black;
+                font-family:'Dwarf';
+            }
+            .tutImg{
+                width:120px;
+                padding-left:10px;
+                padding-right: 10px;
+            }
+
+            .tutTxt{
+                width:150px;
+                margin: auto 0px auto 5px;
+                padding: 20px 0px;
+            }
+
+            #deathScreen{
+                width:640px;
+                height:640px;
+                border:2px solid #000000;
+            }
+
+            #endMenu{
+                background-color:#000;
+                width:332px;
+                height:640px;
+                border:2px solid black;
+                font-family:'Dwarf';
+            }
+
+            .gameStartBtns{
+                width:100px;
+                height:50px;
+                font-size:20px;
+                font-family:'Dwarf';
+                background-color:green;
+                color:white;
+                margin-top: 10px
+            }
+
+            /* main game screen */
+
             #consoleArea{
                 /*
                 width:100%;
@@ -211,7 +266,7 @@
         </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
-    <body onload="Game.init()">
+    <body onload='whichGameMode()'>
         <!-- title+coordinate display (hidden) -->
         <div  style='display: none'>
             <h1>Cellyphus</h1>
@@ -227,16 +282,65 @@
                 <!-- game screen -->
                 <!-- <div style='display: block'> -->
                 <div class="gameWrapper">
-                    <canvas id='game'>Game canvas</canvas>
+                    <canvas id='titleScreen' style='display:block'>title screen</canvas>
+                    <canvas id='game' style='display:none'>Game canvas</canvas>
+                    <canvas id='deathScreen' style='display:none'>end screen</canvas>
                     <!-- <canvas id='attackGame' style='display:none'>Browser not supported for HMTL5</canvas>
                     <canvas id='defenseGame' style='display:none'>Browser not supported for HMTL5</canvas> -->
-                    <iframe id="combatDefense" src="combat_combined/combat_defense2/index.html" style="width:980px;height:640px;border:none;" title="Iframe Example"></iframe>
+                    <iframe id="combatDefense" src="combat_combined_barb/combat_index.html" style="width:1020px;height:650px;border:none;visibility: hidden" title="Iframe Example"></iframe>
                     
                 </div>
 
                 <!-- side menu -->
                 <div class="sideWrapper" style='display: grid'>
-                    <div id="gameSide">
+                    <!-- START MENU SIDEBAR -->
+                    <div id='startMenu'>
+                        <div style='width:200px;border:1px dashed black;margin:auto;margin-top:10px;color:white;font-size:24px;padding:10px'>Controls</div>
+                        <div style='margin:auto;margin-top:15px;' width='300'>
+                            <div style='display:flex'>
+                                <div class='tutImg' ><img src='imgs/tutorial/wasd.png' width='100' height='60'></div>
+                                <div class='tutTxt'>Move Player<br>Combat</div>
+                            </div>
+                            <div style='display:flex'>
+                                <div class='tutImg'><img src='imgs/tutorial/space_key.png' width='100' height='60'></div>
+                                <div class='tutTxt'>Wait Turn</div>
+                            </div>
+                            <div style='display:flex'>
+                                <div class='tutImg' width='120' height='60'><img src='imgs/tutorial/pointer.png' width='20' height='30' style='margin: auto 0px auto 5px;padding: 20px 0px;'></div>
+                                <div class='tutTxt'>Command Frogs<br>Select UI</div>
+                            </div>
+                            <div style='display:flex'>
+                                <div class='tutImg'><img src='imgs/tutorial/v_key.png' width='65' height='60'></div>
+                                <div class='tutTxt'>Plant Seeds</div>
+                            </div>
+                            <div style='display:flex'>
+                                <div class='tutImg'><img src='imgs/tutorial/b_key.png' width='65' height='60'></div>
+                                <div class='tutTxt'>Build Menu Shortcut</div>
+                            </div>
+                            <div style='display:flex'>
+                                <div class='tutImg'><img src='imgs/tutorial/esc_key.png' width='90' height='60'></div>
+                                <div class='tutTxt'>Cancel Build</div>
+                            </div>
+                            <div style='display:flex'>
+                                <div class='tutImg'><img src='imgs/tutorial/m_key.png' width='65' height='60'></div>
+                                <div class='tutTxt'>Minimap Shortcut</div>
+                            </div>
+                            
+                        </div>
+                        <button onclick='startGame()' class='gameStartBtns'>Start</button>
+                    </div>
+                    <div id='endMenu' style='display:none'>
+                        <div style='border:1px solid white;width:200px;padding-top:50px;margin:auto;margin-top:50px;padding-bottom: 30px'>
+                            <div id='objCompPerc' style='color:#fff;padding-bottom: 30px;font-size:24px'>Objectives Completed:<br></div>
+                        </div>
+                        <div style='width:200px;margin:auto'>
+                            <button onclick='startGame()' class='gameStartBtns' style='background-color:#9F4223'>Play Again</button>
+                            <button onclick='titleScreen()' class='gameStartBtns'>Title</button>
+                        </div>
+                        
+                    </div>
+                    <!-- GAME SIDEBAR -->
+                    <div id="gameSide" style='display:none'>
                         <!-- mode tabs -->
                         <div id='drops'>
                             <div class='tabs' onclick='changeSection("minimap",this)' style='background-color: #ECCE0E' id='minimapTab'>Minimap</div>
@@ -244,7 +348,7 @@
                             <div class='tabs' onclick='changeSection("order",this)' id='orderTab'>Order</div>
                             <div class='tabs' onclick='changeSection("obj",this)' id='objTab'>Objectives</div>
                             <div class='tabs' onclick='changeSection("log",this)' id='logTab'>Log</div>
-                            <div class='tabs' onclick='changeSection("settings",this)' id='settingsTab'>Settings</div>
+                            <div class='tabs' onclick='changeSection("settings",this)' id='settingsTab'>Settings<br>Controls</div>
                         </div>
 
                         <!-- minimap and build menu -->
@@ -267,7 +371,7 @@
                                 </div>
                             </div>
                             <div id='text_log' style="display: none;">
-                                Some terrible things happened...
+                                "Well, what are you waiting for?"<br>"I don't know! Something amazing I guess..."
                             </div>
                             <div id='obj_list' style="display: none;">
                                 <div style='display: table' id='obj_table'></div>
@@ -289,7 +393,46 @@
                                     </div>
                                     <div style='display: table-row'>
                                         <div style='display: table-cell;width:100px'>Game Mode: </div>
-                                        <div style='display: table-cell'><select onchange='toggleGameMode(this.value)'><option value='real'>RealTime</option><option value='turn'>Turn Only</option></select></div>
+                                        <div style='display: table-cell'><select onchange='toggleGameStep(this.value)' id='gameModeSelect'><option value='turn'>Turn Only</option><option value='real'>RealTime</option></select></div>
+                                    </div>
+
+                                </div>
+                                <br>
+                                <div style='display: table'>
+                                    <div style='display: table-row'>
+                                        <b>-- Controls --</b><br>
+                                    </div>
+                                    <div style='display: table-row'>
+                                        <div style='display: table-cell'>WASD</div>
+                                        <div style='display: table-cell'>Move / Combat</div>
+                                    </div>
+                                    <div style='display: table-row'>
+                                        <div style='display: table-cell'>Space</div>
+                                        <div style='display: table-cell'>Next turn</div>
+                                    </div>
+                                    <div style='display: table-row'>
+                                        <div style='display: table-cell'>LMB</div>
+                                        <div style='display: table-cell'>Command frogs / Select UI</div>
+                                    </div>
+                                    <div style='display: table-row'>
+                                        <div style='display: table-cell'>V</div>
+                                        <div style='display: table-cell'>Plant Seeds</div>
+                                    </div>
+                                    <div style='display: table-row'>
+                                        <div style='display: table-cell'>H</div>
+                                        <div style='display: table-cell'>Harvest Seeds</div>
+                                    </div>
+                                    <div style='display: table-row'>
+                                        <div style='display: table-cell'>B</div>
+                                        <div style='display: table-cell'>Build shortcut</div>
+                                    </div>
+                                    <div style='display: table-row'>
+                                        <div style='display: table-cell'>M</div>
+                                        <div style='display: table-cell'>Minimap shortcut</div>
+                                    </div>
+                                    <div style='display: table-row'>
+                                        <div style='display: table-cell'>Esc</div>
+                                        <div style='display: table-cell'>Cancel Build</div>
                                     </div>
                                 </div>
                             </div>
@@ -342,6 +485,7 @@
             <script src="scripts/objectives.js"></script>
             <script src="scripts/display.js"></script>  
             <script src="scripts/events.js"></script>
+            <script src="scripts/title.js"></script>
         </div>
     </body>
 </html>

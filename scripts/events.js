@@ -17,6 +17,14 @@ EventHandler.prototype.step = function(e) {
     if(editingName)
         return
 
+    //player is dead, why bother
+    if(Game.player.dead){
+        showDeathScreen();
+        clearTimeout(Game.st);
+        Game.st = 0;
+        return;
+    }
+
     var validUpdate = false;
 
     player = Game.player;
@@ -46,7 +54,7 @@ EventHandler.prototype.step = function(e) {
 
     // we need to detect [b]ed before [b]uild
     // TODO: refactor this harder forever
-    if (await_build_select) {
+    if (await_build_select && [82,87,68,70,66].indexOf(code) != -1) {
         return buildSelect(code);
     }
     if (await_harvest_select) {
@@ -58,7 +66,7 @@ EventHandler.prototype.step = function(e) {
 
     // detect "[b]uild" command
     if (code == 66) {
-        Game.log_display.drawText(0, 0, "Build: [w]all, [d]oor, [f]ire, [b]ed.");
+        Game.log_display.drawText(0, 0, "Build: [w]all, [d]oor, [f]ire, [b]ed, b[r]idge.");
         await_build_select = true;
 
         //open build menu
@@ -100,6 +108,27 @@ EventHandler.prototype.step = function(e) {
 
 
     if (Game.combatTarget != null) {
+        // change to turn only on combat
+        toggleGameStep("turn");
+
+        // pull enemy and player stats pre combat
+        localStorage.setItem("enemyHP", Game.combatTarget.getHealth());
+        localStorage.setItem("playerHP", Game.player.getHealth());
+
+        //console.log("enemyHP: " + localStorage.getItem("enemyHP") + " playerHP: " + localStorage.getItem("playerHP"));
+
+        //swap to combat window
+        showCombat();
+
+
+
+        //register damage dealt
+        //Game.combatTarget.health -= localStorage.getItem("damageDealt");
+
+        //reset damage counter to 0
+        //localStorage.setItem("damageDealt", 0);
+
+
         //freeze movement
         rand = Math.floor(Math.random() * 101);
         did_combat = true;
@@ -154,6 +183,10 @@ EventHandler.prototype.step = function(e) {
             let i = Game.barbarians.indexOf(Game.combatTarget);
             if (i > -1){
                 Game.barbarians.splice(i,1);
+
+                //ding dong the bitch is dead
+                if(Game.combatTarget == Game.king_barbarian)
+                    Game.king_barbarian = null;
             }
             Game.combatTarget = null;
             deadBarbie = true;
@@ -259,8 +292,8 @@ EventHandler.prototype.step = function(e) {
                 newX = player._x;
                 newY = player._y;
 
-                // Q to plant seeds
-                if (code == 81) {
+                // V to plant seeds
+                if (code == 86) {
                     if (Game.player.seeds > 0) {
                         Game.log_display.drawText(0, 0, "You plant seeds.");
                         var[seed_x, seed_y] = getPlantTile(player._x, player._y);
@@ -342,9 +375,26 @@ EventHandler.prototype.step = function(e) {
             Game.barbarians.push(newBarbie); 
             barbarians[barb_id] = newBarbie;
             Game.scheduler.add(newBarbie, true);
+
+            //add another on the second day to make up for the lack of barbarians on the first day
+            if(Game.days == 1){
+                let newBarbie2 = Game._createBarbarian();
+                Game.barbarians.push(newBarbie2); 
+                barbarians[barb_id] = newBarbie2;
+                Game.scheduler.add(newBarbie2, true);
+            }
         }
+
+        Game.player.seeds += 7;     //some seeds from the gods
+        displayText("A new day ("  + Game.days + ") has started! The frog gods gift you 7 seeds for your endurance.")
+
+
     }
 
+    //new grass on the island
+    if((Game.days > 0) && (Game.days % 3 == 0) && (Game.gameTicks % Game.ticksPerDay == 1)){
+        Game._newGrass();
+    }
 
     // Tick grass and tree cellular automata
     Game.simulateGrass();

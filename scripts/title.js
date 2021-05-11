@@ -8,12 +8,6 @@ title_canvas.height = 320;
 var title_frogImg = new Image();
 title_frogImg.src = "imgs/frog.png";
 
-var title_playerImg = new Image();
-title_playerImg.src = "imgs/player.png";
-
-var title_barbImg = new Image();
-title_barbImg.src = "imgs/goblin.png";
-
 var title_grassImg = new Image();
 title_grassImg.src = "imgs/shrub.png";
 
@@ -24,7 +18,7 @@ var title_map = [
 [1,1,1,1,1,1,1,1,1,1],
 [1,0,0,0,0,0,0,0,0,1],
 [1,1,1,1,1,1,1,1,1,1],
-[1,1,1,1,0,0,1,1,1,1],
+[1,1,1,1,1,1,1,1,1,1],
 [1,1,1,1,1,1,1,1,1,1],
 [1,1,1,1,1,1,1,1,1,1],
 [1,1,1,1,1,1,1,1,1,1],

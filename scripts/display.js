@@ -2,7 +2,7 @@
 
 //swap between canvas and iframe
 var mainScreen=document.getElementById('gameArea');
-var defenseScreen=document.getElementById('combatDefense');
+var combatScreen=document.getElementById('combatDefense');
 
 var sideScreen=document.getElementById('gameSide');
 //var attackScreen=document.getElementById('combatAttack');
@@ -15,17 +15,29 @@ swapCanvases();
 function swapCanvases(){
   if(mainScreen.style.visibility=='visible'){
     mainScreen.style.visibility='hidden';
-    defenseScreen.style.visibility='visible';
-
     sideScreen.style.visibility='hidden';
-    //attackScreen.style.visibility='visible';
+    combatScreen.style.visibility='visible';
+
   }else{
     mainScreen.style.visibility='visible';
-    defenseScreen.style.visibility='hidden';
-
     sideScreen.style.visibility='visible';
-    //attackScreen.style.visibility='hidden';
+    combatScreen.style.visibility='hidden';
+
   }
+}
+
+function showMain(){
+	//localStorage.setItem("combatType", "atk");
+	mainScreen.style.visibility='visible';
+  sideScreen.style.visibility='visible';
+  combatScreen.style.visibility='hidden';
+}
+
+function showCombat(){
+	//localStorage.setItem("combatType", "def");
+	mainScreen.style.visibility='hidden';
+  sideScreen.style.visibility='hidden';
+  combatScreen.style.visibility='visible';
 }
 
 //main game
@@ -41,15 +53,45 @@ var mtx = minimapCanvas.getContext("2d");
 miniCanvas.width = 332;
 miniCanvas.height = 300;
 
+//overwrite sprites
+var player2 = new Image();
+player2.src = "imgs/player_barb_king.png";
+var player3 = new Image();
+player3.src = "imgs/player_grass_king.png";
+var player4 = new Image();
+player4.src = "imgs/player_super_king.png";
+
+var kingBarb = new Image();
+kingBarb.src = "imgs/king.png";
+
+var kingWallSpr = new Image();
+kingWallSpr.src = "imgs/kingWall.png";
+
+//highlight sprites
+var playHighL = new Image();
+playHighL.src = "imgs/player_highlight.png";
+
+var frogHighL = new Image();
+frogHighL.src = "imgs/frog_highlight.png";
+
 //minimap icons
 var playerIcon = new Image();
 playerIcon.src = "imgs/sprites/player_icon.png";
+var playerBarbKingIcon = new Image();
+playerBarbKingIcon.src = "imgs/sprites/player_king1.png";
+var playerGrassKingIcon = new Image();
+playerGrassKingIcon.src = "imgs/sprites/player_king2.png";
+var playerSuperKingIcon = new Image();
+playerSuperKingIcon.src = "imgs/sprites/player_super_king.png";
 
 var frogIcon = new Image();
 frogIcon.src = "imgs/sprites/frog_icon.png";
 
 var barbIcon = new Image();
 barbIcon.src = "imgs/sprites/barbarian_icon.png";
+
+var kingIcon = new Image();
+kingIcon.src = "imgs/sprites/king2.png"
 
 //get transparent blueprint tiles
 var alphaImgs = {};
@@ -65,7 +107,7 @@ var harvestImgs = {};
 for (let item in harvest_imgs) {
     harvestImg = new Image();
     harvestImg.src = "imgs/" + harvest_to_img[item] + ".png";
-    console.log(harvestImg.src);
+    //console.log(harvestImg.src);
     harvestImgs[item] = harvestImg;
 }
 
@@ -106,7 +148,7 @@ var objDivShown = false;
 
 //var displayText = function(str) {
 function displayText(str) {
-    Game.log_display.drawText(0, 6, str);
+    Game.log_display.drawText(0, 3, str);
     addToLog(str)
 }
 
@@ -256,17 +298,22 @@ function render(){
 	requestAnimationFrame(render);
 
 	//game not set yet
-	if(Game == null)
+	if(Game == null || Game.curState == "start")
 		return;
 
-  	drawMain();
-  	drawMiniMap();
-
+	//dead
+	else if(Game.curState == "end"){
+		drawDeath();
+	}else{
+		drawMain();
+  		drawMiniMap();
+	}
 }
 
 //switches focus to a point clicked on the minimap
 function camFocusPt(p){
 	camera.focus = {_x:p[0], _y:p[1]};
+	camera.focusChar = null;
 	panCamera();
 
 	//set highlight
@@ -274,6 +321,8 @@ function camFocusPt(p){
 	for(let i =0;i<icons.length;i++){
 		icons[i].style.backgroundColor = "#ffffff00";
 	}
+
+
 }
 
 //move the camera 
@@ -346,12 +395,12 @@ function drawMain(){
 	panCamera();
     
     // Draw all the blueprints as transparent versions of the items that are planned for building
+    mapCtx = gameMapCanvas.getContext("2d");
     for (let key in build_orders) {
         [x, y] = key.split(",");
         img = alphaImgs[build_orders[key]];
         tw = Game.display.getOptions().tileWidth;
         th = Game.display.getOptions().tileHeight;
-        mapCtx = gameMapCanvas.getContext("2d");
         mapCtx.drawImage(img, x*tw, y*th, tw, th);
     }
 
@@ -359,7 +408,6 @@ function drawMain(){
         [x, y] = key.split(",");
         img = harvestImgs[harvest_orders[key]];
         tw = Game.display.getOptions().tileWidth;
-        mapCtx = gameMapCanvas.getContext("2d");
         mapCtx.drawImage(img, x*tw, y*th, tw, th);
     }
 
@@ -369,6 +417,20 @@ function drawMain(){
 		camera.x,camera.y,canvas.width/camera.zoom,canvas.height/camera.zoom,
 		0,0,canvas.width,canvas.height);
 
+	//draw any overwritten sprites
+	if(Game.king_barbarian != null)
+		overwriteChar(Game.king_barbarian,kingBarb, mapCtx);
+		//king player
+	if(Game.king_barbarian == null && !grassLand20)
+		overwriteChar(Game.player, player2, mapCtx);
+	else if(Game.king_barbarian != null && grassLand20)
+		overwriteChar(Game.player, player3, mapCtx);
+	else if(Game.king_barbarian == null && grassLand20)
+		overwriteChar(Game.player, player4, mapCtx);
+
+	if(Game.kingWall && Game.kingWall.intact)
+		overwriteChar(Game.kingWall,kingWallSpr,mapCtx)
+
 
 	//draw ghost build for hover mouse if active
 	if(ghostBuild.active){
@@ -377,7 +439,21 @@ function drawMain(){
 		ctx.globalAlpha = 1.0;
 	}
 
+	//sprite highlight
+	if(camera.focusChar == Game.player && playHighL.width > 0){
+		overwriteChar(camera.focusChar,playHighL,mapCtx)
+	}
+	else if(camera.focusChar != null && frogHighL.width > 0)
+		overwriteChar(camera.focusChar,frogHighL,mapCtx)
+
 	//ctx.restore();
+}
+
+//overwrite the character coordinates with this sprite
+function overwriteChar(c,o,tx){
+	if(o.width > 0){
+		tx.drawImage(o, 0,0,32,32,c._x*tw, c._y*th, tw,th);
+	}
 }
 
 // draw a tile on the main map
@@ -415,16 +491,25 @@ function drawMiniMap(){
 	mtx.drawImage(gameMapCanvas, 0,0,miniCanvas.width,miniCanvas.height);
 
 	//maybe add icons for the characters?
-	mtx.drawImage(playerIcon, 0,0,16,16, (Game.player._x*scw)-(iconSize/2), (Game.player._y*sch)-(iconSize/2), iconSize,iconSize);
+	let pi = playerIcon;
+	if(Game.king_barbarian == null && !grassLand20)
+		pi = playerBarbKingIcon;
+	else if(Game.king_barbarian != null && grassLand20)
+		pi = playerGrassKingIcon;
+	else if(Game.king_barbarian == null && grassLand20)
+		pi = playerSuperKingIcon;
+	mtx.drawImage(pi, 0,0,16,16, (Game.player._x*scw)-(iconSize/3), (Game.player._y*sch)-(iconSize/2), iconSize,iconSize);
+	
+
 	let frogs = Game.frog_manager.frogs;
 	for(let f=0;f<frogs.length;f++){
 		let frog = frogs[f];
-		mtx.drawImage(frogIcon, 0,0,16,16, (frog._x*scw)-(iconSize/2), (frog._y*sch)-(iconSize/2), iconSize,iconSize);
+		mtx.drawImage(frogIcon, 0,0,16,16, (frog._x*scw)-(iconSize/3), (frog._y*sch)-(iconSize/2), iconSize,iconSize);
 	}
 	let barbs = Game.barbarians
 	for(let b=0;b<barbs.length;b++){
 		let barb = barbs[b];
-		mtx.drawImage(barbIcon, 0,0,16,16, (barb._x*scw)-(iconSize/2), (barb._y*sch)-(iconSize/2), iconSize,iconSize);
+		mtx.drawImage((barb.is_king ? kingIcon : barbIcon), 0,0,16,16, (barb._x*scw)-(iconSize/3), (barb._y*sch)-(iconSize/2), iconSize,iconSize);
 	}
 
 
@@ -478,6 +563,8 @@ function changeSection(sec,tab){
 
 		document.getElementById("stats").style.display = "none";
 		document.getElementById("tutorial").style.display = "block";
+
+		cancelObjTab();
 	}
 
 }
@@ -499,7 +586,7 @@ function selectBuildDiv(code,r){
 
 	//set build item
 	buildSelect(code)
-	displayText('Build ' + r.innerHTML.toUpperCase() + '. Select location.');
+	//displayText('Build ' + r.innerHTML.toUpperCase() + '. Select location.');
 }
 
 //reset colors of build item tabs
@@ -558,14 +645,18 @@ function camFocusChar(b){
 	let ent = Game.player;
 
 	//player
-	if(b.id == "player")
+	if(b.id == "player"){
 		ent = Game.player;
+		camera.focusChar = Game.player;
+	}
 
 	//get frog in the array of frogs
-	else if(b.id.includes("frog")){
+	else if(b.id && b.id.includes("frog")){
 		let fi = parseInt(b.id.replace("frog",""));
-		if(fi < Game.frog_manager.frogs.length)
+		if(fi < Game.frog_manager.frogs.length){
 			ent = Game.frog_manager.frogs[fi];
+			camera.focusChar = Game.frog_manager.frogs[fi];
+		}
 	}
 
 	camera.focus = ent;
@@ -579,6 +670,7 @@ function camFocusChar(b){
 	b.style.backgroundColor = "#ECCE0E";
 }
 
+//latin frog names based on ordinance
 function getFrogName(index){
 	let names = ["Primus", "Secondus", "Tertius", "Quartus", "Quintus", "Sextus", "Septimus", "Octonus", "Novemus", "Decemus"]
 	return (index < names.length ? names[index] : names[index%names.length] + " " + roman(Math.floor(index/names.length)));
@@ -590,6 +682,7 @@ function roman(n){
 	return num[n]
 }
 
+//adds a new clickable frog from the list to the index ui
 function addNewFrogUI(index){
 	let charDiv = document.getElementById("stats");
 
@@ -696,6 +789,37 @@ function frogCommand(e){
 	e.style.backgroundColor = "#24B12D";
 
 }
+
+/////////////////    END SCREEN VISUALS   ////////////////
+
+var deathCanvas = document.getElementById("deathScreen");
+var dtx = deathCanvas.getContext("2d");
+deathCanvas.width = 640;
+deathCanvas.height = 640;
+
+var grave = new Image();
+grave.src = "imgs/gravestone.png";
+
+function drawDeath(){
+	dtx.clearRect(0,0,deathCanvas.width,deathCanvas.height);
+
+	//background
+	dtx.fillStyle = "#000";
+	dtx.fillRect(0,0,deathCanvas.width,deathCanvas.height);
+
+	//show Cause of Death
+	dtx.fillStyle = "#fff";
+	dtx.font = "24px Dwarf";
+	dtx.textAlign = "center";
+	let mesparts = Game.player.cod.split("\n");
+	for(let p=0;p<mesparts.length;p++)
+		dtx.fillText(mesparts[p], deathCanvas.width/2,20*p+220);
+
+	//show grave
+	if(grave.width > 0)
+		dtx.drawImage(grave, 0, 0, 31, 31, (canvas.width/2)-32, 280, 64, 64);
+}
+
 
 render();
 

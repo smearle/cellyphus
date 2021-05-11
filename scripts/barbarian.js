@@ -24,6 +24,7 @@ function Barbarian(x, y, lodge, id, king=false) {
 Barbarian.prototype.getSpeed = function() { return this.speed; }
 Barbarian.prototype.getHealth = function() { return this.health; }
 Barbarian.prototype.getLimpAmt = function(){return (Math.min(Math.floor(this.fullHealth/this.health),5));}
+Barbarian.prototype.canMove = function(x,y){return !Game.anyAtPos(x,y);}
 
 Barbarian.prototype.act = function() {
     delete barb_locs[[this._x, this._y]];
@@ -41,8 +42,8 @@ Barbarian.prototype.act = function() {
         return;
     }
 
-    //strong enough to fight
-    if(this.health > 30){
+    //strong enough to fight - but a king never runs from a challenge
+    if(this.is_king || this.health > 30){
         //within range? chase the player or flee
         if(this.getDistance(Game.player) < this.radar){
             this.chase();
@@ -125,15 +126,18 @@ Barbarian.prototype.chase = function(){
             //console.log("he attac")
         }
     }
-    //move towards player
+    //move on path
     else {
         if (Game.combatTarget == this) {Game.combatTarget = null;}
 
         x = path[0][0];
         y = path[0][1];
         //Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
-        this._x = x;
-        this._y = y;
+        if(this.canMove(x,y)){
+            this._x = x;
+            this._y = y;
+        }
+        
         //this._draw();
         //console.log("why are you running?! WHY ARE YOU RUNNING!?!?")
     }
@@ -149,7 +153,7 @@ Barbarian.prototype.idle = function(){
 
 
     //valid spot to move to
-    if(barbPassableCallback(x,y)){
+    if(barbPassableCallback(x,y) && this.canMove(x,y)){
         //Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
         this._x = x;
         this._y = y;
@@ -185,8 +189,10 @@ Barbarian.prototype.leaveHome = function(){
     else {
         x = path[0][0];
         y = path[0][1];
-        this._x = x;
-        this._y = y;
+        if(this.canMove(x,y)){
+            this._x = x;
+            this._y = y;
+        }
         //this._draw();
         //console.log("omw. leaving in 5 min")
     }
@@ -220,8 +226,10 @@ Barbarian.prototype.flee = function(){
             x = path[0][0];
             y = path[0][1];
             //Game.display.draw(this._x, this._y, Game.map[this._x+","+this._y]);
-            this._x = x;
-            this._y = y;
+            if(this.canMove(x,y)){
+                this._x = x;
+                this._y = y;
+            }
             //this._draw();
         }
 

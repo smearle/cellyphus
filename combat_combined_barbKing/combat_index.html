@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Cellyphus Combat Combined</title>
+		<style>
+			*{
+			  margin: 0;
+			  padding: 0;
+			}
+
+			#gameArea{
+				position:relative;
+				width: 980px;
+    		height: 645px;
+    	}
+			#atkFrame{position:absolute;}
+			#defFrame{position:absolute;}
+		</style>
+	</head>
+	<body onload="init()">
+
+		<div id='container'>
+
+			<div id='gameArea'>
+				<iframe id="defFrame" src="combat_defense2/index.html" style="width:985px;height:648px;border:none;" title="defense game"></iframe>
+				<iframe id="atkFrame" src="combat_attack2/index.html" style="width:985px;height:648px;border:none;" title="attack game"></iframe>
+				
+			</div>
+
+
+			<button onclick="showAtk()">Swap to Attack</button>
+			<button onclick="showDef()">Swap to Defense</button>
+			<!-- BUTTONS FOR DEBUGGING - SWITCH BETWEEN COMBAT GAMES
+			<button onclick="swapCanvases()">Swap Canvas Visibilities</button>			
+			 -->
+		</div>
+		
+				
+		<script src="code.js"></script>
+	</body>
