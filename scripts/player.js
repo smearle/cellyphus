@@ -96,7 +96,7 @@ Player.prototype.act = function(newX, newY) {
     }
 
     //decrease player hunger, thirst, and health
-    if (this.hunger == 0 && this.thirst == 0) {
+    if (this.hunger == 0 || this.thirst == 0) {
         this.health = Math.max(0, this.health-1);
     }
     else {
