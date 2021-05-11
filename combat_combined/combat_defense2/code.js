@@ -809,6 +809,14 @@ function step() {
     if (timer.timeRemaining <= 0) {
     	paused = true;
     	contVisible();
+
+    	//store damage taken in current turn
+    	localStorage.setItem("damageTaken", gameVals.damageTaken);
+
+    	//calculate and store new enemy health
+    	var prevHP = localStorage.getItem("playerHP");
+    	var currHP = prevHP - gameVals.damageTaken;
+    	localStorage.setItem("playerHP", currHP);
     }  
 
     if (timer.timeRemaining != 0) {

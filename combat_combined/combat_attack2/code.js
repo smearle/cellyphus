@@ -483,7 +483,13 @@ function step() {
 
     	//LEFT OFF HERE
     	console.log("over: " + gameVals.damageDealt);
+    	//store damage dealt in current turn
     	localStorage.setItem("damageDealt", gameVals.damageDealt);
+
+    	//calculate and store new enemy health
+    	var prevHP = localStorage.getItem("enemyHP");
+    	var currHP = prevHP - gameVals.damageDealt;
+    	localStorage.setItem("enemyHP", currHP);
     }  
 
     if (timer.timeRemaining != 0) {

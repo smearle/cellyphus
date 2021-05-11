@@ -108,13 +108,25 @@ EventHandler.prototype.step = function(e) {
 
 
     if (Game.combatTarget != null) {
+        // change to turn only on combat
+        toggleGameStep("turn");
+
+        // pull enemy and player stats pre combat
+        localStorage.setItem("enemyHP", Game.combatTarget.getHealth());
+        localStorage.setItem("playerHP", Game.player.getHealth());
+
+        //console.log("enemyHP: " + localStorage.getItem("enemyHP") + " playerHP: " + localStorage.getItem("playerHP"));
+
+        //swap to combat window
         showCombat();
 
+
+
         //register damage dealt
-        Game.combatTarget.health -= localStorage.getItem("damageDealt");
+        //Game.combatTarget.health -= localStorage.getItem("damageDealt");
 
         //reset damage counter to 0
-        localStorage.setItem("damageDealt", 0)
+        //localStorage.setItem("damageDealt", 0);
 
 
         //freeze movement

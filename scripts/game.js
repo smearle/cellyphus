@@ -301,14 +301,15 @@ var Game = {
 //      this.spawnFrog();
 //      this.spawnFrog();
         this.barbarians = [];
-        /* no barbarians on first day
+        // comment this segment out for no barbarians on first day
         barb_0 = this._createBarbarian()
         this.barbarians.push(barb_0);      
         barbarians[barb_id] = barb_0;
         barb_1 = this._createBarbarian()
         this.barbarians.push(barb_1);   
         barbarians[barb_id] = barb_1;
-        */
+        // end of comment
+
         this.king_barbarian = this._createKingBarbarian();
         this.barbarians.push(this.king_barbarian);
         barbarians[barb_id] = this.king_barbarian;
