@@ -11,9 +11,10 @@ var sideScreen=document.getElementById('gameSide');
 const order_info = Object.assign({}, harvest_info, attack_info);
 const orderImgs = Object.assign({}, harvestImgs, attackImgs);
 
-document.getElementById("swapScreen").onclick=function(){
+/*document.getElementById("swapScreen").onclick=function(){
   swapCanvases();
-};
+};*/
+
 swapCanvases();
 
 function swapCanvases(){
