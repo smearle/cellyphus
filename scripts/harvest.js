@@ -14,8 +14,8 @@ var next_harvest = harvest_items.NONE
 
 //temp harvest item descriptions
 const harvest_info = {
-	"chop": "Chop the forest.",
-    "cut": "Cut the grass.",
+	"chop_hrv": "Chop the forest.",
+    "cut_hrv": "Cut the grass.",
 }
 
 const harvest_imgs = {}
