@@ -18,7 +18,7 @@ const attack_info = {
     "cut": "Cut the grass.",
 }
 
-const attack_imgs = {}
+const attackImgs = {}
 
 attack_to_img = {
     "chop": "axe",
@@ -26,7 +26,7 @@ attack_to_img = {
 }
 
 for (let key in attack_info) {
-    attack_imgs[key] = "imgs/" + attack_to_img[key] + ".png";
+    attackImgs[key] = "imgs/" + attack_to_img[key] + ".png";
 }
 
 // For when the player is selecting an order to give, will be used to enter a attack_order (x, y): attack_type pair

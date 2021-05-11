@@ -14,11 +14,11 @@ var next_harvest = harvest_items.NONE
 
 //temp harvest item descriptions
 const harvest_info = {
-	"chop_hrv": "Chop the forest.",
-    "cut_hrv": "Cut the grass.",
+	"chop": "Chop the forest.",
+    "cut": "Cut the grass.",
 }
 
-const harvest_imgs = {}
+const harvestImgs = {}
 
 harvest_to_img = {
     "chop": "axe",
@@ -26,8 +26,10 @@ harvest_to_img = {
 }
 
 for (let key in harvest_info) {
-    harvest_imgs[key] = "imgs/" + harvest_to_img[key] + ".png";
+    harvestImgs[key] = "imgs/" + harvest_to_img[key] + ".png";
 }
+console.log("harvestImgs dict: ");
+console.log(harvestImgs);
 
 // For when the player is selecting an order to give, will be used to enter a harvest_order (x, y): harvest_type pair
 

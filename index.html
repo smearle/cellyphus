@@ -344,8 +344,8 @@
                         <!-- mode tabs -->
                         <div id='drops'>
                             <div class='tabs' onclick='changeSection("minimap",this)' style='background-color: #ECCE0E' id='minimapTab'>Minimap</div>
-                            <div class='tabs' onclick='changeSection("build",this)' id='buildTab'>Build</div>
                             <div class='tabs' onclick='changeSection("order",this)' id='orderTab'>Order</div>
+                            <div class='tabs' onclick='changeSection("build",this)' id='buildTab'>Build</div>
                             <div class='tabs' onclick='changeSection("obj",this)' id='objTab'>Objectives</div>
                             <div class='tabs' onclick='changeSection("log",this)' id='logTab'>Log</div>
                             <div class='tabs' onclick='changeSection("settings",this)' id='settingsTab'>Settings<br>Controls</div>
@@ -357,14 +357,14 @@
                             <div id='order_opt' style="display: none;">
                                  <div style='display: flex'>
                                     <div id='orderList'>
-                                        <div class='orderItem' onmouseenter="showOrderDesc('cut_hrv')" onclick="selectOrderDiv(87,this)">Cut (harvest)</div>
-                                        <div class='orderItem' onmouseenter="showOrderDesc('chop_hrv')" onclick="selectOrderDiv(70,this)">Chop (harvest)</div>
+                                        <div class='orderItem' onmouseenter="showOrderDesc('cut')" onclick="selectOrderDiv(87,this)">Cut (harvest)</div>
+                                        <div class='orderItem' onmouseenter="showOrderDesc('chop')" onclick="selectOrderDiv(70,this)">Chop (harvest)</div>
                                         <div class='orderItem' onmouseenter="showOrderDesc('cut_atk')" onclick="selectOrderDiv(66,this)">Cut (attack)</div>
                                         <div class='orderItem' onmouseenter="showOrderDesc('chop_atk')" onclick="selectOrderDiv(68,this)">Shop (attack)</div>
                                         <div class='orderItem' id='cancelOrder' style='background-color:#9a9a9a' onclick="cancelOrder()">Cancel</div>
                                     </div>
                                     <div style='display:grid;width:50%;height:300px'>
-                                        <div style='height:130px;width:100%'><img src='imgs/sprites/Froggy_Chair.png' id='buildIcon' width='120' height='120'></div>
+                                        <div style='height:130px;width:100%'><img src='imgs/sprites/Froggy_Chair.png' id='orderIcon' width='120' height='120'></div>
                                         <div id='orderDesc' style='padding:10px 0px;height:100px;width:80%;margin:auto'>Item description goes here</div>
                                     </div>
                                 </div>

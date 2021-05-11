@@ -9,7 +9,7 @@ var sideScreen=document.getElementById('gameSide');
 
 // Combina harvest and attack orders into "orders" for the sake of UI
 const order_info = Object.assign({}, harvest_info, attack_info);
-const order_imgs = Object.assign({}, harvest_imgs, attack_imgs);
+const orderImgs = Object.assign({}, harvestImgs, attackImgs);
 
 document.getElementById("swapScreen").onclick=function(){
   swapCanvases();
@@ -106,9 +106,7 @@ for (let item in build_imgs) {
     alphaImgs[item] = alphaImg;
 }
 
-var harvestImgs = {};
-
-for (let item in harvest_imgs) {
+for (let item in harvestImgs) {
     harvestImg = new Image();
     harvestImg.src = "imgs/" + harvest_to_img[item] + ".png";
     //console.log(harvestImg.src);
@@ -468,6 +466,7 @@ function drawAlphaTile(img, x, y){
 
 function drawHarvestOverlay(img, x, y) {
     img = harvestImgs[img];
+    console.log("image name " + img);
     ctx.drawImage(img, x, y, 16, 16);
 }
 
@@ -543,6 +542,7 @@ function changeSection(sec,tab){
 	tab.style.backgroundColor = "#ECCE0E";
 
 	document.getElementById("build_opt").style.display = "none";
+	document.getElementById("order_opt").style.display = "none";
 	document.getElementById("minimapCanvas").style.display = "none";
 	document.getElementById("user_settings").style.display = "none";
 	document.getElementById("text_log").style.display = "none";
@@ -556,6 +556,8 @@ function changeSection(sec,tab){
 		document.getElementById("minimapCanvas").style.display = "block";
 	}else if(sec == "build"){
 		document.getElementById("build_opt").style.display = "block";
+    }else if(sec == "order"){
+        document.getElementById("order_opt").style.display = "order";
 	}else if(sec == "settings"){
 		document.getElementById("user_settings").style.display = "block";
 	}else if(sec == "log"){
@@ -587,7 +589,7 @@ function showBuildDesc(b){
 function showOrderDesc(b){
 	//set description and icon based on item
 	document.getElementById("orderDesc").innerHTML = order_info[b];
-	document.getElementById("orderIcon").src = order_imgs[b];
+	document.getElementById("orderIcon").src = orderImgs[b];
 }
 
 
