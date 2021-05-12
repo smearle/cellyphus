@@ -64,11 +64,19 @@ function harvestSelect(code) {
 function orderHarvest(action, x, y) {
   //console.log('Order harvest item '+ item);
     curr_tile = getTile(x, y)
-    if (!(action == harvest_items.CHOP && curr_tile == tile_chars.TREE ||
+    if (action == harvest_items.DEMOLISH) {
+        console.log('demolishating');
+        if (!(curr_tile == tile_chars.WALL || curr_tile == tile_chars.DOOR ||
+            curr_tile == tile_chars.BED || curr_tile == tile_chars.BRIDGE ||
+            curr_tile == tile_chars.FIRE)){
+            displayText("You can only demolish something your frogs built.\nYou insolent scoundrel!");
+        }
+    }
+    else if (!(action == harvest_items.CHOP && curr_tile == tile_chars.TREE ||
           action == harvest_items.CUT && curr_tile == tile_chars.GRASS)) {
         return 
     }
-    displayText('Ordered harvest ' + action + ' at: ('+x+", "+y+")");
+    displayText('Ordered action ' + action + ' at: ('+x+", "+y+")");
     harvest_orders[[x, y]] = action;
     drawHarvestOverlay(action, x, y);
 //    await_harvest_location = false;
@@ -115,6 +123,7 @@ function harvest(frog, x, y) {
     delete harvest_orders[[x, y]];
     frog.isHarvesting = false;
     frog.wandering = true;
+    curr_tile = getTile(x, y);
     switch(curr_harvest) {
         case harvest_items.CHOP:
             displayText("Frog chops the wood.");
@@ -128,8 +137,17 @@ function harvest(frog, x, y) {
             harvested_something = true;
             Game.player.seeds += 3;
             break;
+        case harvest_items.DEMOLISH:
+            displayText(frog.name + " hammers the structure to sawdust.");
+            if (curr_tile == tile_chars.BRIDGE) {
+                setTile(x, y, tile_chars.WATER);
+            }
+            else {
+                setTile(x, y, tile_chars.DIRT);
+            }
+            Game.player.wood += 1;  
         default:
-            displayText("Frog fails to harvest " + curr_harvest)
+            displayText("Frog fails to harvest via " + curr_harvest + " action.")
             console.log("invalid harvest item");
     }
 }
