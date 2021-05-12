@@ -67,7 +67,7 @@ var gameVals = {
   maxTime : 20,
   timeRemaining : 20,
   damaged : false,
-  damagePerHit : 10 //3
+  damagePerHit : 3
   //time
 }
 
@@ -134,6 +134,7 @@ var wall = {
 	y: canvas.height * 1 / 5 - 20,
 	width: 150, 
 	height: 250,
+	HP: 30,
 //wall.x - 75, wall.y - 20
 	//crit1: [canvas.width * 1 / 2, canvas.height * 1 / 5],
 	crit1: [canvas.width * 1 / 2 - 75, canvas.height * 3 / 5 - 23],
@@ -159,15 +160,10 @@ var paused = true;				//if players are currently paused
 
 //////////////////    GENERIC FUNCTIONS   ///////////////
 
-//returns true if enemy or player are dead
-function isGameOver(){
-	var playerHP = localStorage.getItem("playerHP");
-	var enemyHP = localStorage.getItem("enemyHP");
-	if (playerHP <= 0 || enemyHP <= 0) {
-		return true;
-	}
-	return false;
+function breakWall() {
+	localStorage.setItem("isKingWallBrkn", true);
 }
+
 
 //checks if an element is in an array
 function inArr(arr, e){
@@ -316,6 +312,7 @@ function changeCritSpot(){
 	//ctx.fillText("damage", canvas.width - 10, canvas.height - 10);
 
 	gameVals.damageDealt += gameVals.damagePerHit;
+	wall.HP -= gameVals.damagePerHit;
 	gameVals.damaged = true;
 	//console.log(gameVals.points);
 }
@@ -347,14 +344,12 @@ function collided(){
 function contVisible() {
   document.getElementById("cont").style.visibility = "visible";
   document.getElementById("attack").style.visibility = "hidden";
-  document.getElementById("heal").style.visibility = "hidden";
 }
 
 //change continue button to be hidden
 function contHidden() {
   document.getElementById("cont").style.visibility = "hidden";
   document.getElementById("attack").style.visibility = "visible";
-  document.getElementById("heal").style.visibility = "visible";
 }
 
 //draw circular timer and sector to denote time
@@ -457,26 +452,9 @@ function render(){
 //--------------------------------------------------------------------------------------------------------------
 	
 	//show damage stats
-	document.getElementById("playerHP").innerHTML = localStorage.getItem("playerHP") ? localStorage.getItem("playerHP") : 0;
-	document.getElementById("enemyHP").innerHTML = localStorage.getItem("enemyHP") ? localStorage.getItem("enemyHP") : 0;
+	//document.getElementById("enemyHP").innerHTML = wall.HP;
 	document.getElementById("dealt").innerHTML = gameVals.damageDealt;
 	
-	// if(gameVals.damaged) {
-	// 	setTimeout(function(){
-	// 	  // Code to be executed after timeout goes here
-	// 	  gameVals.damaged = false;
-	// 	}, 1500);
-	// // Code to be executed immediately goes here
-	// ctx.font = "15px Arial";
-	// ctx.fillText(gameVals.damagePerHit, ai.x + 7, ai.y - 10);
-	// }
-
-
-	//console.log(gameVals.damaged);
-	
-	//ctx.fillText("Hello World", 10, 50);
-
-	//time
 	
 	ctx.restore();
 }
@@ -500,18 +478,11 @@ function step() {
     	contVisible();
 
     	//store damage dealt in current turn
-    	localStorage.setItem("damageDealt", gameVals.damageDealt);
 
-    	//calculate and store new enemy health
-    	var prevHP = localStorage.getItem("enemyHP");
-    	var currHP = prevHP - gameVals.damageDealt;
-    	localStorage.setItem("enemyHP", currHP);
 
     	//checks if game is over
-    	if(isGameOver()) {
-    		contHidden();
-    		localStorage.setItem("damageDealt", 0);
-    		localStorage.setItem("damageTaken", 0);
+    	if(localStorage.isKingWallBrkn) {
+    		//contHidden();
     	}
     }  
 
@@ -519,10 +490,6 @@ function step() {
     	setTimeout(step, Math.max(0, interval - dt)); // take into account drift
     }
 
-}
-
-function goToDef() {
-	localStorage.setItem("combatType", "def");
 }
 
 //////////////   GAME LOOP FUNCTIONS   //////////////////
@@ -543,6 +510,7 @@ function init(){
 	ai.critSpots.push(wall.crit1);
 	ai.critSpots.push(wall.crit2);
 
+	localStorage.setItem("isKingWallBrkn", false);
 	//console.log(ai.critSpots);
 	//changeCritSpot();
 
@@ -606,10 +574,6 @@ function main(){
   	paused = true;
   } 
 
-  var combatState = localStorage.getItem("combatType"); 
-  if (combatState.localeCompare("def") == 0) {
-		contHidden();
-	}
 
 	currShakeTime = (new Date).getTime();
 	if (currShakeTime < endShakeTime) {
