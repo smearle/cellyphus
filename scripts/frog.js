@@ -45,8 +45,11 @@ Frog.prototype.act = function() {
     this._move_ticker = 0;
     // Wander about
     if (this.trg_barb != -1) {
-        this._x_t = this.trg_barb._x_t;
-        this._y_t = this.trg_barb._y_t;
+        console.log("frog's trg_barb: "+this.trg_barb);
+        console.log("global barbarios: ");
+        console.log(barbarians);
+        this._x_t = barbarians[this.trg_barb]._x;
+        this._y_t = barbarians[this.trg_barb]._y;
     }
     if (this.wandering) {
         // Randomly move to a valid tile

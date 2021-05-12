@@ -212,7 +212,7 @@ function census(x, y) {
     c_fire = getNeighbors(x, y, isFire);
     c_grass = getNeighbors(x, y, isGrass);
     c_grass_tree = c_grass + c_tree;
-    if (c_tree == 5 && Math.random() < 1 || c_tree > 0 && c_fire > 0 || tile == tile_chars.GRASS && c_fire > 0) {
+    if (c_tree == 5 && Math.random() < 1 || c_tree > 0 && c_fire > 0 || tile == tile_chars.GRASS && c_fire > 0 || Game.tick % 2 == 0) {
 //      console.log("Fire is lit");
         fire_lifetimes[[x, y]] = 0;
         return CAstates.FIRE;
