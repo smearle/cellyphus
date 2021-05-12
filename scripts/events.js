@@ -88,6 +88,9 @@ function combatStep(){
         localStorage.setItem("meat", Game.player.getMeat());
         showCombat();
         console.log("fight club!");
+    }else  if (localStorage.getItem("isKingWallBrkn") == "true" && combatWallScreen.style.visibility == 'visible'){
+        Game._destroyWall();
+        showMain();
     }
 
 }
