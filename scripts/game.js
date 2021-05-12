@@ -595,7 +595,7 @@ function resetGame(){
     Game.init();
     Game.curState = "game";
     
-    //localStorage.clear();
+    localStorage.clear();
     localStorage.setItem("damageDealt", 0);
     localStorage.setItem("damageTaken", 0);
     localStorage.setItem("damageRegistered", false);
