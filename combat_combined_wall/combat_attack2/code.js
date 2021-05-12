@@ -19,7 +19,8 @@ var pCtx = canvas.getContext("2d");
 var aud_block = new Audio('audio/Shield_block.ogg');
 aud_block.volume = 0.03;
 
-var aud_EnemyHurt = new Audio('audio/Enemy_hurt.oga');
+//var aud_EnemyHurt = new Audio('audio/Enemy_hurt.oga');
+var aud_EnemyHurt = new Audio('audio/wallBreak.wav');
 aud_EnemyHurt.volume = 0.03;
 
 //camera
@@ -66,7 +67,7 @@ var gameVals = {
   maxTime : 20,
   timeRemaining : 20,
   damaged : false,
-  damagePerHit : 3
+  damagePerHit : 10 //3
   //time
 }
 
@@ -74,8 +75,8 @@ var timer = {
 	x: 100,
 	y: 20,
 	r: 12,
-	maxTime : 20,
-	timeRemaining : 20,
+	maxTime : 15,
+	timeRemaining : 15,
 }
 
 //box character
@@ -88,7 +89,7 @@ var player = {
 	speed : 3,
 	base_speed : 3,
 	dashSpeed : 8,
-	color : '#f00',
+	color : "#0D7612",
 	trail : [],
 	ct : 0,			//trail interval
 	pt : 200		//pause time (ms)
@@ -96,12 +97,12 @@ var player = {
 
 //attacking ai
 var ai = {
-	x : canvas.width * 3 / 6,
-	y : canvas.height * 1 / 5,
-  size : 32,
+	x : canvas.width * 1 / 2 - 75,
+	y : canvas.height * 3 / 5 - 23,
+  size : 16,
   width: 20,
-	height: 300,
-	color : "#0D7612",
+	height: 250,
+	color : '#f00',
 	vel : {x : 0, y : 0},
 	charged : true,				//whether in the middle of an attack
 	maxSpeed : player.speed*3,		//max speed to attack (dependent on player)
@@ -123,9 +124,24 @@ var ai = {
 
 	critSpots : [],
 
-	critDelay : 250 //500ms delay beetween crit spot hit and spawn
+	critDelay : 450 //450ms delay between crit spot hit and spawn
 
 }
+
+//wall structure
+var wall = {
+	x: canvas.width * 1 / 2 - 75, 
+	y: canvas.height * 1 / 5 - 20,
+	width: 150, 
+	height: 250,
+//wall.x - 75, wall.y - 20
+	//crit1: [canvas.width * 1 / 2, canvas.height * 1 / 5],
+	crit1: [canvas.width * 1 / 2 - 75, canvas.height * 3 / 5 - 23],
+	crit2: [canvas.width * 1 / 2 + 75, canvas.height * 3 / 5 - 23],
+	crit1Active : true,
+}
+
+var size = 16;			//size of player and ai objects
 
 //features
 var draw_trail = true;			//player trail feature for movement
@@ -143,6 +159,15 @@ var paused = true;				//if players are currently paused
 
 //////////////////    GENERIC FUNCTIONS   ///////////////
 
+//returns true if enemy or player are dead
+function isGameOver(){
+	var playerHP = localStorage.getItem("playerHP");
+	var enemyHP = localStorage.getItem("enemyHP");
+	if (playerHP <= 0 || enemyHP <= 0) {
+		return true;
+	}
+	return false;
+}
 
 //checks if an element is in an array
 function inArr(arr, e){
@@ -153,9 +178,10 @@ function inArr(arr, e){
 
 //get health input
 function updateSize() {
-	var hunger = document.getElementById("hunger").value;
+	var hunger = localStorage.getItem("playerHunger");//document.getElementById("hunger").value;
 	var diff = player.maxSize - player.minSize;
 	var scale = diff * parseInt(hunger) / 100;
+
 
 	player.size = player.minSize + scale;
   //x = getOrderedQuestion(x);
@@ -270,8 +296,17 @@ function targetPlayer(){
 
 //changes the crit spot for the enemy
 function changeCritSpot(){
-
-  var index = Math.floor(Math.random() * ai.critSpots.length);
+	//if crit 1 was active then change to crit2, vice versa
+	var index;
+	if (wall.crit1Active) {
+		index = 1;
+		wall.crit1Active = false;
+	}
+	else {
+		index = 0;
+		wall.crit1Active = true;
+	}
+  //var index = Math.floor(Math.random() * ai.critSpots.length);
 
 	ai.x = ai.critSpots[index][0];
 	ai.y = ai.critSpots[index][1];
@@ -311,11 +346,15 @@ function collided(){
 //change continue button to be visible
 function contVisible() {
   document.getElementById("cont").style.visibility = "visible";
+  document.getElementById("attack").style.visibility = "hidden";
+  document.getElementById("heal").style.visibility = "hidden";
 }
 
 //change continue button to be hidden
 function contHidden() {
   document.getElementById("cont").style.visibility = "hidden";
+  document.getElementById("attack").style.visibility = "visible";
+  document.getElementById("heal").style.visibility = "visible";
 }
 
 //draw circular timer and sector to denote time
@@ -350,36 +389,13 @@ function render(){
 	ctx.fillStyle = backgroundColor;
 	ctx.fillRect(0,0,canvas.width, canvas.height);
 
-	//draw head
-	/*ctx.beginPath();
-	ctx.arc(ai.head[0], ai.head[1], 50, 0, 2 * Math.PI);
-	ctx.fillStyle = "#f8f8ff";
-	ctx.fill();
-
-	//draw arms
-	var distance = ai.rhand[0] - ai.lhand[0];
-	ctx.beginPath();
-	ctx.rect(ai.lhand[0] - 20, ai.lhand[1] - 20, distance + 40, 50);
-	ctx.fillStyle = "#f8f8ff";
-	ctx.fill();
-
-	//draw torso
-	ctx.beginPath();
-	ctx.rect(ai.head[0] - 25, ai.lhand[1] + 30, 50, 80);
-	ctx.fillStyle = "#f8f8ff";
-	ctx.fill();*/
 
 	//draw wall
 	ctx.beginPath();
-	ctx.rect(ai.head[0] - 75, ai.head[1] - 20, 150, 250);
+	ctx.rect(wall.x, wall.y, wall.width, wall.height);
 	ctx.fillStyle = "#f8f8ff";
 	ctx.fill();
 
-	//draw right leg
-	/*ctx.beginPath();
-	ctx.rect(ai.rfoot[0] - 30, ai.lhand[1] + 90, 50, 80);
-	ctx.fillStyle = "#f8f8ff";
-	ctx.fill();*/
 
 	/*   add draw functions here  */
 
@@ -412,7 +428,6 @@ function render(){
 
 	//draw a dark green square to represent the AI
 	ctx.fillStyle = ai.color;
-	//ctx.fillRect(ai.x-ai.size/2,ai.y-ai.size/2,ai.size,ai.size);
 	ctx.fillRect(ai.x-ai.width/2,ai.y-ai.height/2,ai.width,ai.height);
 
 	//draw ai target
@@ -441,9 +456,11 @@ function render(){
 
 //--------------------------------------------------------------------------------------------------------------
 	
-	//draw damage counters
+	//show damage stats
+	document.getElementById("playerHP").innerHTML = localStorage.getItem("playerHP") ? localStorage.getItem("playerHP") : 0;
+	document.getElementById("enemyHP").innerHTML = localStorage.getItem("enemyHP") ? localStorage.getItem("enemyHP") : 0;
 	document.getElementById("dealt").innerHTML = gameVals.damageDealt;
-
+	
 	// if(gameVals.damaged) {
 	// 	setTimeout(function(){
 	// 	  // Code to be executed after timeout goes here
@@ -460,7 +477,6 @@ function render(){
 	//ctx.fillText("Hello World", 10, 50);
 
 	//time
-	document.getElementById("time").innerHTML = gameVals.timeRemaining;
 	
 	ctx.restore();
 }
@@ -483,8 +499,6 @@ function step() {
     	paused = true;
     	contVisible();
 
-    	//LEFT OFF HERE
-    	console.log("over: " + gameVals.damageDealt);
     	//store damage dealt in current turn
     	localStorage.setItem("damageDealt", gameVals.damageDealt);
 
@@ -492,6 +506,13 @@ function step() {
     	var prevHP = localStorage.getItem("enemyHP");
     	var currHP = prevHP - gameVals.damageDealt;
     	localStorage.setItem("enemyHP", currHP);
+
+    	//checks if game is over
+    	if(isGameOver()) {
+    		contHidden();
+    		localStorage.setItem("damageDealt", 0);
+    		localStorage.setItem("damageTaken", 0);
+    	}
     }  
 
     if (timer.timeRemaining != 0) {
@@ -508,23 +529,19 @@ function goToDef() {
 
 //game initialization function
 function init(){
-	//set checkbox onchange functions
-	let checkboxes = document.getElementsByClassName("featTog");
-	for(let c=0;c<checkboxes.length;c++){
-		checkboxes[c].onchange = function(){changeFeature(checkboxes[c].id)};
-	}
-	changeChecks('select');		//select all to start
+	
 
 	//uncomment to toggle target
 	//targetPlayer();
 
 	//initialize player properties
-	ai.critSpots.push(ai.head);
+	/*ai.critSpots.push(ai.head);
 	ai.critSpots.push(ai.rhand);
 	ai.critSpots.push(ai.lhand);
 	ai.critSpots.push(ai.rfoot);
-	ai.critSpots.push(ai.lfoot);
-
+	ai.critSpots.push(ai.lfoot);*/
+	ai.critSpots.push(wall.crit1);
+	ai.critSpots.push(wall.crit2);
 
 	//console.log(ai.critSpots);
 	//changeCritSpot();
@@ -566,15 +583,6 @@ function changeFeature(feat){
 	}
 }
 
-//changes all the values of the feature toggles from on/off
-function changeChecks(selectType){
-	let val = (selectType == "deselect" ? false : true);
-	let checkboxes = document.getElementsByClassName("featTog");
-	for(let c=0;c<checkboxes.length;c++){
-		checkboxes[c].checked = val;
-		changeFeature(checkboxes[c].id)
-	}
-}
 
 //toggle ai movement
 function togAI(c){
@@ -588,12 +596,13 @@ function main(){
 
 	//panCamera();
 
+	updateSize();
 	render();
 
 	//stop movement when timer is done
   if (timer.timeRemaining <= 0) {
-  	player.x = 30;
-  	player.y = 30;
+  	player.x = canvas.width / 2;
+  	player.y = canvas.width / 2;
   	paused = true;
   } 
 
@@ -723,6 +732,7 @@ function main(){
 	if(!gracePeriod && collided()){
 
 		//play audio feedback of player hit
+		aud_EnemyHurt.currentTime = 0;
 		aud_EnemyHurt.play();
 
 		//delay before generating crit spot
@@ -752,7 +762,6 @@ function main(){
 	//var settings = "(" + ai.target.x + ", " + ai.target.y + ") - " + Math.round(dist(ai,ai.target)) + " - (" + ai.vel.x + ", " + ai.vel.y + ")";
 	var settings = paused;
 
-	//document.getElementById('debug').innerHTML = settings;
 }
 
 
