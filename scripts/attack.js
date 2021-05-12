@@ -8,7 +8,7 @@ const attack_items = {
     NONE: "none",
     CHOP: "chop",
     CUT: "cut",
-    HAMMER: "hammer",
+    HAMMER: "demolish",
 }
 
 //var next_attack = attack_items.NONE
@@ -47,7 +47,7 @@ function attackSelect(code) {
         displayText('Chop barbarian. Select target.');
         next_order = attack_items.CHOP;
     }
-    else if (code == 74) {
+    else if (code == 72) {
         displayText('Hammer barbarian. Select victim.');
         next_order = attack_items.HAMMER;
     }
@@ -120,7 +120,7 @@ function attack(frog, barb_id) {
     frog.isAttacking = false;
     frog.wandering = true;
     switch(curr_attack) {
-        case attack_items.DEMOLISH:
+        case attack_items.HAMMER:
             displayText(frog.name+" busts up part of barbarian "+barb_id+"'s body with a hammer.");
             if (Math.random() < 0.4) {
                 barbarians[barb_id].health -= 13;

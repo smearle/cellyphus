@@ -134,6 +134,8 @@ Frog.prototype.act = function() {
                 setTile(this._x_t, this._y_t, tile_chars.EMPTY);
             }
             this.wandering = true;
+            this.trg_barb = -1;
+            this.is_attacking = false;
         }
         else {
             x = path[0][0];
