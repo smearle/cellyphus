@@ -7,6 +7,9 @@ var drankWater = false;
 var plantedSeeds = false;
 var playerInBase = false;
 
+var attackFlavor = ["You body slammed the barbarian", "You round-housed kicked the barbarian!", "You landed your punch!", "You bit the barbarian", "You headbutt the barbarian!"]
+var defenseFlavor = ["The barbarian slapped you!", "The barbarian sliced at your guts!", "The barbarian spit in your face!", "The barbarian punched your face", "The barbarian kicked you in the shins"]
+
 //always step
 function combatStep(){
     
@@ -15,8 +18,29 @@ function combatStep(){
 
         //i lived bitch
         if((localStorage.enemyHP <= 0  || localStorage.combatType == 'esc')){
+            let diffTargHealth = Game.combatTarget.health - localStorage.getItem("enemyHP");
+            let diffMyHealth = Game.player.health - localStorage.getItem("playerHP");
+
+            //flavor text for the log
+            for(let f=0;f<parseInt(diffMyHealth/5);f++){
+                addToLog(defenseFlavor[Math.floor(Math.random()*defenseFlavor.length)]);
+            }
+            for(let f=0;f<parseInt(diffTargHealth/4);f++){
+                let astr = attackFlavor[Math.floor(Math.random()*attackFlavor.length)];
+                addToLog(astr);
+            }
+
+
             Game.combatTarget.health = localStorage.getItem("enemyHP");
+            Game.player.health = localStorage.getItem("playerHP");
+            
             console.log("we have escaped combat");
+
+            
+
+
+
+
             Game.combatTarget.disengage = false;
             localStorage.combatType = 'atk';
 
