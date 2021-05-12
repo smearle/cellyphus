@@ -32,6 +32,8 @@ function combatStep(){
 
 
             Game.combatTarget.health = localStorage.getItem("enemyHP");
+            Game.player.health = localStorage.getItem("playerHP");
+            
             console.log("we have escaped combat");
 
             
