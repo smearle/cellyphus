@@ -65,11 +65,12 @@ function orderHarvest(action, x, y) {
   //console.log('Order harvest item '+ item);
     curr_tile = getTile(x, y)
     if (action == harvest_items.DEMOLISH) {
-        console.log('demolishating');
+        console.log('demolishinatening');
         if (!(curr_tile == tile_chars.WALL || curr_tile == tile_chars.DOOR ||
             curr_tile == tile_chars.BED || curr_tile == tile_chars.BRIDGE ||
             curr_tile == tile_chars.FIRE)){
             displayText("You can only demolish something your frogs built.\nYou insolent scoundrel!");
+            return;
         }
     }
     else if (!(action == harvest_items.CHOP && curr_tile == tile_chars.TREE ||
