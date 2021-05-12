@@ -46,11 +46,11 @@ function combatStep(){
             showMain();
         }
         //guess i'll die
-        else if(localStorage.playerHP <= 0){
+        else if(localStorage.getItem("playerHP") <= 0){
             showMain();
             localStorage.combatType = 'atk';
             Game.combatTarget = null;
-            Game.player.health = localStorage.playerHP;
+            Game.player.health = localStorage.getItem("playerHP");
             Game.player.act();
         }
 
@@ -113,11 +113,13 @@ EventHandler.prototype.step = function(e) {
     ///////////////        SHORTCUT KEYS        //////////////
 
     // debug command for spawning a new frog
+    /*
     if (code == 78) {
         console.log("spwan a frog (debug)");
         Game.spawnFrog();
         validUpdate = true;
     }
+    */
 
     // we need to detect [b]ed before [b]uild
     // TODO: refactor this harder forever
@@ -177,6 +179,8 @@ EventHandler.prototype.step = function(e) {
         showMain();
     }
 
+    //Game.player.health = localStorage.getItem("playerHP");
+
     if (Game.combatTarget != null) {
 
         localStorage.setItem("isEscape", false);
@@ -194,6 +198,8 @@ EventHandler.prototype.step = function(e) {
 
         //swap to combat window
         Game.combatTarget.health = localStorage.getItem("enemyHP");
+
+        Game.player.health = localStorage.getItem("playerHP");
 
 
 

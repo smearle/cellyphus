@@ -364,7 +364,7 @@
                             -- Objectives Completed --
                             <div id='objCompPerc' style='color:#fff;padding-bottom: 30px;font-size:36px;margin-top:20px'></div>
                         </div>
-                        <div style='width:200px;margin:auto'>
+                        <div style='width:200px;margin:auto;margin-top:20px'>
                             <button onclick='startGame()' class='gameStartBtns' style='background-color:#9F4223'>Play Again</button>
                             <button onclick='titleScreen()' class='gameStartBtns'>Title</button>
                         </div>
@@ -392,7 +392,7 @@
                                         <div class='orderItem' onmouseenter="showOrderDesc('chop')" onclick="selectOrderDiv(84,this)">Chop (harvest)</div>
                                         <div class='orderItem' onmouseenter="showOrderDesc('cut_atk')" onclick="selectOrderDiv(71,this,atk=true)">Cut (attack)</div>
                                         <div class='orderItem' onmouseenter="showOrderDesc('chop_atk')" onclick="selectOrderDiv(84,this,atk=true)">Chop (attack)</div>
-                                        <div class='orderItem' id='cancelOrder' style='background-color:#9a9a9a' onclick="cancelOrder()">Cancel</div>
+                                        <div class='orderItem' id='cancelOrder' style='background-color:#9a9a9a' onclick="cancelHarvest()">Cancel</div>
                                     </div>
                                     <div style='display:grid;width:50%;height:300px'>
                                         <div style='height:130px;width:100%'><img src='imgs/sprites/Froggy_Chair.png' id='orderIcon' width='120' height='120'></div>

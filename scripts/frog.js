@@ -28,6 +28,7 @@ var Frog = function(x, y) {
     this.command = "auto";
     this.mortal = true;
     this.trg_barb = "-1";
+    this.name = "Primus the Immortal Frog";
 }
 
 Frog.prototype.getSpeed = function() { return 100; }
