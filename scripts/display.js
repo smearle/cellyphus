@@ -858,6 +858,19 @@ function drawDeath(){
 		dtx.drawImage(grave, 0, 0, 31, 31, (canvas.width/2)-32, 280, 64, 64);
 }
 
+function setAchievements(){
+	let ach = "";
+	//go through all of the stats and show them
+	ach += "Seeds planted: " + GameStats.seedsPlanted + "<br>";
+	ach += "Grass Eaten: " + GameStats.grassEaten + "<br>";
+	ach += "Fires started: " + GameStats.fireStarted + "<br>";
+	ach += "Frogs spawned: " + GameStats.frogsSpawned + "<br>";
+	ach += "Orders given: " + GameStats.ordersGiven + "<br>";
+	ach += "Barbarians killed: " + GameStats.barbariansKilled;
+
+
+	document.getElementById("achievements").innerHTML = ach;
+}
 
 render();
 

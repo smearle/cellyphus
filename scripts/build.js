@@ -84,6 +84,7 @@ function orderBuild(item, x, y) {
         displayText('Build order is in the queue.');
 //      console.log('Build order is in the queue.');
     }
+    GameStats.ordersGiven++;
    //resetBuildItemsColor();
 }
 

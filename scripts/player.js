@@ -116,12 +116,13 @@ Player.prototype.act = function(newX, newY) {
     //eat grass if on the tile
     curr_tile = Game.map[this._x+","+player._y];
     if (curr_tile == "gg") {
-        Game.log_display.drawText(0, 0, "You eat grass.")
+        Game.log_display.drawText(2, 2, "You eat grass.")
         this.hunger = Math.min(100, this.hunger + 25);
         setTile(this._x, this._y, "..");
         //drawTile(player._x, player._y);
 //      player.seeds += 1;
         ateGrass = true;
+        GameStats.grassEaten++;
 
     }
 

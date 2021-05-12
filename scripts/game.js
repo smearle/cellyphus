@@ -10,6 +10,16 @@ var grassLand20 = false;
 var spawnedFrog = false;
 var arsonicFrogMade = false;
 
+var GameStats = {
+    seedsPlanted: 0,
+    barbariansKilled: 0,
+    grassEaten: 0,
+    frogsSpawned: 0,
+    fireStarted:0,
+    ordersGiven:0
+
+}
+
 var map_width = 64;
 var map_height = 64;
 var tileSet = document.createElement("img");
@@ -107,11 +117,11 @@ var Game = {
         this.resource_display.height = 112;
         document.getElementById("consoleArea").appendChild(this.resource_display);
 
-        this.log_display = new ROT.Display({width:32, height:8, fontSize:14})
+        this.log_display = new ROT.Display({width:74, height:8, fontSize:14})
         document.getElementById("consoleArea").appendChild(this.log_display.getContainer());
 
         this.log_combat = new ROT.Display({width:42, height:8, fontSize:14})
-        document.getElementById("consoleArea").appendChild(this.log_combat.getContainer());
+        //document.getElementById("consoleArea").appendChild(this.log_combat.getContainer());
     },
 
     init: function() {
@@ -217,6 +227,8 @@ var Game = {
             this.map[key] = tile_chars.FLAME;
         }
         //console.log("fire: " + flames.length)
+
+        GameStats.fireStarted += flames.length;
 
         //spawn a new frog at the 7th flame
         if(flames.length >= 5 && !arsonicFrogMade){
@@ -452,6 +464,7 @@ var Game = {
         new_frog = this._createBeing(Frog, freeCells);
         this.frog_manager.frogs.push(new_frog);
         addNewFrogUI(this.frog_manager.frogs.length-1);
+        GameStats.frogsSpawned++;
     },
 
     spawnFrogAt: function(x, y) {
@@ -459,6 +472,7 @@ var Game = {
         new_frog = this._createBeing(Frog, [x+","+y]);
         this.frog_manager.frogs.push(new_frog);
         addNewFrogUI(this.frog_manager.frogs.length-1);
+        GameStats.frogsSpawned++;
     },
 
     //check if movable entities at current position
@@ -633,12 +647,14 @@ function toggleGameStep(v){
 function showDeathScreen(){
     Game.curState = "end";
     cancelObjTab();
+    setAchievements();
     document.getElementById("deathScreen").style.display = "block";
     document.getElementById("endMenu").style.display = "block";
     document.getElementById("gameSide").style.display = "none";
     document.getElementById("game").style.display = "none";
 
-    document.getElementById("objCompPerc").innerHTML = "Objectives Completed:<br>" + objCompleted() + "%";
+    checkObj();
+    document.getElementById("objCompPerc").innerHTML = objCompleted() + "%";
     Game.log_display.drawText(0, 6, "");
     Game.log_combat.drawText(0, 6, "");
     let rtx = Game.resource_display.getContext("2d");
