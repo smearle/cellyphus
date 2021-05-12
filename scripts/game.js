@@ -323,14 +323,18 @@ var Game = {
 
         // comment this segment out for no barbarians on first day
         /*barb_0 = this._createBarbarian()
->>>>>>> 2dd302d9163b7d3b7c7550dbc11d10e405653aec
+        barb_0 = this._createBarbarian()
+
         this.barbarians.push(barb_0);      
         barbarians[barb_id] = barb_0;
         barb_1 = this._createBarbarian()
         this.barbarians.push(barb_1);   
-<<<<<<< HEAD
+
         barbarians[barb_id] = barb_1;
-        */
+
+        barbarians[barb_id] = barb_1;*/
+        
+
         // end of comment
 
         this.king_barbarian = this._createKingBarbarian();
@@ -591,7 +595,7 @@ function resetGame(){
     Game.init();
     Game.curState = "game";
     
-    //localStorage.clear();
+    localStorage.clear();
     localStorage.setItem("damageDealt", 0);
     localStorage.setItem("damageTaken", 0);
     localStorage.setItem("damageRegistered", false);
@@ -756,6 +760,8 @@ window.addEventListener("keydown", function(e) {
     //cancel current build
     if((e.keyCode == 27)){
         cancelOrder();
+        cancelBuild();
+        cancelHarvest();
     }
 
     //title or game on start

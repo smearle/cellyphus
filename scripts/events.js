@@ -7,6 +7,9 @@ var drankWater = false;
 var plantedSeeds = false;
 var playerInBase = false;
 
+var attackFlavor = ["You body slammed the barbarian", "You round-housed kicked the barbarian!", "You landed your punch!", "You bit the barbarian", "You headbutt the barbarian!"]
+var defenseFlavor = ["The barbarian slapped you!", "The barbarian sliced at your guts!", "The barbarian spit in your face!", "The barbarian punched your face", "The barbarian kicked you in the shins"]
+
 //always step
 function combatStep(){
     
@@ -15,8 +18,29 @@ function combatStep(){
 
         //i lived bitch
         if((localStorage.enemyHP <= 0  || localStorage.combatType == 'esc')){
+            let diffTargHealth = Game.combatTarget.health - localStorage.getItem("enemyHP");
+            let diffMyHealth = Game.player.health - localStorage.getItem("playerHP");
+
+            //flavor text for the log
+            for(let f=0;f<parseInt(diffMyHealth/5);f++){
+                addToLog(defenseFlavor[Math.floor(Math.random()*defenseFlavor.length)]);
+            }
+            for(let f=0;f<parseInt(diffTargHealth/4);f++){
+                let astr = attackFlavor[Math.floor(Math.random()*attackFlavor.length)];
+                addToLog(astr);
+            }
+
+
             Game.combatTarget.health = localStorage.getItem("enemyHP");
+            Game.player.health = localStorage.getItem("playerHP");
+            
             console.log("we have escaped combat");
+
+            
+
+
+
+
             Game.combatTarget.disengage = false;
             localStorage.combatType = 'atk';
 
@@ -24,7 +48,8 @@ function combatStep(){
             if (Game.combatTarget.getHealth() <= 0)
             {
                 Game.combatTarget.health = 0;
-                combatTextPlayer("You defeated the enemy");
+                combatTextPlayer("You defeated the enemy and got 1 meat");
+                Game.player.addMeat();
                 Game.scheduler.remove(Game.combatTarget)
                 let i = Game.barbarians.indexOf(Game.combatTarget);
                 if (i > -1){
@@ -45,11 +70,11 @@ function combatStep(){
             showMain();
         }
         //guess i'll die
-        else if(localStorage.playerHP <= 0){
+        else if(localStorage.getItem("playerHP") <= 0){
             showMain();
             localStorage.combatType = 'atk';
             Game.combatTarget = null;
-            Game.player.health = localStorage.playerHP;
+            Game.player.health = localStorage.getItem("playerHP");
             Game.player.act();
         }
 
@@ -60,8 +85,12 @@ function combatStep(){
         localStorage.setItem("playerHP", Game.player.getHealth());
         localStorage.setItem("playerThirst", Game.player.getThirst());
         localStorage.setItem("playerHunger", Game.player.getHunger());
+        localStorage.setItem("meat", Game.player.getMeat());
         showCombat();
         console.log("fight club!");
+    }else  if (localStorage.getItem("isKingWallBrkn") == "true" && combatWallScreen.style.visibility == 'visible'){
+        Game._destroyWall();
+        showMain();
     }
 
 }
@@ -177,6 +206,8 @@ EventHandler.prototype.step = function(e) {
         showMain();
     }
 
+    //Game.player.health = localStorage.getItem("playerHP");
+
     if (Game.combatTarget != null) {
 
         localStorage.setItem("isEscape", false);
@@ -194,6 +225,8 @@ EventHandler.prototype.step = function(e) {
 
         //swap to combat window
         Game.combatTarget.health = localStorage.getItem("enemyHP");
+
+        Game.player.health = localStorage.getItem("playerHP");
 
 
 

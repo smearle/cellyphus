@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Cellyphus Defense</title>
+		<title>Cellyphus Attack</title>
 		<link rel="stylesheet" type="text/css" href="combatStyles.css">
 	</head>
 	<body onload='init()'>
@@ -11,31 +11,35 @@
 
 			<div class="sideWrapper" style='display: grid'>
 				<div class="sidebar" id='juiceTog'>
+					<!-- <h1>Stats:</h1> -->
 					<h2>Player HP: <ins id='playerHP'></ins></h2>
 					<h2>Enemy HP: <ins id='enemyHP'></ins></h2>
 
-					<!-- <h2>Attack:</h2>
-					<p>Damage Dealt: <ins id='dealt'></ins></p> -->
+					<h2>Attack:</h2>
+					<h3>Damage Dealt: <ins id='dealt'></ins></h3>
 					
-					<h2>Defense:</h2>
-					<h3>Damage Taken: <ins id='taken'></ins></h3>
-					<h3>Damage Blocked: <ins id='blocked'></ins></h3>
+					<!-- <h2>Defense:</h2>
+					<p>Damage Taken: <ins id='taken'></ins></p>
+					<p>Damage Blocked: <ins id='blocked'></ins></p> -->
+
+	      	
 				</div>
 
 				<div class="sidebar" id='juiceTog'>
 					
-	      	<button onclick="startGame()" class="gameStartBtns">Defend</button>
+	      	<button onclick="startGame()" id="attack" class="gameStartBtns">Attack</button>
 	      	
-	      	<button onclick="escapeCombat()" id="esc" class="gameStartBtns">Escape</button>
+	      	<!-- <button onclick="heal()" id="heal" class="gameStartBtns">Heal</button> -->
 
 	      	<p></p>
-	      	<button onclick="goToAtk()" id="cont" class="gameStartBtns" style="visibility: hidden;">Continue</button>
+	      	<button onclick="goToDef()" id="cont" class="gameStartBtns" style="visibility: hidden;">Continue</button>
 				</div>
 			</div>
 
 			
-			
 		</div>
-		<script src="sat.js"></script>
+
+	
+		
 		<script src="code.js"></script>
 	</body>

@@ -112,6 +112,7 @@ function initializeObjectives(){
 	addObjective("Drink water", function(){return drankWater;}, function(){seedReward(10)}, "imgs/tutorial/drink_water.gif");
 	addObjective("Plant Seeds", function(){return plantedSeeds;}, function(){woodReward(10)}, "imgs/tutorial/plant_seeds.gif");
 	addObjective("Order a frog to build something", function(){return built_something;}, function(){woodReward(20)},"imgs/tutorial/order_build.gif");
+	addObjective("Order a frog to harvest something", function(){return harvested_something;}, function(){woodReward(20)},"imgs/tutorial/harvest.gif");
 	addObjective("Build a house", function(){return made_house;}, function(){woodReward(25)},"imgs/tutorial/build_house.gif");
 	addObjective("Start a fire", function(){return setFire;}, function(){seedReward(20)},"imgs/tutorial/fire.gif");
 	addObjective("Create a new frog minion", function(){return spawnedFrog;}, function(){meatReward(7)},"imgs/tutorial/minion.gif");

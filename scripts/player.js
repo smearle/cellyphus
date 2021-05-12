@@ -40,6 +40,8 @@ Player.prototype.getHunger = function() { return this.hunger; }
 Player.prototype.getThirst = function() { return this.thirst; }
 Player.prototype.takeDamage = function(dmg) { this.health -= dmg; }
 Player.prototype.healDamage = function(dmg) { this.health += dmg; }
+Player.prototype.addMeat = function() { this.meat += 1; }
+Player.prototype.getMeat = function() { return this.meat; }
 Player.prototype.canMove = function(x,y){return !Game.anyAtPos(x,y);}
 
 //combat functions

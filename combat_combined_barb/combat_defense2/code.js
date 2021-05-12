@@ -665,11 +665,13 @@ function escapeVisible() {
 //change continue button to be visible
 function contVisible() {
   document.getElementById("cont").style.visibility = "visible";
+  document.getElementById("def").style.visibility = "hidden";
 }
 
 //change continue button to be hidden
 function contHidden() {
   document.getElementById("cont").style.visibility = "hidden";
+  document.getElementById("def").style.visibility = "visible";
 }
 
 //draw circular timer and sector to denote time

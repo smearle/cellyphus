@@ -126,10 +126,10 @@ function attack(frog, barb_id) {
             displayText("Frog cuts the barbarian.");
             setTile(x, y, tile_chars.DIRT);
             attacked_something = true;
-            Game.player.grass += 3;
+            Game.player.seeds += 3;
             break;
         default:
-            displayText("Frog fails to attack " + curr_attack)
+            displayText("Frog fails to " + curr_attack + " the enemy")
             console.log("invalid attack item");
     }
     // Check if we killed the barb
