@@ -63,6 +63,7 @@ function combatStep(){
         showCombat();
         console.log("fight club!");
     }
+
 }
 
 var combatInterval = setInterval(function(){
@@ -171,7 +172,10 @@ EventHandler.prototype.step = function(e) {
 
 
     ///////////   COMBAT UPDATE    ///////////////
-
+    if (localStorage.getItem("isKingWallBrkn") == "true"){
+        Game._destroyWall();
+        showMain();
+    }
 
     if (Game.combatTarget != null) {
 
@@ -379,15 +383,20 @@ EventHandler.prototype.step = function(e) {
 
                 //if next to water, drink it
                 if (player_impassable.indexOf(trg_tile) >= 0) {
+                    if(trg_tile == tile_chars.REDWALL && newX == Game.kingWall._x && newY == Game.kingWall._y){
+                        console.log("combat");
+                        showWallCombat();
+                    }
+
                     newX = player._x;
                     newY = player._y;
+                    console.log("player: " + newX + ", " + newY);
+                    console.log("wall: " + Game.kingWall._x + ", " + Game.kingWall._y);
                     if (trg_tile == tile_chars.WATER) {
                         player.thirst = Math.min(100, player.thirst + 25);
                         drankWater = true;
                     }
-                    else if(trg_tile == tile_chars.WALL && newX == Game.kingWall._x && newY == Game.kingWall._y){
-                        
-                    }
+
                 }
 
 

@@ -3,6 +3,7 @@
 //swap between canvas and iframe
 var mainScreen=document.getElementById('gameArea');
 var combatScreen=document.getElementById('combatDefense');
+var combatWallScreen=document.getElementById('combatWall');
 
 var sideScreen=document.getElementById('gameSide');
 //var attackScreen=document.getElementById('combatAttack');
@@ -36,6 +37,7 @@ function showMain(){
 	mainScreen.style.visibility='visible';
   sideScreen.style.visibility='visible';
   combatScreen.style.visibility='hidden';
+  combatWallScreen.style.visibility='hidden';
 }
 
 function showCombat(){
@@ -43,6 +45,14 @@ function showCombat(){
 	mainScreen.style.visibility='hidden';
   sideScreen.style.visibility='hidden';
   combatScreen.style.visibility='visible';
+  combatWallScreen.style.visibility='hidden';
+}
+
+function showWallCombat(){
+	mainScreen.style.visibility='hidden';
+  sideScreen.style.visibility='hidden';
+  combatScreen.style.visibility='hidden';
+	combatWallScreen.style.visibility='visible';
 }
 
 //main game
