@@ -253,7 +253,7 @@ var Game = {
         let foliage = live.length + trees.length;
         let non_foliage = dirt;
 
-        console.log(foliage + " / " + non_foliage + " = " + (foliage/non_foliage))
+        //console.log(foliage + " / " + non_foliage + " = " + (foliage/non_foliage))
         //20% of the map covered in foliage
         if(foliage/non_foliage >= 0.2){
             grassLand20 = true;

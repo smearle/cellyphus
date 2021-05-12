@@ -20,6 +20,8 @@ function Barbarian(x, y, lodge, id, king=false) {
     this.frog_fight = false;
     this._draw();
     this.id = id;
+    this.firstSight = false;
+    this.rand_laugh = Math.floor(Math.random()*20);
 
     this.disengage = true;
 }
@@ -63,6 +65,11 @@ Barbarian.prototype.act = function() {
         //within range? chase the player or flee
         if(this.getDistance(Game.player) < this.radar){
             this.chase();
+
+            if(!this.firstSight){
+                playSFX("barb_idle",0.4);
+                this.firstSight = true;
+            }
         }
         //quarantined? go outside
         else if(this.getDistance(this.base) < 10){
@@ -71,11 +78,17 @@ Barbarian.prototype.act = function() {
         //wander around
         else{
             this.idle();
+
+            //give a chuckle
+            if(Game.gameTicks % (30+this.rand_laugh) == 0)
+                playSFX("barb_laugh",0.4);
         }
     }
     //run away back to the base
     else if(!this.at_base){
         this.flee();
+        if(this.firstSight)
+            this.firstSight = false;
     }
 
     //regain health

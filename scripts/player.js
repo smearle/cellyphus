@@ -18,9 +18,9 @@ var Player = function(x, y) {
     this.hungerDecay = 0;
 
 
-    this.seeds = 20;
-    this.wood = 30;
-    this.meat = 0;
+    this.seeds = 0;
+    this.wood = 5;
+    this.meat = 1;
 
     this.punchDmg = 7;
     this.kickDmg = 10;

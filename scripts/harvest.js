@@ -124,6 +124,7 @@ function harvest(frog, x, y) {
     frog.isHarvesting = false;
     frog.wandering = true;
     curr_tile = getTile(x, y);
+    playSFX("harvest",0.3)
     switch(curr_harvest) {
         case harvest_items.CHOP:
             displayText("Frog chops the wood.");

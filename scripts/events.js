@@ -10,6 +10,8 @@ var playerInBase = false;
 var attackFlavor = ["You body slammed the barbarian", "You round-housed kicked the barbarian!", "You landed your punch!", "You bit the barbarian", "You headbutt the barbarian!"]
 var defenseFlavor = ["The barbarian slapped you!", "The barbarian sliced at your guts!", "The barbarian spit in your face!", "The barbarian punched your face", "The barbarian kicked you in the shins"]
 
+var warned = false;
+
 //always step
 function combatStep(){
     
@@ -305,7 +307,7 @@ EventHandler.prototype.step = function(e) {
 //              console.log("Main Screen: (" + rx + "," + ry + ")  -->  (" + x + "," + y + ")");
 
                 //direct build location on the map
-                console.log('build? ' + await_build_location + ' harv? ' + await_harvest_location + ' atk? ' + await_attack_location);
+                //console.log('build? ' + await_build_location + ' harv? ' + await_harvest_location + ' atk? ' + await_attack_location);
                 if (await_build_location) {
                     orderBuild(next_order, x, y)
                 }
@@ -381,6 +383,7 @@ EventHandler.prototype.step = function(e) {
                         plantedSeeds = true;
                         Game.player.seeds--;
                         GameStats.seedsPlanted++;
+                        playSFX("plant_seeds",0.1)
                     }
                     else {
                         Game.log_display.drawText(0, 0, "You have no seeds to plant.");
@@ -412,11 +415,12 @@ EventHandler.prototype.step = function(e) {
 
                     newX = player._x;
                     newY = player._y;
-                    console.log("player: " + newX + ", " + newY);
-                    console.log("wall: " + Game.kingWall._x + ", " + Game.kingWall._y);
+                    //console.log("player: " + newX + ", " + newY);
+                    //console.log("wall: " + Game.kingWall._x + ", " + Game.kingWall._y);
                     if (trg_tile == tile_chars.WATER) {
                         player.thirst = Math.min(100, player.thirst + 25);
                         drankWater = true;
+                        playSFX("drink_water",0.1)
                     }
 
                 }
@@ -501,6 +505,28 @@ EventHandler.prototype.step = function(e) {
     if(objDivShown){
         setObjsDiv()
     }
+
+
+
+    //sound effects based on statuses
+    //low health
+    if(Game.player.health == Math.floor(Game.player.maxHealth/3) && !warned){
+        playSFX("low_health",0.5);
+        warned = true;
+    }else{
+        warned = false;
+    }
+    //low thirst
+    if(Game.player.thirst == Math.floor(Game.player.maxThirst/3)){
+        playSFX("low_thirst",0.6);
+        console.log("warned for thirst")
+    }
+    //low hunmger
+    if(Game.player.hunger == Math.floor(Game.player.maxHunger/3)){
+        playSFX("low_hunger",0.6);
+    }
+
+
 
 
     //render();

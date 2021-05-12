@@ -123,6 +123,7 @@ function build(frog, x, y) {
     delete build_orders[[x, y]];
     frog.isBuilding = false;
     frog.wandering = true;
+    playSFX("build",0.25)
     switch(curr_build) {
 
         case build_items.WALL:
