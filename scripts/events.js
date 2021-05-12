@@ -383,7 +383,12 @@ EventHandler.prototype.step = function(e) {
                         player.thirst = Math.min(100, player.thirst + 25);
                         drankWater = true;
                     }
+                    else if(trg_tile == tile_chars.WALL && newX == Game.kingWall._x && newY == Game.kingWall._y){
+                        
+                    }
                 }
+
+
 
                 if(!playerInBase && newX == Game.blackLodge._x && newY == Game.blackLodge._y)
                     playerInBase = true;

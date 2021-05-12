@@ -1,12 +1,9 @@
-var atkFrame=document.getElementById('atkFrame');
+/*var atkFrame=document.getElementById('atkFrame');
 
 var defFrame=document.getElementById('defFrame');
 
 swapCanvases();
 
-/*document.getElementById("test").onclick=function(){
-  swapCanvases();
-};*/
 
 function init(){
 	localStorage.setItem("combatType", "atk");
@@ -53,3 +50,4 @@ function main(){
 }
 main();
 //var game = setInterval(showMinigame, 1000);
+*/
