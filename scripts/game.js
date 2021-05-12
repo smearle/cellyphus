@@ -301,13 +301,14 @@ var Game = {
 //      this.spawnFrog();
 //      this.spawnFrog();
         this.barbarians = [];
+
         // comment this segment out for no barbarians on first day
-        barb_0 = this._createBarbarian()
+        /*barb_0 = this._createBarbarian()
         this.barbarians.push(barb_0);      
         barbarians[barb_id] = barb_0;
         barb_1 = this._createBarbarian()
         this.barbarians.push(barb_1);   
-        barbarians[barb_id] = barb_1;
+        barbarians[barb_id] = barb_1;*/
         // end of comment
 
         this.king_barbarian = this._createKingBarbarian();
@@ -570,7 +571,7 @@ function resetGame(){
     localStorage.setItem("damageDealt", 0);
     localStorage.setItem("damageTaken", 0);
     localStorage.setItem("damageRegistered", false);
-
+    localStorage.setItem("isKingWallBrkn", false);
     //set to real-time or turn based time
     if(localStorage.stepMode)
         Game.game_mode = localStorage.stepMode;
