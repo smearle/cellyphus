@@ -18,16 +18,23 @@ function combatStep(){
 
         //i lived bitch
         if((localStorage.enemyHP <= 0  || localStorage.combatType == 'esc')){
+            let diffTargHealth = Game.combatTarget.health - localStorage.getItem("enemyHP");
+            let diffMyHealth = Game.player.health - localStorage.getItem("playerHP");
+
+            //flavor text for the log
+            for(let f=0;f<parseInt(diffMyHealth/5);f++){
+                addToLog(defenseFlavor[Math.floor(Math.random()*defenseFlavor.length)]);
+            }
+            for(let f=0;f<parseInt(diffTargHealth/4);f++){
+                let astr = attackFlavor[Math.floor(Math.random()*attackFlavor.length)];
+                addToLog(astr);
+            }
+
+
             Game.combatTarget.health = localStorage.getItem("enemyHP");
             console.log("we have escaped combat");
 
-            //flavor text for the log
-            for(let f=0;f<parseInt(localStorage.damageTaken/5);f++){
-                addToLog(defenseFlavor[Math.floor(Math.random()*defenseFlavor.length)]);
-            }
-            for(let f=0;f<parseInt(localStorage.damageDealt/4);f++){
-                addToLog(attackFlavor[Math.floor(Math.random()*attackFlavor.length)]);
-            }
+            
 
 
 
