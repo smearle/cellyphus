@@ -33,6 +33,8 @@ function combatStep(){
                     //ding dong the bitch is dead
                     if(Game.combatTarget == Game.king_barbarian)
                         Game.king_barbarian = null;
+
+                    GameStats.barbariansKilled++;
                 }
                 Game.combatTarget = null;
                 deadBarbie = true;
@@ -189,7 +191,6 @@ EventHandler.prototype.step = function(e) {
         //console.log("enemyHP: " + localStorage.getItem("enemyHP") + " playerHP: " + localStorage.getItem("playerHP"));
 
         //swap to combat window
-        showCombat();
         Game.combatTarget.health = localStorage.getItem("enemyHP");
 
 
@@ -355,6 +356,7 @@ EventHandler.prototype.step = function(e) {
                         setTile(seed_x, seed_y, tile_chars.GRASS);
                         plantedSeeds = true;
                         Game.player.seeds--;
+                        GameStats.seedsPlanted++;
                     }
                     else {
                         Game.log_display.drawText(0, 0, "You have no seeds to plant.");
@@ -471,9 +473,11 @@ EventHandler.prototype.step = function(e) {
 
 
     //update objectives once completed
+    checkObj();
     if(objDivShown){
         setObjsDiv()
     }
+
 
     //render();
     //panCamera();

@@ -159,6 +159,29 @@
                 border:2px solid #3F7138;
             }
 
+            /* ORDER SCREEN */
+            #orderList{
+                width:50%;
+                height:300px;
+                overflow: auto;
+                border-right: 1px solid #787878;
+            }
+
+            #orderList > div{
+                border-bottom:1px solid #a0a0a0;
+                font-size:18px;
+                padding:10px 0px;
+            }   
+
+            #orderIcon{
+                padding: 15px 0px;
+            }
+
+            #orderList > div:hover{
+                border:2px solid #3F7138;
+            }
+
+
             /* SETTINGS */
             #user_settings{
                 margin-left:15px;
@@ -331,8 +354,15 @@
                         <button onclick='startGame()' class='gameStartBtns'>Start</button>
                     </div>
                     <div id='endMenu' style='display:none'>
-                        <div style='border:1px solid white;width:200px;padding-top:50px;margin:auto;margin-top:50px;padding-bottom: 30px'>
-                            <div id='objCompPerc' style='color:#fff;padding-bottom: 30px;font-size:24px'>Objectives Completed:<br></div>
+                        <div style='border:1px solid white;width:200px;padding-top:15px;margin:auto;margin-top:20px;padding-bottom: 30px;color:#fff;font-size:22px'>
+                            -- Achievements --
+                            <div id='achievements' style='font-size:16px;margin-top: 10px'>
+                                
+                            </div>
+                        </div>
+                        <div style='border:1px solid white;width:200px;padding-top:15px;margin:auto;margin-top:20px;padding-bottom: 30px;font-size:16px;color:#fff'>
+                            -- Objectives Completed --
+                            <div id='objCompPerc' style='color:#fff;padding-bottom: 30px;font-size:36px;margin-top:20px'></div>
                         </div>
                         <div style='width:200px;margin:auto'>
                             <button onclick='startGame()' class='gameStartBtns' style='background-color:#9F4223'>Play Again</button>

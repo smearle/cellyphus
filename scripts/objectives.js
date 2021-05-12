@@ -124,10 +124,7 @@ function initializeObjectives(){
 }
 
 
-
-//set whether the objectives are active or not for the div
-function setObjsDiv(){
-
+function checkObj(){
 	//check if any new ones are active
 	let act_objs = objectiveList.activation;
 	for(let a=0;a<act_objs.length;a++){
@@ -141,6 +138,12 @@ function setObjsDiv(){
 			objectiveList.completed[a] = outcome;
 		}
 	}
+}
+
+//set whether the objectives are active or not for the div
+function setObjsDiv(){
+
+	checkObj();
 	
 	//update inner html of divs
 	let objs = objectiveList.completed;
