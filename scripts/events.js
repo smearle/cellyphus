@@ -510,22 +510,23 @@ EventHandler.prototype.step = function(e) {
 
     //sound effects based on statuses
     //low health
-    if(Game.player.health == Math.floor(Game.player.maxHealth/3) && !warned){
-        playSFX("low_health",0.5);
-        warned = true;
-    }else{
-        warned = false;
+    if(!Game.player.immortal){
+        if(Game.player.health == Math.floor(Game.player.maxHealth/3) && !warned){
+            playSFX("low_health",0.5);
+            warned = true;
+        }else{
+            warned = false;
+        }
+        //low thirst
+        if(Game.player.thirst == Math.floor(Game.player.maxThirst/3)){
+            playSFX("low_thirst",0.6);
+            console.log("warned for thirst")
+        }
+        //low hunmger
+        if(Game.player.hunger == Math.floor(Game.player.maxHunger/3)){
+            playSFX("low_hunger",0.6);
+        }
     }
-    //low thirst
-    if(Game.player.thirst == Math.floor(Game.player.maxThirst/3)){
-        playSFX("low_thirst",0.6);
-        console.log("warned for thirst")
-    }
-    //low hunmger
-    if(Game.player.hunger == Math.floor(Game.player.maxHunger/3)){
-        playSFX("low_hunger",0.6);
-    }
-
 
 
 

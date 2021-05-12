@@ -382,6 +382,7 @@ var Game = {
         this.kingWall.intact = false;
         let key = (this.kingWall._x+","+this.kingWall._y);
         this.map[key] = tile_chars.DIRT;
+        playSFX("break_wall",0.5);
     },
 
     _generateBoxes: function(freeCells) {
@@ -775,6 +776,15 @@ window.addEventListener("keydown", function(e) {
             alert("Switching to title mode on start");
             localStorage.startType = "title";
         }
+    }
+
+    //toggle sfx
+    if(e.keyCode == 190){
+        muteSFX = !muteSFX;
+        if(muteSFX)
+            alert("SFX OFF")
+        else
+            alert("SFX ON")
     }
 
     /*

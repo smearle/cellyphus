@@ -67,7 +67,7 @@ Barbarian.prototype.act = function() {
             this.chase();
 
             if(!this.firstSight){
-                playSFX("barb_idle",0.4);
+                playSFX("barb_idle",0.35);
                 this.firstSight = true;
             }
         }
@@ -81,7 +81,7 @@ Barbarian.prototype.act = function() {
 
             //give a chuckle
             if(Game.gameTicks % (30+this.rand_laugh) == 0)
-                playSFX("barb_laugh",0.4);
+                playSFX((this.is_king ? "barb_laugh" : "barb_laugh2"),0.35);
         }
     }
     //run away back to the base

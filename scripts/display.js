@@ -803,7 +803,7 @@ function addNewFrogUI(index){
 	//frog commands
 	let commandDiv = document.createElement("div");
 	commandDiv.classList.add("commands");
-	let frogComms = ["Build", "Attack", "Forage", "Auto"];
+	let frogComms = ["Build", "Attack", "Harvest", "Auto"];
 	for(let c=0;c<frogComms.length;c++){
 		let but = document.createElement("button");
 		but.innerHTML = frogComms[c]
