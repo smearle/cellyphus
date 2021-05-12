@@ -18,8 +18,8 @@ function combatStep(){
 
         //i lived bitch
         if((localStorage.enemyHP <= 0  || localStorage.combatType == 'esc')){
-            let diffTargHealth = Game.combatTarget.health - localStorage.getItem("enemyHP");
-            let diffMyHealth = Game.player.health - localStorage.getItem("playerHP");
+            let diffTargHealth = Game.combatTarget.health - parseInt(localStorage.getItem("enemyHP"));
+            let diffMyHealth = Game.player.health - parseInt(localStorage.getItem("playerHP"));
 
             //flavor text for the log
             for(let f=0;f<parseInt(diffMyHealth/5);f++){
@@ -31,8 +31,8 @@ function combatStep(){
             }
 
 
-            Game.combatTarget.health = localStorage.getItem("enemyHP");
-            Game.player.health = localStorage.getItem("playerHP");
+            Game.combatTarget.health = parseInt(localStorage.getItem("enemyHP"));
+            Game.player.health = parseInt(localStorage.getItem("playerHP"));
             
             console.log("we have escaped combat");
 
@@ -62,7 +62,7 @@ function combatStep(){
             showMain();
             localStorage.combatType = 'atk';
             Game.combatTarget = null;
-            Game.player.health = localStorage.getItem("playerHP");
+            Game.player.health = parseInt(localStorage.getItem("playerHP"));
             Game.player.act();
         }
 
@@ -212,9 +212,9 @@ EventHandler.prototype.step = function(e) {
         //console.log("enemyHP: " + localStorage.getItem("enemyHP") + " playerHP: " + localStorage.getItem("playerHP"));
 
         //swap to combat window
-        Game.combatTarget.health = localStorage.getItem("enemyHP");
+        //Game.combatTarget.health = parseInt(localStorage.getItem("enemyHP"));
 
-        Game.player.health = localStorage.getItem("playerHP");
+        //Game.player.health = parseInt(localStorage.getItem("playerHP"));
 
 
 
