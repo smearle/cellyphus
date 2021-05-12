@@ -7,58 +7,74 @@ var drankWater = false;
 var plantedSeeds = false;
 var playerInBase = false;
 
+//always step
+function combatStep(){
+    
+
+    if (combatScreen.style.visibility == 'visible') {
+
+        //i lived bitch
+        if((localStorage.enemyHP <= 0  || localStorage.combatType == 'esc')){
+            Game.combatTarget.health = localStorage.getItem("enemyHP");
+            console.log("we have escaped combat");
+            Game.combatTarget.disengage = false;
+            localStorage.combatType = 'atk';
+
+            //enemy has died
+            if (Game.combatTarget.getHealth() <= 0)
+            {
+                Game.combatTarget.health = 0;
+                combatTextPlayer("You defeated the enemy");
+                Game.scheduler.remove(Game.combatTarget)
+                let i = Game.barbarians.indexOf(Game.combatTarget);
+                if (i > -1){
+                    Game.barbarians.splice(i,1);
+
+                    //ding dong the bitch is dead
+                    if(Game.combatTarget == Game.king_barbarian)
+                        Game.king_barbarian = null;
+                }
+                Game.combatTarget = null;
+                deadBarbie = true;
+            }
+
+
+            Game.combatTarget = null
+            showMain();
+        }
+        //guess i'll die
+        else if(localStorage.playerHP <= 0){
+            showMain();
+            localStorage.combatType = 'atk';
+            Game.combatTarget = null;
+            Game.player.health = localStorage.playerHP;
+            Game.player.act();
+        }
+
+    }
+
+    else if (Game.combatTarget != null && combatScreen.style.visibility == 'hidden') {
+        localStorage.setItem("enemyHP", Game.combatTarget.getHealth());
+        localStorage.setItem("playerHP", Game.player.getHealth());
+        localStorage.setItem("playerThirst", Game.player.getThirst());
+        localStorage.setItem("playerHunger", Game.player.getHunger());
+        showCombat();
+        console.log("fight club!");
+    }
+}
+
+var combatInterval = setInterval(function(){
+    combatStep();
+},200);
+
 //main game loop
 EventHandler.prototype.step = function(e) {
-    //make inCombat boolean when barbarian comes
-    //
-    if ((localStorage.enemyHP <= 0  || localStorage.combatType == 'esc') && combatScreen.style.visibility == 'visible') {
-        Game.combatTarget.health = localStorage.getItem("enemyHP");
-        console.log("we have escaped combat");
-        Game.combatTarget.disengage = false;
-        localStorage.combatType = 'atk';
 
-
-        //enemy has died
-        if (Game.combatTarget.getHealth() <= 0)
-        {
-            Game.combatTarget.health = 0;
-            combatTextPlayer("You defeated the enemy");
-            Game.scheduler.remove(Game.combatTarget)
-            let i = Game.barbarians.indexOf(Game.combatTarget);
-            if (i > -1){
-                Game.barbarians.splice(i,1);
-
-                //ding dong the bitch is dead
-                if(Game.combatTarget == Game.king_barbarian)
-                    Game.king_barbarian = null;
-            }
-            Game.combatTarget = null;
-            deadBarbie = true;
-        }
-
-
-        Game.combatTarget = null
-        showMain();
-
-
-    }
-
-    else if (Game.combatTarget != null) {
-        
-        if(combatScreen.style.visibility == 'hidden') {
-            localStorage.setItem("enemyHP", Game.combatTarget.getHealth());
-            localStorage.setItem("playerHP", Game.player.getHealth());
-            localStorage.setItem("playerThirst", Game.player.getThirst());
-            localStorage.setItem("playerHunger", Game.player.getHunger());
-            showCombat();
-        }
-
-        return
+    //don't bother when in combat
+    if(combatScreen.style.visibility == 'visible'){
+        return;
     }
     
-    
-
-
     //ignore input while editing name
     if(editingName)
         return
