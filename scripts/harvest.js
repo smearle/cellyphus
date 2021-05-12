@@ -2,7 +2,7 @@ var await_harvest_select = false;
 var await_harvest_location = false;
 var harvest_orders = {}
 
-var built_something = false;
+var harvested_something = false;
 
 const harvest_items = {
     NONE: "none",
@@ -93,6 +93,7 @@ function orderFrogHarvest(frog, action, x, y) {
     frog._y_t = y;
     frog.isHarvesting = true;
     frog.wandering = false;
+    harves
 }
 
 
