@@ -267,3 +267,21 @@ Barbarian.prototype._draw = function() {
     Game.display.draw(this._x, this._y, "..", "transparent");
     Game.display.draw(this._x, this._y, "SS", "transparent");
 }
+
+function killBarbarian(barb){
+    Game.scheduler.remove(barb)
+    let i = Game.barbarians.indexOf(barb);
+    if (i > -1){
+        Game.barbarians.splice(i,1);
+        delete Game.barb_locs[barb._x, barb._y];
+
+        //ding dong the bitch is dead
+        if(barb == Game.king_barbarian)
+            Game.king_barbarian = null;
+
+        GameStats.barbariansKilled++;
+    }
+    Game.combatTarget = null;
+    deadBarbie = true;
+    delete attack_orders[barb_id];
+}

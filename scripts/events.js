@@ -50,19 +50,7 @@ function combatStep(){
                 Game.combatTarget.health = 0;
                 combatTextPlayer("You defeated the enemy and got 1 meat");
                 Game.player.addMeat();
-                Game.scheduler.remove(Game.combatTarget)
-                let i = Game.barbarians.indexOf(Game.combatTarget);
-                if (i > -1){
-                    Game.barbarians.splice(i,1);
-
-                    //ding dong the bitch is dead
-                    if(Game.combatTarget == Game.king_barbarian)
-                        Game.king_barbarian = null;
-
-                    GameStats.barbariansKilled++;
-                }
-                Game.combatTarget = null;
-                deadBarbie = true;
+                killBarbarian(Game.combatTarget);
             }
 
 

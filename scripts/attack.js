@@ -112,7 +112,11 @@ function orderFrogAttack(frog, action, barb_id) {
 
 
 function attack(frog, barb_id) {
+    if (Game.tick % 2 == 0) {
+        return;
+    }
     curr_attack = attack_orders[barb_id];
+    barb = barbarians[barb_id];
     frog.isAttacking = false;
     frog.wandering = true;
     switch(curr_attack) {
@@ -139,8 +143,8 @@ function attack(frog, barb_id) {
             console.log("invalid attack item");
     }
     // Check if we killed the barb
-    if (!(barb_id in barbarians)) {
-        delete attack_orders[barb_id];
+    if (barb.health <= 0) {
+        killBarbarian(barb);
     }
 }
 

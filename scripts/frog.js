@@ -27,7 +27,7 @@ var Frog = function(x, y) {
     this._move_ticker = 0
     this.command = "auto";
     this.mortal = true;
-    this.trg_barb = "-1";
+    this.trg_barb = -1;
     this.name = "Primus the Immortal Frog";
 }
 
@@ -44,6 +44,10 @@ Frog.prototype.act = function() {
     }
     this._move_ticker = 0;
     // Wander about
+    if (this.trg_barb != -1) {
+        this._x_t = this.trg_barb._x_t;
+        this._y_t = this.trg_barb._y_t;
+    }
     if (this.wandering) {
         // Randomly move to a valid tile
         var newX;
@@ -85,7 +89,7 @@ Frog.prototype.act = function() {
 
     // Head to some target
     else {
-        var astar = new ROT.Path.AStar(this.trg_barb._x, this.trg_barb_y, frogPassableCallback, {topology:4});
+        var astar = new ROT.Path.AStar(this._x_t, this._y_t, frogPassableCallback, {topology:4});
 
         var path = [];
         var pathCallback = function(x, y) {
