@@ -110,11 +110,13 @@ EventHandler.prototype.step = function(e) {
     ///////////////        SHORTCUT KEYS        //////////////
 
     // debug command for spawning a new frog
+    /*
     if (code == 78) {
         console.log("spwan a frog (debug)");
         Game.spawnFrog();
         validUpdate = true;
     }
+    */
 
     // we need to detect [b]ed before [b]uild
     // TODO: refactor this harder forever

@@ -747,6 +747,7 @@ function addNewFrogUI(index){
 	txt.ondblclick = function(){editCharName(txtdiv);}
 	txt.innerHTML = getFrogName(index) + " the Frog";
 	txtdiv.appendChild(txt);
+	Game.frog_manager.frogs[index].name = getFrogName(index) + " the Frog";
 
 	//input
 	let edittxt = document.createElement("input");
@@ -806,8 +807,14 @@ function saveCharName(e){
 
 	editingName = false;
 
+	//player changed name
 	if(e.id == "playerSideStats")
 		changedName = true;
+	//changed frog name
+	else{
+		let fi = parseInt(e.id.replace("frog","").replace("SideStats",""));
+		Game.frog_manager.frogs[fi].name = intxt.value;
+	}
 }
 
 

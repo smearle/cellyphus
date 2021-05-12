@@ -20,6 +20,13 @@ var GameStats = {
 
 }
 
+var CheatCodes = {
+    "38,38,40,40,37,39,37,39,66,65,13":"konami",
+    "49,50,51,52,53,54,55,56,57,48":"1234567890",
+    "81,87,69,82,84,89":'qwerty',
+    "83,65,77,68,65,78,73,69,76,77":"devs"
+}
+
 var map_width = 64;
 var map_height = 64;
 var tileSet = document.createElement("img");
@@ -314,12 +321,14 @@ var Game = {
 //      this.spawnFrog();
         this.barbarians = [];
         // comment this segment out for no barbarians on first day
+        /*
         barb_0 = this._createBarbarian()
         this.barbarians.push(barb_0);      
         barbarians[barb_id] = barb_0;
         barb_1 = this._createBarbarian()
         this.barbarians.push(barb_1);   
         barbarians[barb_id] = barb_1;
+        */
         // end of comment
 
         this.king_barbarian = this._createKingBarbarian();
@@ -659,13 +668,77 @@ function showDeathScreen(){
     Game.log_combat.drawText(0, 6, "");
     let rtx = Game.resource_display.getContext("2d");
     rtx.clearRect(0,0,Game.resource_display.width,Game.resource_display.height)
+
 }
 
+/// cheats
 
+var cheatkeyInd = 0;
+var cheatSet = [];
+var cheee = "";
+function enterCheatCode(e){
+    if(cheatkeyInd == 0){
+        let keys = Object.keys(CheatCodes);
+        for(let k=0;k<keys.length;k++){
+            let curCheat = keys[k];
+            let css = curCheat.split(",");
+
+            //match
+            if(e.keyCode == parseInt(css[0])){
+                cheatSet = css;
+                cheee = curCheat;
+                cheatkeyInd++;
+                return;
+            }
+        }
+    }
+
+  if(e.keyCode == parseInt(cheatSet[cheatkeyInd])){
+    cheatkeyInd++;
+  }else{
+    cheatkeyInd = 0;
+    return;
+  }
+  
+  //activate cheat code
+  if(cheatkeyInd == cheatSet.length){
+    if(CheatCodes[cheee] == "konami")
+        immortality();
+    else if(CheatCodes[cheee] == "qwerty")
+        hundredMeat();
+    else if(CheatCodes[cheee] == "1234567890")
+        thousandSeeds();
+    else if(CheatCodes[cheee] == "devs")
+        devFrog();
+
+    keyInd = 0;
+  }
+}
+
+function immortality(){
+    Game.player.immortal = true;
+    alert("You are blessed with immortality from the game dev gods!")
+}
+
+function thousandSeeds(){
+    Game.player.seeds += 1000;
+    alert("You found 1000 seeds buried in the dirt!");
+}
+
+function hundredMeat(){
+    Game.player.meat += 100;
+    alert("An invisible cow combusts before your eyes into 100 steaks!")
+}
+
+function devFrog(){
+    Game.spawnFrog();
+    alert("The game dev gods grant you a new frog minion!");
+}
 
 
 //prevent scrolling with the game
 window.addEventListener("keydown", function(e) {
+
     // space and arrow keys
     if(([37, 38, 39, 40].indexOf(e.keyCode) > -1)){
         e.preventDefault();
@@ -694,6 +767,7 @@ window.addEventListener("keydown", function(e) {
         }
     }
 
+    /*
     //immortality
     if(e.keyCode == 220){
         Game.player.immortal = true;
@@ -704,8 +778,11 @@ window.addEventListener("keydown", function(e) {
     if(e.keyCode == 190){
         Game.player.seeds = 1000;
     }
+    */
 
 
 }, false);
+
+window.addEventListener("keydown", enterCheatCode, false);
 
 //Game.init();
