@@ -85,7 +85,7 @@ Frog.prototype.act = function() {
 
     // Head to some target
     else {
-        var astar = new ROT.Path.AStar(this._x_t, this._y_t, frogPassableCallback, {topology:4});
+        var astar = new ROT.Path.AStar(this.trg_barb._x, this.trg_barb_y, frogPassableCallback, {topology:4});
 
         var path = [];
         var pathCallback = function(x, y) {

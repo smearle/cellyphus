@@ -80,7 +80,7 @@ function orderAttack(action, x, y) {
            orderFrogAttack(frog, action, barb_id);
            //reset menu colors
            assigned = true;
-           displayText('Assigned frog ' + frog.name + ' to ' + action + ' barbarian ' + barb_id +'.');
+           displayText('Assigned ' + frog.name + ' to ' + action + ' barbarian ' + barb_id +'.');
            break;
         }
     }
@@ -116,17 +116,23 @@ function attack(frog, barb_id) {
     frog.isAttacking = false;
     frog.wandering = true;
     switch(curr_attack) {
+        case attack_items.DEMOLISH:
+            displayText(frog.name+" busts up part of barbarian "+barb_id+"'s body with a hammer.");
+            if (Math.random() < 0.4) {
+                barbarians[barb_id].health -= 13;
+            }
+            attacked_something = true;
         case attack_items.CHOP:
-            displayText("Frog chops the barbarian.");
-            setTile(x, y, tile_chars.DIRT);
-            Game.player.wood += 10;
+            displayText("Frog chops barbarian " + barb_id +".");
+            if (Math.random() < 0.6) {
+                barbarians[barb_id].health -= 7;
+            }
             attacked_something = true;
             break
         case attack_items.CUT:
-            displayText("Frog cuts the barbarian.");
-            setTile(x, y, tile_chars.DIRT);
+            displayText("Frog cuts barbarian " + barb_id + ".");
+            barbarians[barb_id].health -= 3;
             attacked_something = true;
-            Game.player.seeds += 3;
             break;
         default:
             displayText("Frog fails to " + curr_attack + " the enemy")
