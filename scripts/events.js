@@ -24,7 +24,8 @@ function combatStep(){
             if (Game.combatTarget.getHealth() <= 0)
             {
                 Game.combatTarget.health = 0;
-                combatTextPlayer("You defeated the enemy");
+                combatTextPlayer("You defeated the enemy and got 1 meat");
+                Game.player.addMeat();
                 Game.scheduler.remove(Game.combatTarget)
                 let i = Game.barbarians.indexOf(Game.combatTarget);
                 if (i > -1){
@@ -60,6 +61,7 @@ function combatStep(){
         localStorage.setItem("playerHP", Game.player.getHealth());
         localStorage.setItem("playerThirst", Game.player.getThirst());
         localStorage.setItem("playerHunger", Game.player.getHunger());
+        localStorage.setItem("meat", Game.player.getMeat());
         showCombat();
         console.log("fight club!");
     }

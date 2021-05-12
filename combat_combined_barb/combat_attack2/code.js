@@ -66,7 +66,7 @@ var gameVals = {
   maxTime : 20,
   timeRemaining : 20,
   damaged : false,
-  damagePerHit : 10 //3
+  damagePerHit : 4
   //time
 }
 
@@ -142,6 +142,12 @@ var paused = true;				//if players are currently paused
 
 
 //////////////////    GENERIC FUNCTIONS   ///////////////
+
+//consumes 1 meat to heal player for 30 hp
+function heal(){
+	localStorage.meat -= 1;
+	localStorage.playerHP += 30;
+}
 
 //returns true if enemy or player are dead
 function isGameOver(){
@@ -318,18 +324,26 @@ function collided(){
 
 //////////////////  RENDER FUNCTIONS  ////////////////////
 
+//determines if heal button is visible
+function healVisible() {
+	if(localStorage.meat > 0) {
+		/*document.getElementById("heal").style.visibility = "visible";*/
+	}
+}
+
 //change continue button to be visible
 function contVisible() {
   document.getElementById("cont").style.visibility = "visible";
   document.getElementById("attack").style.visibility = "hidden";
-  document.getElementById("heal").style.visibility = "hidden";
+  /*document.getElementById("heal").style.visibility = "hidden";*/
 }
 
 //change continue button to be hidden
 function contHidden() {
   document.getElementById("cont").style.visibility = "hidden";
   document.getElementById("attack").style.visibility = "visible";
-  document.getElementById("heal").style.visibility = "visible";
+  healVisible();
+  //document.getElementById("heal").style.visibility = "visible";
 }
 
 //draw circular timer and sector to denote time
@@ -591,7 +605,7 @@ function main(){
 	canvas.focus();
 
 	//panCamera();
-
+	healVisible();
 	updateSize();
 	render();
 
