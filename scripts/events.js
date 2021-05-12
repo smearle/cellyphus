@@ -280,14 +280,15 @@ EventHandler.prototype.step = function(e) {
 //              console.log("Main Screen: (" + rx + "," + ry + ")  -->  (" + x + "," + y + ")");
 
                 //direct build location on the map
+                console.log('build? ' + await_build_location + ' harv? ' + await_harvest_location + ' atk? ' + await_attack_location);
                 if (await_build_location) {
-                    orderBuild(next_build, x, y)
+                    orderBuild(next_order, x, y)
                 }
                 else if (await_harvest_location) {
-                    orderHarvest(next_harvest, x, y)
+                    orderHarvest(next_order, x, y)
                 }
                 else if (await_attack_location) {
-                    orderAttack(next_attack, x, y);
+                    orderAttack(next_order, x, y);
                 }
             }
 

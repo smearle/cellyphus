@@ -9,7 +9,7 @@ var sideScreen=document.getElementById('gameSide');
 
 // Combina harvest and attack orders into "orders" for the sake of UI
 const order_info = Object.assign({}, harvest_info, attack_info);
-const orderImgs = Object.assign({}, harvestImgs, attackImgs);
+const orderImgs = Object.assign({}, harvestImgs, attackImgs, build_imgs);
 
 /*document.getElementById("swapScreen").onclick=function(){
   swapCanvases();
@@ -50,7 +50,7 @@ var canvas = document.getElementById("game");
 var ctx = canvas.getContext("2d");
 canvas.width = 640;
 canvas.height = 640;
-canvas.onmousemove = function(e){drawGhostBuild(e)}
+canvas.onmousemove = function(e){drawGhostOrder(e)}
 
 //minimap canvas
 var miniCanvas = document.getElementById("minimapCanvas");
@@ -376,6 +376,31 @@ function drawGhostBuild(e){
 
 }
 
+//draw ghost of order item on the map when hovered over
+let ghostOrder = {active:false, x:0,y:0,img:null}
+ghostOrder.img = new Image();
+function drawGhostOrder(e){
+	//not in harvest/attack mode? ignore
+	if (!(await_harvest_location || await_attack_location || await_build_location || await_harvest_select || await_attack_select || await_build_select)){
+		ghostOrder.active = false;
+		return;
+	}
+//  console.log("ghost image debug");
+//  console.log(next_order);
+//  console.log(orderImgs);
+
+	//get raw pixel location relative to the canvas
+    let rect = e.target.getBoundingClientRect();
+    let mx = Math.floor(Math.round(e.clientX - rect.left)/tw);
+    let my = Math.floor(Math.round(e.clientY - rect.top)/th);
+
+    ghostOrder.active = true;
+    ghostOrder.x = mx;
+    ghostOrder.y = my;
+    ghostOrder.img.src = orderImgs[next_order];
+
+}
+
 //draw the main game screen (camera focuses on a certain point)
 function drawMain(){
 	if(Game == null || Game.display == null)		//wait until game object is available
@@ -441,6 +466,12 @@ function drawMain(){
 		ctx.drawImage(ghostBuild.img, ghostBuild.x*tw, ghostBuild.y*th, tw,th);
 		ctx.globalAlpha = 1.0;
 	}
+	if(ghostOrder.active){
+		ctx.globalAlpha = 0.5;
+		ctx.drawImage(ghostOrder.img, ghostOrder.x*tw, ghostOrder.y*th, tw,th);
+		ctx.globalAlpha = 1.0;
+    }
+	
 
 	//sprite highlight
 	if(camera.focusChar == Game.player && playHighL.width > 0){
@@ -606,13 +637,16 @@ function selectBuildDiv(code,r){
 
 //select order item to build from the menu selection
 function selectOrderDiv(code,r,atk=false){
+//  console.log(code);
     resetOrderItemsColor();
 	r.style.backgroundColor = "#ECCE0E";
 	//set order item
     if (atk){
+      //console.log('attack');
         attackSelect(code);
     }
     else {
+      //console.log('harvest');
         harvestSelect(code);
     }
 	//displayText('Build ' + r.innerHTML.toUpperCase() + '. Select location.');

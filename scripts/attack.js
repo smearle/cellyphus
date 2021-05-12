@@ -8,14 +8,16 @@ const attack_items = {
     NONE: "none",
     CHOP: "chop",
     CUT: "cut",
+    HAMMER: "hammer",
 }
 
-var next_attack = attack_items.NONE
+//var next_attack = attack_items.NONE
 
 //temp attack item descriptions
 const attack_info = {
 	"chop_atk": "Chop the enemy.",
     "cut_atk": "Cut the enemy.",
+    "demolish_atk": "Demolish the enemy.",
 }
 
 const attackImgs = {}
@@ -23,6 +25,7 @@ const attackImgs = {}
 attack_to_img = {
     "chop_atk": "axe",
     "cut_atk": "sickle",
+    "demolish_atk": "hammer",
 }
 
 for (let key in attack_info) {
@@ -32,13 +35,21 @@ for (let key in attack_info) {
 // For when the player is selecting an order to give, will be used to enter a attack_order (x, y): attack_type pair
 
 function attackSelect(code) {
+    await_build_select = false;
+    await_build_location = false;
+    await_harvest_select = false;
+    await_harvest_location = false;
     if (code == 71) {
         displayText('Cut barbarian. Select barbarian.');
-        next_attack = attack_items.CUT;
+        next_order = attack_items.CUT;
     }
     else if (code == 84) {
-        displayText('Chop barbarian. Select barbarian.');
-        next_attack = attack_items.CHOP;
+        displayText('Chop barbarian. Select target.');
+        next_order = attack_items.CHOP;
+    }
+    else if (code == 74) {
+        displayText('Hammer barbarian. Select victim.');
+        next_order = attack_items.HAMMER;
     }
     await_attack_select = false;
     await_attack_location = true;
@@ -46,7 +57,7 @@ function attackSelect(code) {
 }
 
 function orderAttack(action, x, y) {
-//  console.log('Order attack item '+ item);
+    console.log('Order attack action '+ action);
     curr_tile = getTile(x, y)
     console.log(curr_tile);
     if (!([x, y] in barb_locs)) {
@@ -69,7 +80,7 @@ function orderAttack(action, x, y) {
            orderFrogAttack(frog, action, barb_id);
            //reset menu colors
            assigned = true;
-           displayText('Assigned frog ' + frog.name + ' attack ' + action + ' barbarian ' + barb_id +')');
+           displayText('Assigned frog ' + frog.name + ' to ' + action + ' barbarian ' + barb_id +'.');
            break;
         }
     }
@@ -82,7 +93,7 @@ function orderAttack(action, x, y) {
 
 //cancel current attack
 function cancelAttack(){
-	next_attack = "none";
+	next_order = "none";
 	await_attack_select = false;
     await_attack_location = false;
 //  resetAttackItemsColor();

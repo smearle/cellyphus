@@ -28,7 +28,7 @@ flame_emoji = imread("all_imgs/fire_emoji_32.png")
 ant_emoji = imread("all_imgs/ant_emoji_32.png")
 axe = imread("all_imgs/axe.png")
 sickle = imread("all_imgs/sickle.png")
-
+hammer = imread("all_imgs/hammer.png")
 
 def im_coords(im, x0, y0):
     ''' Get a 32*32 tile from some x y in a given image'''
@@ -58,6 +58,7 @@ flame = im_coords(flame_emoji, 0, 0)
 ant = im_coords(ant_emoji, 0, 0)
 axe = im_coords(axe, 0, 0)
 sickle = im_coords(sickle, 0, 0)
+hammer = im_coords(hammer, 0, 0)
 
 # A dictionary with all the tiles and their names
 img_names = {
@@ -80,6 +81,7 @@ img_names = {
     'ant': ant,
     'sickle': sickle,
     'axe': axe,
+    'hammer': hammer,
     }
 
 def write_img(img, name):

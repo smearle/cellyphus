@@ -664,7 +664,7 @@ window.addEventListener("keydown", function(e) {
     }
     //cancel current build
     if((e.keyCode == 27)){
-        cancelBuild();
+        cancelOrder();
     }
 
     //title or game on start

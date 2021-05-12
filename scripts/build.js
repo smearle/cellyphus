@@ -14,7 +14,7 @@ const build_items = {
     SEED: "grass",
 }
 
-var next_build = build_items.NONE
+var next_order = build_items.NONE
 
 //temp build item descriptions
 const build_info = {
@@ -34,25 +34,29 @@ for (let key in build_info) {
 // For when the player is selecting an order to give, will be used to enter a build_order (x, y): build_type pair
 
 function buildSelect(code) {
+    await_harvest_select = false;
+    await_harvest_location = false;
+    await_attack_select = false;
+    await_attack_location = false;
     if (code == 87) {
         displayText('Build wall. Select location.');
-        next_build = build_items.WALL;
+        next_order = build_items.WALL;
     }
     else if (code == 68) {
         displayText('Build door. Select location.');
-        next_build = build_items.DOOR;
+        next_order = build_items.DOOR;
     }
     else if (code == 70) {
         displayText('Build fire. Select location.');
-        next_build = build_items.FIRE;
+        next_order = build_items.FIRE;
     }
     else if (code == 66) {
         displayText('Build bed. Select location.');
-        next_build = build_items.BED;
+        next_order = build_items.BED;
     }
     else if (code == 82) {
         displayText('Build bridge. Select location.');
-        next_build = build_items.BRIDGE;
+        next_order = build_items.BRIDGE;
     }
     await_build_select = false;
     await_build_location = true;
@@ -76,7 +80,7 @@ function orderBuild(item, x, y) {
            orderFrogBuild(frog, item, x, y);
            //reset menu colors
            assigned = true;
-           displayText('Assigned frog ' + frog.name + ' build ' + item + ' at (' + x +', ' + y + ')');
+           displayText('Assigned frog ' + frog.name + ' build ' + item + ' at (' + x +', ' + y + ').');
            break;
         }
     }
@@ -88,12 +92,20 @@ function orderBuild(item, x, y) {
 }
 
 //cancel current build
-function cancelBuild(){
-	next_build = "none";
+function cancelOrder(){
+	next_order = "none";
+//  next_harvest = "none";
+//  next_attack = "none";
 	await_build_select = false;
+    await_harvest_select = false;
+    await_attack_select = false;
     await_build_location = false;
+    await_harvest_location = false;
+    await_attack_location = false;
     resetBuildItemsColor();
-    ghostBuild.active = false;
+    resetOrderItemsColor();
+  //ghostBuild.active = false;
+    ghostOrder.active = false;
 }
 
 // TODO use this item name? <--- WHAT?
