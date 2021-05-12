@@ -66,7 +66,7 @@ var gameVals = {
 	damageTaken : 0,
 	damageBlocked: 0,
 	damaged : false,
-	damagePerHit : 3,
+	damagePerHit : 5,
 	//time
 }
 
@@ -79,8 +79,8 @@ var timer = {
 	x: 100,
 	y: 20,
 	r: 12,
-	maxTime : 20,
-	timeRemaining : 20,
+	maxTime : 15,
+	timeRemaining : 15,
 }
 
 //shapes from SAT library to check for collision
@@ -97,7 +97,7 @@ var player = {
 	speed : 3,
 	base_speed : 3,
 	dashSpeed : 8,
-	color : '#f00',
+	color : "#0D7612",
 	trail : [],
 	ct : 0,			//trail interval
 	pt : 200,		//pause time (ms)
@@ -210,7 +210,7 @@ var ai = {
 	y : 75,
 	height: 16,
 	width: 16,
-	color : "#0D7612",
+	color : '#f00',
 	vel : {x : 0, y : 0},
 	charged : true,				//whether in the middle of an attack
 	maxSpeed : player.speed*3,		//max speed to attack (dependent on player)
@@ -254,6 +254,16 @@ var paused = true;				//if players are currently paused
 
 
 //////////////////    GENERIC FUNCTIONS   ///////////////
+
+//returns true if enemy or player are dead
+function isGameOver(){
+	var playerHP = localStorage.getItem("playerHP");
+	var enemyHP = localStorage.getItem("enemyHP");
+	if (playerHP <= 0 || enemyHP <= 0) {
+		return true;
+	}
+	return false;
+}
 
 //returns the horizontal and vertical components that make up diagonal given diagonal len
 //second and third parameter indicate direction of x and y respectively
@@ -527,7 +537,7 @@ function updateHitReset() {
 
 //send AI to random location on screen after some period of time
 function randomizeAILocation() {
-	let thirst = document.getElementById("thirst").value;
+	let thirst = localStorage.getItem("playerThirst");//document.getElementById("thirst").value;
 
 	//move ai position and collision mask
 	ai.x = Math.floor(Math.random() * (canvasCombat.width + 1));
@@ -636,6 +646,22 @@ function shieldCollided(shield) {
 
 //////////////////  RENDER FUNCTIONS  ////////////////////
 
+//change combat type to escape
+function escapeCombat() {
+	localStorage.setItem("combatType", "esc");
+}
+
+//show escape option when barbarian is below threshold
+function escapeVisible() {
+	if (localStorage.enemyHP < 30) {
+		document.getElementById("esc").style.visibility = "visible";
+	}
+	else {
+		document.getElementById("esc").style.visibility = "hidden";
+	}
+}
+
+
 //change continue button to be visible
 function contVisible() {
   document.getElementById("cont").style.visibility = "visible";
@@ -724,8 +750,8 @@ function render(){
 	ctxCombat.fillRect(ai.x-ai.width/2,ai.y-ai.height/2,ai.width,ai.height);
 
 	//draw ai target
-	ctxCombat.fillStyle = "#000";
-	ctxCombat.fillText("X", ai.target.x, ai.target.y);
+	//ctxCombat.fillStyle = "#000";
+	//ctxCombat.fillText("X", ai.target.x, ai.target.y);
 
 	//draw dark screen
 	if(darkScreen && gracePeriod){
@@ -789,10 +815,12 @@ function render(){
 		shieldCollided(shieldL);
 	}
 
-	//draw html text
+	//show damage stats
+	document.getElementById("playerHP").innerHTML = localStorage.getItem("playerHP") ? localStorage.getItem("playerHP") : 0;
+	document.getElementById("enemyHP").innerHTML = localStorage.getItem("enemyHP") ? localStorage.getItem("enemyHP") : 0;
 	document.getElementById("taken").innerHTML = gameVals.damageTaken;
 	document.getElementById("blocked").innerHTML = gameVals.damageBlocked;
-	document.getElementById("time").innerHTML = timer.timeRemaining;
+
 	ctxCombat.restore();
 }
 
@@ -817,6 +845,13 @@ function step() {
     	var prevHP = localStorage.getItem("playerHP");
     	var currHP = prevHP - gameVals.damageTaken;
     	localStorage.setItem("playerHP", currHP);
+
+    	//checks if game is over
+    	if(isGameOver()) {
+    		contHidden();
+    		localStorage.setItem("damageDealt", 0);
+    		localStorage.setItem("damageTaken", 0);
+    	}
     }  
 
     if (timer.timeRemaining != 0) {
@@ -825,6 +860,7 @@ function step() {
 }
 
 function goToAtk() {
+	console.log("sent to attack");
 	localStorage.setItem("combatType", "atk");
 }
 
@@ -888,10 +924,12 @@ function togAI(c){
 //main game loop
 function main(){
 	requestAnimationFrame(main);
+
 	canvasCombat.focus();
 
 	//panCamera();
 
+	escapeVisible();
 	render();
 
 	//pause when timer is 0
