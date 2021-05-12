@@ -148,6 +148,7 @@ function harvest(frog, x, y) {
                 setTile(x, y, tile_chars.DIRT);
             }
             Game.player.wood += 1;  
+            break;
         default:
             displayText("Frog fails to harvest via " + curr_harvest + " action.")
             console.log("invalid harvest item");

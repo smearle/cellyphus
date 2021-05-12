@@ -64,29 +64,35 @@ Frog.prototype.act = function() {
 
       //Game.log_display.drawText(0, 4, "Idle frog wanders.");
       //// random build
-        pending_builds = Object.keys(build_orders);
-        if (pending_builds.length > 0 && !frog_impassable.includes(getTile(this._x, this._y))) {
-            key = pending_builds[Math.floor(pending_builds.length * Math.random())].split(",");
-            build_x = parseInt(key[0]);
-            build_y = parseInt(key[1]);
-            val = build_orders[key];
-            orderFrogBuild(this, val, build_x, build_y);
+        if (this.command == 'auto' || this.command == 'build') {
+            pending_builds = Object.keys(build_orders);
+            if (pending_builds.length > 0 && !frog_impassable.includes(getTile(this._x, this._y))) {
+                key = pending_builds[Math.floor(pending_builds.length * Math.random())].split(",");
+                build_x = parseInt(key[0]);
+                build_y = parseInt(key[1]);
+                val = build_orders[key];
+                orderFrogBuild(this, val, build_x, build_y);
+            }
         }
-        pending_harvests = Object.keys(harvest_orders);
-        if (pending_harvests.length > 0 && !frog_impassable.includes(getTile(this._x, this._y))) {
-            key = pending_harvests[Math.floor(pending_harvests.length * Math.random())].split(",");
-            harvest_x = parseInt(key[0]);
-            harvest_y = parseInt(key[1]);
-            val = harvest_orders[key];
-            orderFrogHarvest(this, val, harvest_x, harvest_y);
+        if (this.command == 'auto' || this.command == 'harvest') {
+            pending_harvests = Object.keys(harvest_orders);
+            if (pending_harvests.length > 0 && !frog_impassable.includes(getTile(this._x, this._y))) {
+                key = pending_harvests[Math.floor(pending_harvests.length * Math.random())].split(",");
+                harvest_x = parseInt(key[0]);
+                harvest_y = parseInt(key[1]);
+                val = harvest_orders[key];
+                orderFrogHarvest(this, val, harvest_x, harvest_y);
+            }
         }
-        pending_attacks = Object.keys(attack_orders);
-        if (pending_attacks.length > 0 && !frog_impassable.includes(getTile(this._x, this._y))) {
-            key = pending_attacks[Math.floor(pending_attacks.length * Math.random())].split(",");
-            attack_x = parseInt(key[0]);
-            attack_y = parseInt(key[1]);
-            val = attack_orders[key];
-            orderFrogAttack(this, val, attack_x, attack_y);
+        if (this.command == 'auto' || this.command == 'attack') {
+            pending_attacks = Object.keys(attack_orders);
+            if (pending_attacks.length > 0 && !frog_impassable.includes(getTile(this._x, this._y))) {
+                key = pending_attacks[Math.floor(pending_attacks.length * Math.random())].split(",");
+                attack_x = parseInt(key[0]);
+                attack_y = parseInt(key[1]);
+                val = attack_orders[key];
+                orderFrogAttack(this, val, attack_x, attack_y);
+            }
         }
     }
 
@@ -129,13 +135,15 @@ Frog.prototype.act = function() {
         if (/*path.length == 1 ||*/ path.length == 0) {
             Game.log_display.drawText(0, 4, "Frog arrives.");
             // automatically harvest wood
-            if (tile == "**"){
-                Game.player.wood += 5;
-                setTile(this._x_t, this._y_t, tile_chars.EMPTY);
-            }
+//          if (tile == "**"){
+//              Game.player.wood += 5;
+//              setTile(this._x_t, this._y_t, tile_chars.EMPTY);
+//          }
+            delete attack_orders[this.trg_barb];
             this.wandering = true;
             this.trg_barb = -1;
-            this.is_attacking = false;
+            this.isAttacking = false;
+            console.log(attack_orders);
         }
         else {
             x = path[0][0];
