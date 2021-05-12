@@ -112,7 +112,7 @@ function initializeObjectives(){
 	addObjective("Drink water", function(){return drankWater;}, function(){seedReward(10)}, "imgs/tutorial/drink_water.gif");
 	addObjective("Plant Seeds", function(){return plantedSeeds;}, function(){woodReward(10)}, "imgs/tutorial/plant_seeds.gif");
 	addObjective("Order a frog to build something", function(){return built_something;}, function(){woodReward(20)},"imgs/tutorial/order_build.gif");
-	addObjective("Build a house", function(){return false;}, function(){woodReward(25)},"imgs/tutorial/build_house.gif");
+	addObjective("Build a house", function(){return madeHouse;}, function(){woodReward(25)},"imgs/tutorial/build_house.gif");
 	addObjective("Start a fire", function(){return setFire;}, function(){seedReward(20)},"imgs/tutorial/fire.gif");
 	addObjective("Create a new frog minion", function(){return spawnedFrog;}, function(){meatReward(7)},"imgs/tutorial/minion.gif");
 	addObjective("Survive 3 days", function(){return Game.days >= 3;}, function(){healthReward(0.2)},"imgs/tutorial/3days.gif");
@@ -124,10 +124,7 @@ function initializeObjectives(){
 }
 
 
-
-//set whether the objectives are active or not for the div
-function setObjsDiv(){
-
+function checkObj(){
 	//check if any new ones are active
 	let act_objs = objectiveList.activation;
 	for(let a=0;a<act_objs.length;a++){
@@ -141,6 +138,12 @@ function setObjsDiv(){
 			objectiveList.completed[a] = outcome;
 		}
 	}
+}
+
+//set whether the objectives are active or not for the div
+function setObjsDiv(){
+
+	checkObj();
 	
 	//update inner html of divs
 	let objs = objectiveList.completed;

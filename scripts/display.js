@@ -3,6 +3,7 @@
 //swap between canvas and iframe
 var mainScreen=document.getElementById('gameArea');
 var combatScreen=document.getElementById('combatDefense');
+var combatWallScreen=document.getElementById('combatWall');
 
 var sideScreen=document.getElementById('gameSide');
 //var attackScreen=document.getElementById('combatAttack');
@@ -36,6 +37,7 @@ function showMain(){
 	mainScreen.style.visibility='visible';
   sideScreen.style.visibility='visible';
   combatScreen.style.visibility='hidden';
+  combatWallScreen.style.visibility='hidden';
 }
 
 function showCombat(){
@@ -43,6 +45,14 @@ function showCombat(){
 	mainScreen.style.visibility='hidden';
   sideScreen.style.visibility='hidden';
   combatScreen.style.visibility='visible';
+  combatWallScreen.style.visibility='hidden';
+}
+
+function showWallCombat(){
+	mainScreen.style.visibility='hidden';
+  sideScreen.style.visibility='hidden';
+  combatScreen.style.visibility='hidden';
+	combatWallScreen.style.visibility='visible';
 }
 
 //main game
@@ -781,6 +791,7 @@ function addNewFrogUI(index){
 	txt.ondblclick = function(){editCharName(txtdiv);}
 	txt.innerHTML = getFrogName(index) + " the Frog";
 	txtdiv.appendChild(txt);
+	Game.frog_manager.frogs[index].name = getFrogName(index) + " the Frog";
 
 	//input
 	let edittxt = document.createElement("input");
@@ -840,8 +851,14 @@ function saveCharName(e){
 
 	editingName = false;
 
+	//player changed name
 	if(e.id == "playerSideStats")
 		changedName = true;
+	//changed frog name
+	else{
+		let fi = parseInt(e.id.replace("frog","").replace("SideStats",""));
+		Game.frog_manager.frogs[fi].name = intxt.value;
+	}
 }
 
 
@@ -892,6 +909,19 @@ function drawDeath(){
 		dtx.drawImage(grave, 0, 0, 31, 31, (canvas.width/2)-32, 280, 64, 64);
 }
 
+function setAchievements(){
+	let ach = "";
+	//go through all of the stats and show them
+	ach += "Seeds planted: " + GameStats.seedsPlanted + "<br>";
+	ach += "Grass Eaten: " + GameStats.grassEaten + "<br>";
+	ach += "Fires started: " + GameStats.fireStarted + "<br>";
+	ach += "Frogs spawned: " + GameStats.frogsSpawned + "<br>";
+	ach += "Orders given: " + GameStats.ordersGiven + "<br>";
+	ach += "Barbarians killed: " + GameStats.barbariansKilled;
+
+
+	document.getElementById("achievements").innerHTML = ach;
+}
 
 render();
 

@@ -33,6 +33,8 @@ function combatStep(){
                     //ding dong the bitch is dead
                     if(Game.combatTarget == Game.king_barbarian)
                         Game.king_barbarian = null;
+
+                    GameStats.barbariansKilled++;
                 }
                 Game.combatTarget = null;
                 deadBarbie = true;
@@ -61,6 +63,7 @@ function combatStep(){
         showCombat();
         console.log("fight club!");
     }
+
 }
 
 var combatInterval = setInterval(function(){
@@ -108,11 +111,13 @@ EventHandler.prototype.step = function(e) {
     ///////////////        SHORTCUT KEYS        //////////////
 
     // debug command for spawning a new frog
+    /*
     if (code == 78) {
         console.log("spwan a frog (debug)");
         Game.spawnFrog();
         validUpdate = true;
     }
+    */
 
     // we need to detect [b]ed before [b]uild
     // TODO: refactor this harder forever
@@ -167,8 +172,8 @@ EventHandler.prototype.step = function(e) {
 
 
     ///////////   COMBAT UPDATE    ///////////////
-
-    if (Game.combatTarget == null) {
+    if (localStorage.getItem("isKingWallBrkn") == "true"){
+        Game._destroyWall();
         showMain();
     }
 
@@ -188,7 +193,6 @@ EventHandler.prototype.step = function(e) {
         //console.log("enemyHP: " + localStorage.getItem("enemyHP") + " playerHP: " + localStorage.getItem("playerHP"));
 
         //swap to combat window
-        showCombat();
         Game.combatTarget.health = localStorage.getItem("enemyHP");
 
 
@@ -355,6 +359,7 @@ EventHandler.prototype.step = function(e) {
                         setTile(seed_x, seed_y, tile_chars.GRASS);
                         plantedSeeds = true;
                         Game.player.seeds--;
+                        GameStats.seedsPlanted++;
                     }
                     else {
                         Game.log_display.drawText(0, 0, "You have no seeds to plant.");
@@ -379,15 +384,20 @@ EventHandler.prototype.step = function(e) {
 
                 //if next to water, drink it
                 if (player_impassable.indexOf(trg_tile) >= 0) {
+                    if(trg_tile == tile_chars.REDWALL && newX == Game.kingWall._x && newY == Game.kingWall._y){
+                        console.log("combat");
+                        showWallCombat();
+                    }
+
                     newX = player._x;
                     newY = player._y;
+                    console.log("player: " + newX + ", " + newY);
+                    console.log("wall: " + Game.kingWall._x + ", " + Game.kingWall._y);
                     if (trg_tile == tile_chars.WATER) {
                         player.thirst = Math.min(100, player.thirst + 25);
                         drankWater = true;
                     }
-                    else if(trg_tile == tile_chars.WALL && newX == Game.kingWall._x && newY == Game.kingWall._y){
-                        
-                    }
+
                 }
 
 
@@ -466,9 +476,11 @@ EventHandler.prototype.step = function(e) {
 
 
     //update objectives once completed
+    checkObj();
     if(objDivShown){
         setObjsDiv()
     }
+
 
     //render();
     //panCamera();

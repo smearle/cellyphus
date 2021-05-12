@@ -17,6 +17,7 @@ function Barbarian(x, y, lodge, id, king=false) {
     this.recharge = 0;
     this.delay = 0;
     this.is_king = king;
+    this.frog_fight = false;
     this._draw();
     this.id = id;
 
@@ -43,6 +44,11 @@ Barbarian.prototype.act = function() {
     		this.disengage = true;
     	}
     }
+
+    if(this.frog_fight){
+        return;
+    }
+
 
     //skip turns if low health
     this.delay++;

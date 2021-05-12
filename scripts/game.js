@@ -10,6 +10,23 @@ var grassLand20 = false;
 var spawnedFrog = false;
 var arsonicFrogMade = false;
 
+var GameStats = {
+    seedsPlanted: 0,
+    barbariansKilled: 0,
+    grassEaten: 0,
+    frogsSpawned: 0,
+    fireStarted:0,
+    ordersGiven:0
+
+}
+
+var CheatCodes = {
+    "38,38,40,40,37,39,37,39,66,65":"konami",
+    "49,50,51,52,53,54,55,56,57,48":"1234567890",
+    "81,87,69,82,84,89":'qwerty',
+    "83,65,77,68,65,78,73,69,76,77":"devs"
+}
+
 var map_width = 64;
 var map_height = 64;
 var tileSet = document.createElement("img");
@@ -107,11 +124,11 @@ var Game = {
         this.resource_display.height = 112;
         document.getElementById("consoleArea").appendChild(this.resource_display);
 
-        this.log_display = new ROT.Display({width:32, height:8, fontSize:14})
+        this.log_display = new ROT.Display({width:74, height:8, fontSize:14})
         document.getElementById("consoleArea").appendChild(this.log_display.getContainer());
 
         this.log_combat = new ROT.Display({width:42, height:8, fontSize:14})
-        document.getElementById("consoleArea").appendChild(this.log_combat.getContainer());
+        //document.getElementById("consoleArea").appendChild(this.log_combat.getContainer());
     },
 
     init: function() {
@@ -218,6 +235,8 @@ var Game = {
         }
         //console.log("fire: " + flames.length)
 
+        GameStats.fireStarted += flames.length;
+
         //spawn a new frog at the 7th flame
         if(flames.length >= 5 && !arsonicFrogMade){
             [x, y] = flames[4];
@@ -301,13 +320,17 @@ var Game = {
 //      this.spawnFrog();
 //      this.spawnFrog();
         this.barbarians = [];
+
         // comment this segment out for no barbarians on first day
-        barb_0 = this._createBarbarian()
+        /*barb_0 = this._createBarbarian()
+>>>>>>> 2dd302d9163b7d3b7c7550dbc11d10e405653aec
         this.barbarians.push(barb_0);      
         barbarians[barb_id] = barb_0;
         barb_1 = this._createBarbarian()
         this.barbarians.push(barb_1);   
+<<<<<<< HEAD
         barbarians[barb_id] = barb_1;
+        */
         // end of comment
 
         this.king_barbarian = this._createKingBarbarian();
@@ -452,6 +475,7 @@ var Game = {
         new_frog = this._createBeing(Frog, freeCells);
         this.frog_manager.frogs.push(new_frog);
         addNewFrogUI(this.frog_manager.frogs.length-1);
+        GameStats.frogsSpawned++;
     },
 
     spawnFrogAt: function(x, y) {
@@ -459,6 +483,7 @@ var Game = {
         new_frog = this._createBeing(Frog, [x+","+y]);
         this.frog_manager.frogs.push(new_frog);
         addNewFrogUI(this.frog_manager.frogs.length-1);
+        GameStats.frogsSpawned++;
     },
 
     //check if movable entities at current position
@@ -570,7 +595,7 @@ function resetGame(){
     localStorage.setItem("damageDealt", 0);
     localStorage.setItem("damageTaken", 0);
     localStorage.setItem("damageRegistered", false);
-
+    localStorage.setItem("isKingWallBrkn", false);
     //set to real-time or turn based time
     if(localStorage.stepMode)
         Game.game_mode = localStorage.stepMode;
@@ -633,23 +658,89 @@ function toggleGameStep(v){
 function showDeathScreen(){
     Game.curState = "end";
     cancelObjTab();
+    setAchievements();
     document.getElementById("deathScreen").style.display = "block";
     document.getElementById("endMenu").style.display = "block";
     document.getElementById("gameSide").style.display = "none";
     document.getElementById("game").style.display = "none";
 
-    document.getElementById("objCompPerc").innerHTML = "Objectives Completed:<br>" + objCompleted() + "%";
+    checkObj();
+    document.getElementById("objCompPerc").innerHTML = objCompleted() + "%";
     Game.log_display.drawText(0, 6, "");
     Game.log_combat.drawText(0, 6, "");
     let rtx = Game.resource_display.getContext("2d");
     rtx.clearRect(0,0,Game.resource_display.width,Game.resource_display.height)
+
 }
 
+/// cheats
 
+var cheatkeyInd = 0;
+var cheatSet = [];
+var cheee = "";
+function enterCheatCode(e){
+    if(cheatkeyInd == 0){
+        let keys = Object.keys(CheatCodes);
+        for(let k=0;k<keys.length;k++){
+            let curCheat = keys[k];
+            let css = curCheat.split(",");
+
+            //match
+            if(e.keyCode == parseInt(css[0])){
+                cheatSet = css;
+                cheee = curCheat;
+                cheatkeyInd++;
+                return;
+            }
+        }
+    }
+
+  if(e.keyCode == parseInt(cheatSet[cheatkeyInd])){
+    cheatkeyInd++;
+  }else{
+    cheatkeyInd = 0;
+    return;
+  }
+  
+  //activate cheat code
+  if(cheatkeyInd == cheatSet.length){
+    if(CheatCodes[cheee] == "konami")
+        immortality();
+    else if(CheatCodes[cheee] == "qwerty")
+        hundredMeat();
+    else if(CheatCodes[cheee] == "1234567890")
+        thousandSeeds();
+    else if(CheatCodes[cheee] == "devs")
+        devFrog();
+
+    keyInd = 0;
+  }
+}
+
+function immortality(){
+    Game.player.immortal = true;
+    alert("You are blessed with immortality from the game dev gods!")
+}
+
+function thousandSeeds(){
+    Game.player.seeds += 1000;
+    alert("You found 1000 seeds buried in the dirt!");
+}
+
+function hundredMeat(){
+    Game.player.meat += 100;
+    alert("An invisible cow combusts before your eyes into 100 steaks!")
+}
+
+function devFrog(){
+    Game.spawnFrog();
+    alert("The game dev gods grant you a new frog minion!");
+}
 
 
 //prevent scrolling with the game
 window.addEventListener("keydown", function(e) {
+
     // space and arrow keys
     if(([37, 38, 39, 40].indexOf(e.keyCode) > -1)){
         e.preventDefault();
@@ -678,6 +769,7 @@ window.addEventListener("keydown", function(e) {
         }
     }
 
+    /*
     //immortality
     if(e.keyCode == 220){
         Game.player.immortal = true;
@@ -688,8 +780,11 @@ window.addEventListener("keydown", function(e) {
     if(e.keyCode == 190){
         Game.player.seeds = 1000;
     }
+    */
 
 
 }, false);
+
+window.addEventListener("keydown", enterCheatCode, false);
 
 //Game.init();

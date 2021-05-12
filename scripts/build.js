@@ -3,6 +3,7 @@ var await_build_location = false;
 var build_orders = {}
 
 var built_something = false;
+var made_house = false;
 
 const build_items = {
     NONE: "none",
@@ -88,6 +89,7 @@ function orderBuild(item, x, y) {
         displayText('Build order is in the queue.');
 //      console.log('Build order is in the queue.');
     }
+    GameStats.ordersGiven++;
    //resetBuildItemsColor();
 }
 
@@ -159,6 +161,7 @@ function build(frog, x, y) {
                 built_something = true;
                 if (isSheltered(x, y)) {
                     Game.spawnFrogAt(x, y);
+                    made_house = true;
                 }
             }
             else {
