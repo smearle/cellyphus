@@ -93,7 +93,6 @@ function orderFrogHarvest(frog, action, x, y) {
     frog._y_t = y;
     frog.isHarvesting = true;
     frog.wandering = false;
-    harves
 }
 
 
