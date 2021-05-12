@@ -467,7 +467,6 @@ function drawAlphaTile(img, x, y){
 
 function drawHarvestOverlay(img, x, y) {
     img = harvestImgs[img];
-    console.log("image name " + img);
     ctx.drawImage(img, x, y, 16, 16);
 }
 
@@ -609,7 +608,6 @@ function selectBuildDiv(code,r){
 function selectOrderDiv(code,r,atk=false){
     resetOrderItemsColor();
 	r.style.backgroundColor = "#ECCE0E";
-    console.log("selecting attak order? "+atk);
 	//set order item
     if (atk){
         attackSelect(code);

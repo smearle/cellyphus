@@ -121,33 +121,61 @@ function build(frog, x, y) {
                 built_something = true;
             }
             else {
-                displayText("No wood, no wall.");
+                displayText("No wood, no wall. Chop a trunk or two, why don't you.");
             }
 
             break;
 
         case build_items.DOOR:
-            displayText("Frog builds the door.");
-            setTile(x, y, tile_chars.DOOR);
-            built_something = true;
+            if (Game.player.wood > 1) {
+                displayText("Frog builds the door.");
+                setTile(x, y, tile_chars.DOOR);
+                drawTile(x, y);
+                Game.player.wood -= 2;
+                built_something = true;
+            }
+            else {
+                displayText("Not enough wood for the door. Get that lumber.");
+            }
             break
         case build_items.BED:
-            displayText("Frog builds the bed.");
-            setTile(x, y, tile_chars.BED);
-            built_something = true;
-            if (isSheltered(x, y)) {
-                Game.spawnFrogAt(x, y);
+            if (Game.player.wood > 2) {
+                displayText("Frog builds the bed.");
+                setTile(x, y, tile_chars.BED);
+                drawTile(x, y);
+                Game.player.wood -= 3;
+                built_something = true;
+                if (isSheltered(x, y)) {
+                    Game.spawnFrogAt(x, y);
+                }
+            }
+            else {
+                displayText("Not enough wood for the bed. Chop some trees");
             }
             break;
         case build_items.FIRE:
-            displayText("Frog builds the fire.");
-            setTile(x, y, tile_chars.FIRE);
-            built_something = true;
+            if (Game.player.wood > 2) {
+                displayText("Frog builds the fire.");
+                setTile(x, y, tile_chars.FIRE);
+                drawTile(x, y);
+                Game.player.wood -= 3;
+                built_something = true;
+            }
+            else {
+                displayText("Nothing to burn! Collect some firewood.")
+            }
             break;
         case build_items.BRIDGE:
-            displayText("Frog builds the " + curr_build + ".");
-            setTile(x, y, tile_chars.BRIDGE);
-            built_something = true;
+            if (Game.player.wood > 0) {
+                displayText("Frog builds the " + curr_build + ".");
+                setTile(x, y, tile_chars.BRIDGE);
+                drawTile(x, y);
+                Game.player.wood -= 1;
+                built_something = true;
+            }
+            else {
+                displayText("No wood with which to build a bridge! Deforest a lil' sumthin' sumthin'.")
+            }
             break;
 
         default:
@@ -160,9 +188,47 @@ function isSheltered(x, y) {
     /* 
      * Is it sheltered?
      */ 
+    i = 0;
+    var [x0, y0] = [x, y];
+    visiting = {};
+    visiting[[x, y]] = true;
+//  console.log("starting at " + x + "," + y);
+//  console.log("starting at " + x0 + "," + y0);
+    visited = {};
+    while (Object.keys(visiting).length > 0) {
+        i++;
+//      console.log("visiting");
+//      console.log(visiting);
+//      console.log(Object.keys(visiting)[0]);
+        var [x, y] = Object.keys(visiting)[0].split(",");
+        x = parseInt(x);
+        y = parseInt(y);
+//      console.log("visiting " + x + "," + y);
+        delete visiting[[x, y]];
+        if ([x, y] in visited) {
+            continue;
+        }
+        if (x < 0 || x > map_width || y < 0 || y> map_height){
+            return false;
+        }
+        if (i > 1000) {
+            return false;
+        }
+      //console.log("visited");
+      //console.log(visited);
+        // TODO: check for edge of the map?
+        isOpen = !(isTile(x, y, tile_chars.WALL) || isTile(x, y, tile_chars.DOOR) || Math.abs(x0-x) > 10 || Math.abs(y0-y));
+        if (isOpen) {
+            // Cue surrounding tiles for search
+            visiting[[x+1, y]] = true;
+            visiting[[x, y+1]] = true;
+            visiting[[x-1, y]] = true;
+            visiting[[x, y-1]] = true;
+        }
+        visited[x, y] = true;
+    }
+    return true;
 
-    // Dummy function for now: is there a wall next to us?
-    return isTile(x+1, y, tile_chars.WALL);
 }
 
 
