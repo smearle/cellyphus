@@ -956,7 +956,9 @@ function main(){
   }
 
   var combatState = localStorage.getItem("combatType"); 
-  if (combatState.localeCompare("atk") == 0) {
+  //console.log("combat state: " + combatState);
+  //if (combatState.localeCompare("atk") == 0) {
+  if (combatState == "atk") {
 		contHidden();
 	}
 

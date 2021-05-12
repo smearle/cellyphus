@@ -595,10 +595,12 @@ function resetGame(){
     Game.init();
     Game.curState = "game";
     
+    console.log("init game");
     localStorage.clear();
     localStorage.setItem("damageDealt", 0);
     localStorage.setItem("damageTaken", 0);
     localStorage.setItem("damageRegistered", false);
+    localStorage.setItem("combatType", "atk");
     localStorage.setItem("isKingWallBrkn", false);
     //set to real-time or turn based time
     if(localStorage.stepMode)

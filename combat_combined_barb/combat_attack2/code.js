@@ -617,7 +617,9 @@ function main(){
   } 
 
   var combatState = localStorage.getItem("combatType"); 
-  if (combatState.localeCompare("def") == 0) {
+  //console.log("combat state: " + combatState);
+  //if (combatState.localeCompare("def") == 0) {
+  if (combatState =="def") {
 		contHidden();
 	}
 

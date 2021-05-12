@@ -174,7 +174,7 @@ function inArr(arr, e){
 
 //get health input
 function updateSize() {
-	var hunger = localStorage.getItem("playerHunger");//document.getElementById("hunger").value;
+	var hunger = localStorage.getItem("playerHunger") ? localStorage.getItem("playerHunger") : 50;//document.getElementById("hunger").value;
 	var diff = player.maxSize - player.minSize;
 	var scale = diff * parseInt(hunger) / 100;
 
@@ -461,6 +461,8 @@ function render(){
 //var t = 10;
 
 function step() {
+		console.log(timer.timeRemaining);
+		console.log("loc: " + player.x + ", " + player.y);
     var dt = Date.now() - expected; // the drift (positive for overshooting)
     if (dt > interval) {
         // something really bad happened. Maybe the browser (tab) was inactive?
@@ -572,7 +574,7 @@ function main(){
   	player.x = canvas.width / 2;
   	player.y = canvas.width / 2;
   	paused = true;
-  } 
+  }
 
 
 	currShakeTime = (new Date).getTime();
